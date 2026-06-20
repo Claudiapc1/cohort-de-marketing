@@ -32,7 +32,7 @@ Se nao vier o nicho, **pergunte e PARE** ate receber.
 1. **Nicho ou palavras-chave** definidas (5-10 termos)
 2. **Acesso a Twitter/X** (busca publica, sem login obrigatorio)
 3. **Apify MCP** (opcional, para scrape de TikTok/Instagram)
-4. **Output do `/pesquisa-icp`** (recomendado) — para filtrar tendencias relevantes ao perfil do cliente
+4. **Output do `/pesquisa-de-avatar`** (recomendado) — para filtrar tendencias relevantes ao perfil do cliente
 
 ---
 
@@ -149,7 +149,7 @@ Posts:
 Tenho um padrao de tendencia emergente: [colar padrao + 3 exemplos]
 
 Meu produto e: [briefing]
-Meu ICP e: [colar 1 paragrafo do /pesquisa-icp]
+Meu ICP e: [colar 1 paragrafo do /pesquisa-de-avatar]
 
 Gere 3 variacoes adaptadas:
 - Variacao A: replica fiel do padrao com meu produto
@@ -170,7 +170,7 @@ E recomende qual testar primeiro e por que.
 ## Regras
 
 - **Sempre cite link da fonte.** Sem link, vira invencao.
-- **Foque em conteudo organico**, nao em ads pagos (esses sao analisados pelo `/competitor-analysis`).
+- **Foque em conteudo organico**, nao em ads pagos (esses sao analisados pelo `/espiao-do-concorrente`).
 - **Janela de tempo: 14 dias.** Mais que isso, ja e tendencia velha.
 - **Engajamento minimo** para considerar: 100 likes (Twitter), 50k views (Reels/TikTok), 500 reacoes (LinkedIn).
 - **Saida do timing classification** e o que importa. Padrao em "pico" entra como aviso, nao como recomendacao.
@@ -206,7 +206,7 @@ E recomende qual testar primeiro e por que.
 - Recomendar tendencia em "pico" como prioridade (vai dar fadiga rapido)
 - Citar exemplo sem link de origem
 - Generalizar de 5 posts para "a tendencia toda"
-- Misturar conteudo organico com ads (usar /competitor-analysis para ads)
+- Misturar conteudo organico com ads (usar /espiao-do-concorrente para ads)
 - Pular Etapa 5 (variacoes) e mandar so o relatorio sem acionavel
 
 ---
@@ -214,7 +214,7 @@ E recomende qual testar primeiro e por que.
 ## Conexao com outras skills
 
 ```
-/pesquisa-icp (opcional, melhora as variacoes)
+/pesquisa-de-avatar (opcional, melhora as variacoes)
     ↓
 /trend-hunting (esta skill)
     ↓ variacoes-teste.md

@@ -537,6 +537,16 @@
     <div class="step">
       <div class="step-num">3</div>
       <div class="step-content">
+        <h3>Configure suas chaves de API (opcional)</h3>
+        <p>Copie o template de variáveis de ambiente e preencha o que tiver:</p>
+        <div class="command-block">cp .env.example .env</div>
+        <p>Abra o <code>.env</code> no editor. Cada chave tem instrução de <strong>onde pegar</strong> (Meta Ad Library, Apify, OpenAI etc.). Todas são <strong>opcionais</strong>: sem chave, as skills caem para modo manual (você cola o material, a IA analisa). O <code>.env</code> nunca vai para o GitHub (já está no <code>.gitignore</code>).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
         <h3>Abra o Claude Code no diretório</h3>
         <div class="command-block">claude</div>
         <p>As 5 skills em <code>.claude/skills/</code> são carregadas automaticamente pelo Claude Code.</p>
@@ -544,12 +554,12 @@
     </div>
 
     <div class="step">
-      <div class="step-num">4</div>
+      <div class="step-num">5</div>
       <div class="step-content">
         <h3>Teste que está funcionando</h3>
         <p>No Claude Code, digite:</p>
-        <div class="command-block slash">pesquisa-icp</div>
-        <p>Se aparecer o menu da skill com as 10 perguntas, está tudo certo.</p>
+        <div class="command-block slash">pesquisa-de-avatar</div>
+        <p>Se a skill responder com o menu de coleta de dor, está tudo certo.</p>
       </div>
     </div>
   </section>
@@ -561,15 +571,15 @@
 
     <div class="skills-grid">
       <div class="skill-card">
-        <div class="skill-name">/pesquisa-icp</div>
-        <p class="skill-what">Pesquisa estruturada de cliente ideal em 10 módulos. Faz perguntas guiadas sobre seu negócio e seus dados reais.</p>
-        <p class="skill-out"><strong>Sai com:</strong> ICP completo, formato A-G + Módulo 10 validado</p>
+        <div class="skill-name">/pesquisa-de-avatar</div>
+        <p class="skill-what">Minera dor real em reviews, comunidades e redes (verbatim, com fonte). Monta avatar em 7 dimensões. Roda focus group sintético em 3 personas para testar sua headline.</p>
+        <p class="skill-out"><strong>Sai com:</strong> Dores ranqueadas + Avatar + Headline validada</p>
       </div>
 
       <div class="skill-card">
-        <div class="skill-name">/competitor-analysis</div>
-        <p class="skill-what">Mapeia 3-5 concorrentes em 4 vetores (posicionamento, preço, promessa, ângulo) e aponta a brecha defensável.</p>
-        <p class="skill-out"><strong>Sai com:</strong> Dossiê + briefing para offerbook</p>
+        <div class="skill-name">/espiao-do-concorrente</div>
+        <p class="skill-what">Varre toda presença pública de 1 concorrente (Meta Ad Library + Google Ads + TikTok Ads + redes + site + reviews + Reclame Aqui). Devolve ganchos, ofertas, ângulos e brechas.</p>
+        <p class="skill-out"><strong>Sai com:</strong> Dossiê multi-fonte + 3 jogadas recomendadas</p>
       </div>
 
       <div class="skill-card">
@@ -602,10 +612,10 @@
         <span class="bloco-num">Bloco 1</span>
         <span class="bloco-time">50 minutos</span>
       </div>
-      <h3>ICP com /pesquisa-icp</h3>
-      <p>A skill faz 10 módulos de perguntas. Você responde com dados reais (formulários, entrevistas, reviews). Pré-requisito: mínimo 10 fontes.</p>
-      <div class="bloco-action">/pesquisa-icp [nome do seu negócio]</div>
-      <p class="bloco-result"><strong>Resultado:</strong> 3 arquivos ICP (md, html, resumo) prontos para alimentar as próximas skills.</p>
+      <h3>Pesquisa de Avatar com /pesquisa-de-avatar</h3>
+      <p>A skill faz 4 passos: minera dor real em 3 fontes (reviews, comunidades, redes), ranqueia dores nos 4 critérios da dor cara, monta avatar em 7 dimensões e roda focus group sintético em 3 personas testando sua headline. Modo rede (busca sozinha) ou offline (você cola o material).</p>
+      <div class="bloco-action">/pesquisa-de-avatar [nome do seu negócio ou nicho]</div>
+      <p class="bloco-result"><strong>Resultado:</strong> Relatório com dores ranqueadas + avatar + headline já validada em 3 personas, antes de gastar real em mídia.</p>
     </div>
 
     <div class="bloco">
@@ -614,10 +624,10 @@
         <span class="bloco-time">50 minutos</span>
       </div>
       <h3>Concorrentes e Tendências (em paralelo)</h3>
-      <p>Duas skills rodam ao mesmo tempo em abas separadas do Claude Code.</p>
-      <div class="bloco-action">/competitor-analysis [seu nicho]</div>
+      <p>Duas skills rodam ao mesmo tempo em abas separadas do Claude Code. A /espiao-do-concorrente varre Meta Ad Library, Google Ads, TikTok Ads, redes sociais, site e reviews de UM concorrente.</p>
+      <div class="bloco-action">/espiao-do-concorrente [nome ou @ do concorrente]</div>
       <div class="bloco-action">/trend-hunting [seu nicho]</div>
-      <p class="bloco-result"><strong>Resultado:</strong> Dossiê dos 3-5 concorrentes + relatório de tendências + 2 briefings (para swipe e offerbook).</p>
+      <p class="bloco-result"><strong>Resultado:</strong> Dossiê multi-fonte do concorrente com brechas + relatório de tendências emergentes + variações prontas para teste.</p>
     </div>
 
     <div class="bloco">
@@ -668,7 +678,7 @@
       <span class="rule-icon">3</span>
       <div>
         <h3>Brecha de ângulo > brecha de preço</h3>
-        <p>Preço é copiável em 30 dias. História (ângulo) não se copia. Quando o /competitor-analysis sugerir brecha, prefira ângulo.</p>
+        <p>Preço é copiável em 30 dias. História (ângulo) não se copia. Quando o /espiao-do-concorrente sugerir brecha, prefira ângulo.</p>
       </div>
     </div>
 
@@ -715,7 +725,7 @@
   <div class="cta-final">
     <h2>Pronta para <em>começar</em>?</h2>
     <p>Abra o Claude Code no terminal e rode o primeiro comando.</p>
-    <div class="command-block slash">pesquisa-icp [nome do seu negócio]</div>
+    <div class="command-block slash">pesquisa-de-avatar [nome do seu negócio]</div>
   </div>
 </div>
 

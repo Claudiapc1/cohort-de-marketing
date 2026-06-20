@@ -12,8 +12,8 @@ VOCE
  |
  +-- AULA 01: Research Analyst   <- voce esta aqui
  |    |
- |    +-- /pesquisa-icp           (Pesquisa Lendaria)
- |    +-- /competitor-analysis    (Apify + Claude)
+ |    +-- /pesquisa-de-avatar           (Pesquisa Lendaria)
+ |    +-- /espiao-do-concorrente    (Apify + Claude)
  |    +-- /trend-hunting          (Claude + Twitter/X)
  |    +-- /swipe-file             (organiza criativos)
  |    +-- /offerbook              (squad 3 mentes -> Jobs + Musk + Hormozi)
@@ -40,14 +40,14 @@ Esse pacote vira input direto da **Aula 02 (Arquiteto de Funil)**.
 ### Bloco 1 (50 min) — ICP
 
 1. Abrir Claude Code no projeto do aluno
-2. `/pesquisa-icp [seu nicho]` -> a skill faz 10 modulos de perguntas
+2. `/pesquisa-de-avatar [seu nicho]` -> a skill faz 10 modulos de perguntas
 3. Aluno responde com dados reais (formularios, entrevistas, reviews)
 4. Output: 3 arquivos ICP (md, html, resumo)
 5. Validar com checklist do Modulo 10
 
 ### Bloco 2 (50 min) — Concorrentes + Tendencias (paralelo)
 
-1. `/competitor-analysis [seu nicho]` -> coleta 3-5 concorrentes, mapeia 4 vetores
+1. `/espiao-do-concorrente [seu nicho]` -> coleta 3-5 concorrentes, mapeia 4 vetores
 2. Em paralelo (segunda aba/tab): `/trend-hunting [seu nicho]` -> 4 fontes, padroes emergentes
 3. Output: dossie + relatorio de tendencias + briefings para swipe-file e offerbook
 
@@ -67,10 +67,10 @@ Esse pacote vira input direto da **Aula 02 (Arquiteto de Funil)**.
 ## Conexao entre as skills
 
 ```
-/pesquisa-icp
+/pesquisa-de-avatar
     \
      v output: icp-{negocio}.md
-/competitor-analysis  -- briefing-offerbook.md ---->  /offerbook
+/espiao-do-concorrente  -- briefing-offerbook.md ---->  /offerbook
     \                                                    ^
      v output: briefing-swipe-file.md                    |
 /trend-hunting -- variacoes-teste.md -->                |
@@ -111,4 +111,4 @@ Do mapa mental original:
 - **Apify MCP** (opcional, para scrape de concorrentes e tendencias)
 - **Twitter/X** acesso (busca publica)
 - **Figma** ou Notion (organizar swipe file visualmente)
-- **Editor de markdown** (preencher ICP-template.md ou abrir o offerbook .docx)
+- **Editor de markdown** (preencher templates das skills ou abrir o offerbook .docx)

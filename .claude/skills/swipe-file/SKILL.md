@@ -1,6 +1,6 @@
 ---
 name: swipe-file
-description: "Organiza criativos winners (anuncios, posts, hooks, CTAs) capturados das skills /competitor-analysis e /trend-hunting em uma biblioteca categorizada e pesquisavel. Alimenta direto Copy e Media Buyer com referencias acionaveis. Funciona como Figma vivo: organizado por tipo, formato, performance e nicho. Output: swipe-file.md + estrutura de pastas + instrucoes Figma. NAO copia criativo dos outros: extrai padrao para inspirar. Triggers: 'swipe file', 'organizar criativos', 'biblioteca de referencias', '/swipe-file', 'salvar criativo winner'."
+description: "Organiza criativos winners (anuncios, posts, hooks, CTAs) capturados das skills /espiao-do-concorrente e /trend-hunting em uma biblioteca categorizada e pesquisavel. Alimenta direto Copy e Media Buyer com referencias acionaveis. Funciona como Figma vivo: organizado por tipo, formato, performance e nicho. Output: swipe-file.md + estrutura de pastas + instrucoes Figma. NAO copia criativo dos outros: extrai padrao para inspirar. Triggers: 'swipe file', 'organizar criativos', 'biblioteca de referencias', '/swipe-file', 'salvar criativo winner'."
 user_invocable: true
 ---
 
@@ -14,7 +14,7 @@ Esta skill mantem **biblioteca viva** de criativos vencedores (anuncios, posts, 
 
 ## Quando usar
 
-- Apos rodar `/competitor-analysis` ou `/trend-hunting` (output deles vira input)
+- Apos rodar `/espiao-do-concorrente` ou `/trend-hunting` (output deles vira input)
 - Briefing semanal de criativos para o time
 - Diagnostico de campanha que precisa de novos angulos
 - Manutencao continua (toda semana, capturar 5-10 novos winners)
@@ -35,9 +35,9 @@ Se nao vier acao, mostrar o menu.
 
 ## Pre-requisitos
 
-1. **Output do `/competitor-analysis`** OU **`/trend-hunting`** (lista de criativos para capturar)
+1. **Output do `/espiao-do-concorrente`** OU **`/trend-hunting`** (lista de criativos para capturar)
 2. **Figma** (opcional, recomendado para visual) ou Notion/Google Drive
-3. **ICP definido** (`/pesquisa-icp`) — filtro de relevancia
+3. **ICP definido** (`/pesquisa-de-avatar`) — filtro de relevancia
 
 ---
 
@@ -267,7 +267,7 @@ fonte: https://www.facebook.com/ads/library/?id=...
 ## Conexao com outras skills
 
 ```
-/competitor-analysis → briefing-swipe-file.md ↘
+/espiao-do-concorrente → briefing-swipe-file.md ↘
                                                 /swipe-file (esta skill)
 /trend-hunting → variacoes-teste.md          ↗      ↓
                                                 briefing para Copy + Media Buyer
