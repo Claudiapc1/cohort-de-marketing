@@ -880,7 +880,7 @@ ${(() => {
     </div>
   </section>
 
-  ${logo ? `
+  ${(logo && typeof logo.dataUrl === "string") ? `
   <section>
     <h2>Logo</h2>
     <div class="logo-display" style="background:${safe(cSurface)};color:${safe(cText)}">

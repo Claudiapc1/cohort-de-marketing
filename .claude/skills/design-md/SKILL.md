@@ -8,6 +8,43 @@ version: 1.0.0
 
 > Built by **Alan Nicolas** ([@oalanicolas](https://github.com/oalanicolas)) — [github.com/oalanicolas](https://github.com/oalanicolas)
 
+## ⚡ Execução no Cohort — Fluxo de 3 caminhos (USE SEMPRE ISTO)
+
+Quando o aluno acionar a skill (`/design-md`), **primeiro pergunte como ele quer criar a marca** (não assuma que ele tem uma URL):
+
+> **Como você quer criar o seu design.md?**
+> 1. **Do zero** — eu te ajudo a montar uma identidade a partir de referências (Pinterest, sites que você curte)
+> 2. **Com o que eu já tenho** — me manda seus arquivos de marca (logo, cores, manual) e eu monto
+> 3. **A partir de um site** — extraio a identidade de uma URL (o seu site ou uma referência)
+> 4. **Nenhuma agora** — seguir no brand neutro padrão (dark + cinza) e criar a sua marca depois
+
+Conduza conforme a resposta. Os caminhos **1, 2 e 3** terminam igual: `DESIGN.md` na **raiz do projeto** + `.cohort-brand-choice` = `design-md`. O **caminho 4** só marca o neutro (não gera DESIGN.md). Ao final, confirme pro aluno o que ficou ativo e que as próximas skills já seguem essa escolha.
+
+### Caminho 1 — Do zero (a partir de referências)
+1. Pergunte: que negócio é, que sensação a marca deve passar (3 palavras) e referências que ele curte (links do Pinterest ou sites).
+2. Se ele der uma URL de referência forte, pode usá-la com o **Caminho 3** como ponto de partida e refinar.
+3. Proponha uma paleta (primary/secondary/accent/surface/text/text-muted) e uma dupla de fontes (título + corpo), explicando o porquê.
+4. Com o aval dele, preencha o template `data/cohort-brand-template.md` e escreva o resultado em `./DESIGN.md` (raiz). Escreva `design-md` em `.cohort-brand-choice`.
+
+### Caminho 2 — Com o que eu já tenho
+1. Peça os arquivos da marca (logo, paleta, manual, prints) e **leia o que ele enviar**.
+2. **Vá falando o que tem e o que falta** — ex.: "achei seu logo e a cor principal, mas preciso da fonte e da cor de fundo, qual é?". Complete com ele até ter o mínimo (cores, fontes, logo).
+3. Preencha o template `data/cohort-brand-template.md` com os dados reais e escreva em `./DESIGN.md` (raiz). Escreva `design-md` em `.cohort-brand-choice`.
+
+### Caminho 3 — A partir de um site (extração automática)
+Execute **um comando só**, a partir da raiz do projeto:
+
+```bash
+node .claude/skills/design-md/cohort.cjs --url <URL>
+```
+
+O wrapper instala as dependências (1ª vez), gera, **copia o `DESIGN.md` para a raiz** e marca o brand-choice. Não rode `npm install` nem `run.cjs` direto, e não peça pro aluno mover arquivo — o `cohort.cjs` já cuida disso. (As seções abaixo são a referência técnica do extrator.)
+
+### Caminho 4 — Nenhuma agora (neutro)
+O aluno não quer criar marca agora. Escreva `neutro` em `.cohort-brand-choice` (raiz). As skills seguem no brand neutro padrão (dark + cinza). Avise que ele pode rodar a `/design-md` de novo quando quiser criar a marca dele — é só apagar `.cohort-brand-choice` e escolher outro caminho.
+
+---
+
 Extract a Google-spec [`DESIGN.md`](https://github.com/google-labs-code/design.md) from any public URL using static analysis only — **no headless browser, no Playwright, no Hyperbrowser**. The cognition layer is `claude -p` (default) or OpenRouter Haiku.
 
 > **Standalone skill.** Self-contained — copy the `design-md/` folder into any Claude Code project's `.claude/skills/` and run `npm install` inside it. No host-repo coupling.
