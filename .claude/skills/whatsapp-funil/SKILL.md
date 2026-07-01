@@ -137,6 +137,8 @@ Antes de montar a sequência, confirme: **quais momentos seu funil consegue dete
 4. **Cadência dos lembretes** de evento (se houver evento no funil).
 5. **Mapa de disparos** (momento + timing + tom) — com o texto marcado como tarefa de copy sua.
 
+**Material visual usa o `DESIGN.md` da marca.** Se você renderizar a sequência/o mapa como material visual (HTML, PDF), gere-o JÁ com os tokens do `projetos/{slug}/DESIGN.md` — cores, fontes, borda/raio, tamanho, logo. NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto). Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
+
 ---
 
 ## Veto conditions (NÃO prescrever se…)

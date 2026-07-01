@@ -175,6 +175,7 @@ Regras de geração:
 - Template original do DOCX NUNCA é modificado — o script faz cópia.
 - Se faltar campo no MD, o DOCX gera com `[A PREENCHER]` no lugar (não falha).
 - Pré-requisito DOCX: `pip install python-docx` (uma vez).
+- **Material visual usa o `DESIGN.md` da marca:** qualquer versão visual (HTML/PDF) do offerbook é renderizada JÁ com os tokens do `projetos/{slug}/DESIGN.md` — cores, fontes, borda/raio, tamanho, logo. NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto). Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). O `Template-Offerbook.docx` (estrutura do documento) permanece intacto. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
 
 ---
 

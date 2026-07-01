@@ -150,6 +150,8 @@ Preenchido com o material real, em português. Para cada achado, indique a(s) fo
 
 Se a amostra foi pequena, veio de poucas fontes ou do modo offline, diga isso no topo, com honestidade.
 
+**Material visual usa o `DESIGN.md` da marca.** Se você renderizar o dossiê como HTML/PDF (relatório visual), gere-o JÁ com os tokens do `projetos/{slug}/DESIGN.md` — cores, fontes, borda/raio, tamanho, logo. NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto). Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes. (Os screenshots dos criativos do concorrente entram como estão — o design da marca aplica só ao documento, não às peças capturadas.)
+
 ## Estilo de escrita (obrigatório)
 
 - Português do Brasil, claro e direto.

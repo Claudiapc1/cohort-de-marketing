@@ -135,7 +135,7 @@ O método (autoria Alan Nicolas) é simples e replicável: você escolhe um cria
 Todo entregável desta skill sai em **3 formatos**, com o mesmo nome-base:
 
 1. **`.md`** — o conteúdo (fonte de verdade).
-2. **`.html`** — versão estilizada no padrão visual do cohort (paleta dark + champagne, fontes Source Serif 4 + Inter, cards). Use o `offerbook-*.html` ou `relatorio-avatar.html` como referência de estilo. CSS inline, self-contained, sem emoji, português acentuado.
+2. **`.html`** — versão estilizada aplicando os **tokens do `projetos/{slug}/DESIGN.md` da marca do aluno** (cores, fontes, borda, tamanho). NUNCA use um tema fixo/genérico (dark, champagne, etc.) — a identidade é sempre a do `DESIGN.md`. Corpo com boa legibilidade (respeite o público; nichos 50+/acessibilidade pedem fonte grande, ≥18px, alto contraste). CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, PARE e rode `/design-md` antes (o gate já cobre isso).
 3. **`.pdf`** — gerado a partir do html:
 
    ```

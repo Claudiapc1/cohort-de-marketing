@@ -167,6 +167,8 @@ A skill gera (depende da acao):
 2. Atualizacao do `projetos/{slug}/swipe/swipe-file-index.md` master
 3. Instrucoes Figma (link para adicionar frame manualmente, se usar Figma)
 
+**Material visual usa o `DESIGN.md` da marca.** Se você renderizar a biblioteca ou o briefing como HTML/PDF (relatório visual), gere-o JÁ com os tokens do `projetos/{slug}/DESIGN.md` — cores, fontes, borda/raio, tamanho, logo. NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto). Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes. (Os screenshots dos criativos winners entram como estão — o design da marca aplica só ao documento, não às peças capturadas.)
+
 **Para `/swipe-file briefing [tipo]`:**
 1. Documento `projetos/{slug}/swipe/briefing-{tipo}-{data}.md` com 10-20 referencias organizadas (granular, por tipo)
 2. **`projetos/{slug}/swipe/briefing-swipe-file.md`** (handoff master) — index unico que consolida TODOS os briefings gerados ate aqui, e e o arquivo que voce passa pro Copy (`/copy-funil`) e pro Media Buyer. Atualizado a cada novo briefing gerado.

@@ -173,7 +173,7 @@ Se a amostra foi pequena, veio de poucas fontes ou do modo offline, diga isso no
    - `{{SUBTITULO}}` — fonte e tamanho da amostra (ex: "Reviews e comunidades · 246 trechos").
    - `{{DATA}}` — data de hoje.
    - `{{CONTEUDO}}` — as 7 seções renderizadas em HTML, usando `<h2>` por seção, `<h3>` por subitem, `<table>` para as dores/distribuições, `<blockquote class="verbatim">` para CADA citação literal do cliente, e `<div class="callout">` para o aviso de honestidade da fonte. Mantenha o verbatim sempre em `.verbatim` — é a matéria-prima.
-   - Se você usa a skill `design-md` e tem um `DESIGN.md` do seu negócio, aplique as cores, fontes e logo dele no HTML. Sem isso, o template vem em estilo neutro (sem marca) — pode usar como está.
+   - **Material visual usa o `DESIGN.md` da marca:** se você usa a skill `design-md` e tem um `DESIGN.md` do seu negócio, aplique JÁ os tokens dele no HTML — cores, fontes, borda/raio, tamanho, logo. NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto). Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). Sem `DESIGN.md`, o template vem em estilo neutro (sem marca) — pode usar como está, ou gere o `DESIGN.md` com `/design-md` antes.
 3. **PDF** (`projetos/{slug}/avatar.pdf`): rode o script sobre o HTML gerado:
    ```
    bash scripts/gerar_pdf.sh projetos/{slug}/avatar.html

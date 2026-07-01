@@ -62,6 +62,8 @@ Não invente de cabeça o conteúdo que deveria vir da etapa anterior.
 7. **Calibrar a voz** — ajuste cada roteiro para a SUA voz (ou a voz da sua equipe), usando transcrições/conteúdos reais seus como referência. Se ainda não tiver material de referência, marque como "primeiro corte" para refinar depois.
 8. **Entregar** — exporte os roteiros (ex.: Markdown → documento) e suba na sua pasta de entrega.
 
+**Material visual usa o `DESIGN.md` da marca.** Se você renderizar os roteiros/criativos como material visual (HTML, PDF, PNG, slides), gere-o JÁ com os tokens do `projetos/{slug}/DESIGN.md` — cores, fontes, borda/raio, tamanho, logo. NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto). Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
+
 ## Gates de qualidade (NÃO pular)
 
 - **Anúncio pago é "Meta-safe":** sem cifra de renda nem promessa financeira. Você pega a ESTRUTURA do concorrente e tira as cifras dele. Cifra de faturamento só vale em conteúdo orgânico/página, nunca em ad pago.
