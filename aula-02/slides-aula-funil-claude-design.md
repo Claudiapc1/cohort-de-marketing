@@ -165,7 +165,7 @@ Quando usar
 · Antes de back-end de ticket alto
 
 Erro comum
-Calcular ROI só no low ticket — o lucro está no OTO/back-end
+Calcular ROI só no low ticket — o lucro está no OTO/backend-funil
 ```
 
 ---
@@ -351,11 +351,11 @@ Estágio 3 → Funil: webinário / aula ao vivo
 
 01  Offerbook     pré-requisito · Fran fez ontem ✅
 02  Copy          /copy-funil
-03  Página        /pagina-vendas
+03  Página        /pagina-vendas-funil
 04  Email         /email-funil
 05  Conteúdo      /conteudo-funil
-06  Back-end      /back-end
-07  Recuperação   /recuperacao
+06  Back-end      /backend-funil
+07  Recuperação   /recuperacao-funil
 08  Teste         /cro-funil
 ```
 
@@ -371,7 +371,7 @@ Mesmo produto. Mesmo offerbook.
 
 ```
 /copy-funil      → hooks · headline · bullets · CTA
-/pagina-vendas   → estrutura da página com a copy
+/pagina-vendas-funil   → estrutura da página com a copy
 ```
 
 Os outros módulos (email · conteúdo · back-end · recuperação) você executa depois — a lógica é exatamente a mesma.
@@ -392,7 +392,7 @@ Os outros módulos (email · conteúdo · back-end · recuperação) você execu
 | Boleto gerado | Empurra pro cartão com vantagem |
 | Não comprou nada | Volta pro estágio da dor |
 
-`/recuperacao` · `/cro-funil`
+`/recuperacao-funil` · `/cro-funil`
 
 ---
 
@@ -409,13 +409,13 @@ Os outros módulos (email · conteúdo · back-end · recuperação) você execu
 
 03  /copy-funil → a mensagem
 
-04  /pagina-vendas → o container da mensagem
+04  /pagina-vendas-funil → o container da mensagem
 
 05  /email-funil + /conteudo-funil → distribuição
 
-06  /back-end → o que vem depois da venda
+06  /backend-funil → o que vem depois da venda
 
-07  /recuperacao → o dinheiro esquecido
+07  /recuperacao-funil → o dinheiro esquecido
 
 08  /cro-funil → testar, otimizar, escalar
 ```
@@ -482,7 +482,7 @@ COPY
 
 PÁGINAS
   /design-md       identidade visual do seu negócio
-  /pagina-vendas   estrutura completa da página de vendas
+  /pagina-vendas-funil   estrutura completa da página de vendas
 
 CONTEÚDO
   /conteudo-funil  mapa de conteúdo orgânico por estágio de consciência
@@ -494,8 +494,8 @@ DISTRIBUIÇÃO
   /whatsapp-funil  sequências WhatsApp / DM
 
 BACK-END
-  /back-end        upsell · OTO · downsell · janela 4h
-  /recuperacao     carrinho · cartão recusado · boleto
+  /backend-funil        upsell · OTO · downsell · janela 4h
+  /recuperacao-funil     carrinho · cartão recusado · boleto
   /cro-funil       KPIs por etapa · A/B · quando escalar
 ```
 

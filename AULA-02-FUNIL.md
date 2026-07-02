@@ -37,10 +37,10 @@ O funil é um caminho numerado. Cada skill entrega uma peça e consome a peça a
 6. **`/metodo-funil`** — **o mapa.** Diagnostica o estágio de consciência (1 a 5) e prescreve o funil certo, mais o mapa de execução com todas as peças na ordem. Consome: `offerbook.md`. Entrega: `funil.md`.
 7. **`/copy-funil`** — headlines, bullets, CTA, quebra de objeções. Consome: `offerbook.md`. Entrega: `copy.md`.
 8. **`/design-md`** — extrai a identidade visual (cores, fontes, tokens) de uma URL de referência sua. Consome: uma URL. Entrega: `DESIGN.md`.
-9. **`/pagina-vendas`** — estrutura a página de vendas (16 elementos), aplicando o seu `DESIGN.md`. Consome: `copy.md` + `DESIGN.md`. Entrega: `pagina/`.
+9. **`/pagina-vendas-funil`** — estrutura a página de vendas (16 elementos), aplicando o seu `DESIGN.md`. Consome: `copy.md` + `DESIGN.md`. Entrega: `pagina/`.
 10. **`/email-funil`** — a sequência de emails (convite → nutrição → venda → recuperação), na sua marca. Consome: `offerbook.md` + `DESIGN.md`. Entrega: `emails/`.
 11. **`/conteudo-funil`** — roteiros de Reels na sua voz, modelados num criador de referência. Consome: uma referência do Instagram (+ `offerbook.md`). Entrega: `conteudo/`.
-12. **`/recuperacao`** — a sequência de quem chegou no checkout e não comprou (carrinho abandonado, cartão recusado, boleto, downsell). Consome: `offerbook.md` + `funil.md`. Entrega: `recuperacao.md`.
+12. **`/recuperacao-funil`** — a sequência de quem chegou no checkout e não comprou (carrinho abandonado, cartão recusado, boleto, downsell). Consome: `offerbook.md` + `funil.md`. Entrega: `recuperacao.md`.
 13. **`/cro-funil`** — mede cada etapa, define o teste A/B certo e diz quando escalar. Consome: os dados do seu funil no ar. Entrega: `cro.md`.
 
 ### Formatos de funil alternativos (use conforme o `/metodo-funil` prescrever)
@@ -54,8 +54,8 @@ O `/metodo-funil` decide **qual formato de funil** o seu público pede. Use esta
 - **`/quiz-funil`** — quiz/diagnóstico que segmenta o lead e casa a oferta ao resultado (nível 4).
 - **`/whatsapp-funil`** — a sequência de WhatsApp/DM por momento.
 - **`/criativos-funil`** — roteiros de anúncio modelados na Biblioteca de Anúncios de um concorrente.
-- **`/mockup-produto`** — prompts para gerar os mockups visuais dos produtos e bônus na sua marca.
-- **`/back-end`** — a estrutura de upsell, OTO, order bump e downsell (onde mora o lucro).
+- **`/mockup-produto-funil`** — prompts para gerar os mockups visuais dos produtos e bônus na sua marca.
+- **`/backend-funil`** — a estrutura de upsell, OTO, order bump e downsell (onde mora o lucro).
 
 ---
 
@@ -94,10 +94,10 @@ Comando · o que faz · o que lê · o que gera (dentro de `projetos/{slug}/`).
 | `/metodo-funil` | Diagnostica o estágio de consciência (1–5) e entrega o mapa de execução do funil na ordem | `offerbook.md` | `funil.md` (md + html + pdf) |
 | `/copy-funil` | Pipeline de copy de alta conversão (headlines, bullets, CTA, objeções) usando os frameworks dos copywriters lendários | `offerbook.md` | `copy.md` (+ html/pdf) |
 | `/design-md` | Extrai a identidade visual (cores, fontes, tokens) de uma URL de referência | Uma URL pública | `DESIGN.md` (+ `tokens.json`, `preview.html`) |
-| `/pagina-vendas` | Estrutura a página de vendas de alta conversão (16 elementos) na sua marca | `copy.md` + `DESIGN.md` | `pagina/` |
+| `/pagina-vendas-funil` | Estrutura a página de vendas de alta conversão (16 elementos) na sua marca | `copy.md` + `DESIGN.md` | `pagina/` |
 | `/email-funil` | Gera os emails do funil (convite, confirmação, lembrete, recap, nurture, venda) na sua marca | `offerbook.md` + `DESIGN.md` | `emails/` |
 | `/conteudo-funil` | Modela os Reels de um criador de referência e gera roteiros na sua voz | Uma referência do Instagram (+ `offerbook.md`) | `conteudo/` |
-| `/recuperacao` | Estrutura a sequência de recuperação de quem não comprou (carrinho, cartão, boleto, downsell) | `offerbook.md` + `funil.md` | `recuperacao.md` |
+| `/recuperacao-funil` | Estrutura a sequência de recuperação de quem não comprou (carrinho, cartão, boleto, downsell) | `offerbook.md` + `funil.md` | `recuperacao.md` |
 | `/cro-funil` | Monta os KPIs por etapa, o teste A/B da headline e diz quando escalar | Dados do seu funil no ar | `cro.md` |
 
 ### Formatos de funil e peças extras (conforme o `/metodo-funil` prescrever)
@@ -111,8 +111,8 @@ Comando · o que faz · o que lê · o que gera (dentro de `projetos/{slug}/`).
 | `/quiz-funil` | Funil de quiz/diagnóstico que segmenta o lead e casa a oferta ao resultado (nível 4) | `offerbook.md` | Estrutura do quiz |
 | `/whatsapp-funil` | Sequência de WhatsApp/DM por momento, casada ao estágio de consciência | `offerbook.md` + `funil.md` | Sequência de WhatsApp/DM |
 | `/criativos-funil` | Modela a Biblioteca de Anúncios de um concorrente em roteiros de criativo na sua voz | Concorrente (Biblioteca de Anúncios) | Roteiros de criativo |
-| `/mockup-produto` | Monta prompts prontos para gerar os mockups visuais dos produtos e bônus na sua marca | `offerbook.md` + `DESIGN.md` | `mockups/` (prompts) |
-| `/back-end` | Estrutura o back-end do funil (upsell, OTO, order bump, downsell, janela de 4h, LTV) | Produto de entrada + público | Estrutura do back-end |
+| `/mockup-produto-funil` | Monta prompts prontos para gerar os mockups visuais dos produtos e bônus na sua marca | `offerbook.md` + `DESIGN.md` | `mockups/` (prompts) |
+| `/backend-funil` | Estrutura o back-end do funil (upsell, OTO, order bump, downsell, janela de 4h, LTV) | Produto de entrada + público | Estrutura do back-end |
 
 ---
 

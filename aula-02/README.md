@@ -32,19 +32,19 @@ O `/metodo-funil` lê o seu offerbook, identifica o estágio de consciência do 
 | `/avatar-funil` | ICP detalhado, dores, objeções e voz do cliente | Perfil de avatar pronto para copy |
 | `/copy-funil` | Hooks, headline, bullets, CTA e objeções por estágio | Blocos de copy organizados |
 | `/design-md` | Extrai paleta, tipografia e estilo da sua URL | DESIGN.md da sua marca |
-| `/pagina-vendas` | Estrutura completa da página de vendas (15 blocos) | Página pronta para publicar |
+| `/pagina-vendas-funil` | Estrutura completa da página de vendas (15 blocos) | Página pronta para publicar |
 | `/vsl-funil` | Roteiro de VSL Direct Response | Script de vídeo de vendas |
 | `/advertorial-funil` | Página editorial de pré-venda pra público frio (nível 5) | Estrutura de advertorial |
 | `/lancamento-funil` | Funil de lançamento/PLF pra público frio com lista (nível 5) | PLCs → carrinho → fechamento |
 | `/webinario-funil` | Funil de webinário/aula que vende (níveis 4-3) | Registro → roteiro → pós-venda |
 | `/quiz-funil` | Funil de quiz/diagnóstico que segmenta e casa a oferta (nível 4) | Quiz + páginas de resultado |
-| `/mockup-produto` | Mockups dos produtos/bônus na identidade da marca | Prompts de mockup prontos |
+| `/mockup-produto-funil` | Mockups dos produtos/bônus na identidade da marca | Prompts de mockup prontos |
 | `/email-funil` | Sequências de nutrição e venda por estágio | Cadência de email pronta |
 | `/conteudo-funil` | Mapa de conteúdo orgânico por estágio de consciência | Reels · carrosséis · stories · roteiros |
 | `/criativos-funil` | Anúncios casados ao estágio do público | Briefing de criativos pagos |
 | `/whatsapp-funil` | Sequências WhatsApp e DM por momento do funil | Mensagens prontas por etapa |
-| `/back-end` | Upsell, OTO, downsell, order bump, janela 4h, LTV | Estrutura completa de back-end |
-| `/recuperacao` | Carrinho abandonado, cartão recusado, boleto | Sequências de recuperação |
+| `/backend-funil` | Upsell, OTO, downsell, order bump, janela 4h, LTV | Estrutura completa de back-end |
+| `/recuperacao-funil` | Carrinho abandonado, cartão recusado, boleto | Sequências de recuperação |
 | `/cro-funil` | KPIs por etapa, teste A/B, quando escalar | Protocolo de otimização |
 
 **Tese-mãe da Aula 02:** um funil não é uma página. É um sistema. Cada peça tem um trabalho — e existe uma ordem certa para montar.
@@ -118,7 +118,7 @@ Extrai paleta, tipografia e estilo da sua marca. Gera o `DESIGN.md` que as próx
 ### Passo 4 — Página de vendas (30 min)
 
 ```
-/pagina-vendas [nome do produto]
+/pagina-vendas-funil [nome do produto]
 ```
 
 Usa o `DESIGN.md` + copy do passo 2. Gera a estrutura completa em 15 blocos.
@@ -138,7 +138,7 @@ Em abas separadas do Claude Code:
 ### Passo 6 — Back-end (15 min)
 
 ```
-/back-end [nome do produto]
+/backend-funil [nome do produto]
 ```
 
 Monta a estrutura de upsell, OTO, downsell e janela de 4h.
@@ -214,15 +214,15 @@ A skill `/metodo-funil` precisa do offerbook para funcionar. Sem offerbook, não
 
 ### Execute na ordem do mapa
 
-O mapa de execução do `/metodo-funil` define a ordem por um motivo: cada skill usa o output da anterior. `/pagina-vendas` consome a copy do `/copy-funil`. `/email-funil` consome o `DESIGN.md`. Pular etapas gera retrabalho.
+O mapa de execução do `/metodo-funil` define a ordem por um motivo: cada skill usa o output da anterior. `/pagina-vendas-funil` consome a copy do `/copy-funil`. `/email-funil` consome o `DESIGN.md`. Pular etapas gera retrabalho.
 
 ### DESIGN.md é a âncora visual
 
-Rode `/design-md` uma vez com a URL real do seu negócio. O arquivo gerado é referenciado por `/pagina-vendas` e `/email-funil` automaticamente — sem ele, as skills usam padrão genérico.
+Rode `/design-md` uma vez com a URL real do seu negócio. O arquivo gerado é referenciado por `/pagina-vendas-funil` e `/email-funil` automaticamente — sem ele, as skills usam padrão genérico.
 
 ### Recovery é dinheiro esquecido
 
-Não pule `/recuperacao` e `/cro-funil`. Carrinho abandonado, cartão recusado e boleto vencido representam receita que já estava quase dentro. São as sequências com maior ROI do funil.
+Não pule `/recuperacao-funil` e `/cro-funil`. Carrinho abandonado, cartão recusado e boleto vencido representam receita que já estava quase dentro. São as sequências com maior ROI do funil.
 
 ---
 

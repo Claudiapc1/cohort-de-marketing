@@ -519,7 +519,7 @@
       <li><a href="#secao-7">Os 3 formatos de entregável</a></li>
       <li><a href="#secao-8">A regra do DESIGN.md</a></li>
       <li><a href="#secao-9">Passo a passo por skill</a></li>
-      <li><a href="#secao-10">Acompanhe o progresso: /funil-status</a></li>
+      <li><a href="#secao-10">Acompanhe o progresso: /status-funil</a></li>
       <li><a href="#secao-11">As regras de ouro</a></li>
     </ol>
   </nav>
@@ -620,7 +620,7 @@
       </div>
       <div class="convention-row">
         <span class="cr-label">recuperacao.md</span>
-        <span class="cr-desc">Sequência de recuperação de checkout. Gerado pelo <code style="font-family: var(--font-mono); font-size: 0.9em;">/recuperacao</code>.</span>
+        <span class="cr-desc">Sequência de recuperação de checkout. Gerado pelo <code style="font-family: var(--font-mono); font-size: 0.9em;">/recuperacao-funil</code>.</span>
       </div>
       <div class="convention-row">
         <span class="cr-label">cro.md</span>
@@ -628,7 +628,7 @@
       </div>
       <div class="convention-row">
         <span class="cr-label">pagina/</span>
-        <span class="cr-desc">Estrutura e HTML da página de vendas. Gerado pelo <code style="font-family: var(--font-mono); font-size: 0.9em;">/pagina-vendas</code>.</span>
+        <span class="cr-desc">Estrutura e HTML da página de vendas. Gerado pelo <code style="font-family: var(--font-mono); font-size: 0.9em;">/pagina-vendas-funil</code>.</span>
       </div>
       <div class="convention-row">
         <span class="cr-label">emails/</span>
@@ -644,7 +644,7 @@
       </div>
       <div class="convention-row">
         <span class="cr-label">mockups/</span>
-        <span class="cr-desc">Prompts para mockups dos produtos e bônus. Gerado pelo <code style="font-family: var(--font-mono); font-size: 0.9em;">/mockup-produto</code>.</span>
+        <span class="cr-desc">Prompts para mockups dos produtos e bônus. Gerado pelo <code style="font-family: var(--font-mono); font-size: 0.9em;">/mockup-produto-funil</code>.</span>
       </div>
     </div>
 
@@ -764,7 +764,7 @@
         <p class="skill-out"><strong>Lê:</strong> uma URL pública. <strong>Gera:</strong> DESIGN.md (+ tokens.json, preview.html)</p>
       </div>
       <div class="skill-card">
-        <div class="skill-name">/pagina-vendas</div>
+        <div class="skill-name">/pagina-vendas-funil</div>
         <div class="skill-what">Estrutura a página de vendas de alta conversão com 16 elementos em sequência — headline, sub-headline, VSL, mecanismo único, stack, ancoragem, prova social, bullets, bônus, garantia, escassez, FAQ, CTA, checkout, footer. Aplica os tokens do DESIGN.md da sua marca.</div>
         <p class="skill-out"><strong>Lê:</strong> copy.md + DESIGN.md. <strong>Gera:</strong> pagina/ (html + md + pdf)</p>
       </div>
@@ -779,7 +779,7 @@
         <p class="skill-out"><strong>Lê:</strong> offerbook.md + DESIGN.md. <strong>Gera:</strong> conteudo/ + carrossel/</p>
       </div>
       <div class="skill-card">
-        <div class="skill-name">/recuperacao</div>
+        <div class="skill-name">/recuperacao-funil</div>
         <div class="skill-what">Estrutura a sequência de recuperação de quem chegou no checkout e não comprou. Cada comportamento revela uma objeção diferente: carrinho abandonado (30 min, tom leve), cartão recusado (logo após, urgente), boleto gerado (antes de vencer), downsell (quem recusou o upsell) e re-elevação ao nível 4 do problema.</div>
         <p class="skill-out"><strong>Lê:</strong> offerbook.md + funil.md. <strong>Gera:</strong> recuperacao.md (+ html + pdf)</p>
       </div>
@@ -835,12 +835,12 @@
         <p class="skill-out"><strong>Lê:</strong> offerbook.md + DESIGN.md. <strong>Gera:</strong> criativos/</p>
       </div>
       <div class="skill-card alt">
-        <div class="skill-name">/mockup-produto</div>
+        <div class="skill-name">/mockup-produto-funil</div>
         <div class="skill-what">Monta prompts de geração de imagem prontos, parametrizados pelos tokens do seu DESIGN.md, para cada item do offerbook: capa de ebook/PDF, tela de área de membros, box do produto, bundle de bônus empilhado e device mockup. Você gera as imagens na ferramenta de sua escolha.</div>
         <p class="skill-out"><strong>Lê:</strong> offerbook.md + DESIGN.md. <strong>Gera:</strong> mockups/ (prompts)</p>
       </div>
       <div class="skill-card alt">
-        <div class="skill-name">/back-end</div>
+        <div class="skill-name">/backend-funil</div>
         <div class="skill-what">Estrutura o back-end do funil: mapa ramificado (comprou → upsell 1 → upsell 2 / não comprou → downsell), janela de 3-7 segundos pós-checkout para o upsell, janela de 4 horas para toda a sequência de back-end, OTO de verdade (único, não reoferecer depois) e raciocínio de LTV — o lucro mora no back, não no front.</div>
         <p class="skill-out"><strong>Lê:</strong> offerbook.md + funil.md. <strong>Gera:</strong> back-end.md (+ html + pdf)</p>
       </div>
@@ -942,9 +942,9 @@
         <span class="bloco-num">04</span>
         <span class="bloco-time">Página</span>
       </div>
-      <h3>/pagina-vendas — a estrutura da página</h3>
+      <h3>/pagina-vendas-funil — a estrutura da página</h3>
       <p style="font-family: var(--font-ui); font-size: 0.95rem; color: var(--muted-foreground);">A skill lê a copy e o DESIGN.md. Apresenta os 16 elementos topo a fundo com o esqueleto de copy e o mapeamento de onde cada cor, fonte e logo do DESIGN.md entra. A headline passa em 3 testes antes de avançar: resultado específico, prazo e objeção removida.</p>
-      <div class="bloco-action">/pagina-vendas</div>
+      <div class="bloco-action">/pagina-vendas-funil</div>
       <p class="bloco-result"><strong>Você recebe:</strong> estrutura da página com os 16 elementos, checklist visual e plano de teste A/B da headline. Salvo em <strong>pagina/</strong>.</p>
     </div>
 
@@ -976,9 +976,9 @@
         <span class="bloco-num">07</span>
         <span class="bloco-time">Recuperação</span>
       </div>
-      <h3>/recuperacao — quem chegou e não comprou</h3>
+      <h3>/recuperacao-funil — quem chegou e não comprou</h3>
       <p style="font-family: var(--font-ui); font-size: 0.95rem; color: var(--muted-foreground);">A skill mapeia os comportamentos que seu checkout consegue detectar e prescreve abordagem e timing para cada um. Recuperar quem já chegou ao checkout custa menos do que adquirir um lead novo — e cada comportamento revela uma objeção diferente que pede uma resposta diferente.</p>
-      <div class="bloco-action">/recuperacao</div>
+      <div class="bloco-action">/recuperacao-funil</div>
       <p class="bloco-result"><strong>Você recebe:</strong> mapa de comportamentos com abordagem e timing por situação, cascata ordenada do mais quente ao mais frio, plano de re-elevação ao nível 4. Salvo em <strong>recuperacao.md</strong>.</p>
     </div>
 
@@ -998,8 +998,8 @@
   <!-- 10 -->
   <section id="secao-10">
     <div class="section-num">Parte 10</div>
-    <h2>Acompanhe o progresso: <em>/funil-status</em></h2>
-    <p>A qualquer momento entre uma skill e outra, rode <code style="font-family: var(--font-mono); background: var(--raised); color: var(--primary-light); padding: 2px 8px; border-radius: 0.25rem; font-size: 0.85em;">/funil-status</code>. A skill lê a pasta <code>projetos/{slug}/</code>, verifica a existência de cada peça e mostra um checklist vivo do seu funil.</p>
+    <h2>Acompanhe o progresso: <em>/status-funil</em></h2>
+    <p>A qualquer momento entre uma skill e outra, rode <code style="font-family: var(--font-mono); background: var(--raised); color: var(--primary-light); padding: 2px 8px; border-radius: 0.25rem; font-size: 0.85em;">/status-funil</code>. A skill lê a pasta <code>projetos/{slug}/</code>, verifica a existência de cada peça e mostra um checklist vivo do seu funil.</p>
 
     <div class="command-block slash">funil-status</div>
 
@@ -1022,10 +1022,10 @@
           <tr><td>3</td><td><strong>Diagnóstico do funil</strong></td><td>funil.md</td><td>/metodo-funil</td></tr>
           <tr><td>4</td><td><strong>Copy</strong></td><td>copy.md</td><td>/copy-funil</td></tr>
           <tr><td>5</td><td><strong>Identidade visual</strong></td><td>DESIGN.md</td><td>/design-md</td></tr>
-          <tr><td>6</td><td><strong>Página de vendas</strong></td><td>pagina/</td><td>/pagina-vendas</td></tr>
+          <tr><td>6</td><td><strong>Página de vendas</strong></td><td>pagina/</td><td>/pagina-vendas-funil</td></tr>
           <tr><td>7</td><td><strong>Emails</strong></td><td>emails/</td><td>/email-funil</td></tr>
           <tr><td>8</td><td><strong>Conteúdo</strong></td><td>conteudo/ + carrossel/</td><td>/conteudo-funil</td></tr>
-          <tr><td>9</td><td><strong>Recuperação</strong></td><td>recuperacao.md</td><td>/recuperacao</td></tr>
+          <tr><td>9</td><td><strong>Recuperação</strong></td><td>recuperacao.md</td><td>/recuperacao-funil</td></tr>
           <tr><td>10</td><td><strong>CRO</strong></td><td>cro.md</td><td>/cro-funil</td></tr>
         </tbody>
       </table>
@@ -1099,8 +1099,8 @@
     <div class="rule">
       <span class="rule-icon">8</span>
       <div>
-        <h3>Use /funil-status para não se perder</h3>
-        <p>Rode <code>/funil-status</code> a qualquer momento para ver o que já foi construído, o que falta e qual é o próximo passo. É o "você está aqui" do seu funil.</p>
+        <h3>Use /status-funil para não se perder</h3>
+        <p>Rode <code>/status-funil</code> a qualquer momento para ver o que já foi construído, o que falta e qual é o próximo passo. É o "você está aqui" do seu funil.</p>
       </div>
     </div>
   </section>
