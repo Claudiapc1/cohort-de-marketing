@@ -24,6 +24,13 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
+## Passo 0 — Checar insumos antes de rodar
+
+- **Obrigatório:** `offerbook.md` (produto, oferta e ticket que travam no checkout vêm dele).
+- **Recomendados:** `avatar.md` (objeções reais de quem não comprou) e `espiao/dossie-*.md` (quebra de objeção com as brechas do concorrente).
+
+Se faltar o obrigatório, aponte a skill que o gera (`/offerbook`) e PERGUNTE se o aluno quer seguir mesmo assim.
+
 ## Gate de pré-requisito (execute ANTES de tudo)
 
 Esta skill parte do output anterior do funil. Todo o trabalho de um nicho vive em **`projetos/{slug}/`** (convenção de projeto acima).
@@ -135,6 +142,8 @@ Assim que o checkout começar a registrar os comportamentos, volte e rode `/recu
 **SEMPRE:** distinguir o comportamento antes de escolher a abordagem · tratar cartão recusado diferente de carrinho abandonado · começar pela abordagem mais quente e descer a cascata · re-elevar pro nível 4 (problema) quem não converteu · apresentar a estrutura pra revisão antes de disparar.
 
 **NUNCA:** mandar a mesma mensagem pra todo mundo que não comprou · pressionar quem está só com objeção (carrinho) como se fosse cartão recusado · esquecer o downsell pra quem não fecha no ticket cheio · escrever a copy final dentro da skill (é tarefa de copy separada) · disparar nada sem você aprovar.
+
+**Honestidade de prova:** nunca invente depoimento, número, case ou citação nas mensagens de recuperação — prova vem do `offerbook.md`/pesquisa. Sem prova → garantia/bastidor/transparência e marque **[SEM PROVA AINDA]**; nicho regulado → linguagem de possibilidade (gate de compliance do offerbook).
 
 ---
 

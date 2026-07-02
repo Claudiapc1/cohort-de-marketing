@@ -24,6 +24,13 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
+## Passo 0 — Checar insumos antes de rodar
+
+- **Obrigatório:** `projetos/{slug}/offerbook.md` — o front-end/oferta de entrada é o gatilho de toda a ramificação. Se faltar, aponte a skill `/offerbook` (que o gera) e **PERGUNTE se o usuário quer seguir mesmo assim**.
+- **Recomendados:** `avatar.md` (da `/avatar-funil`) e `funil.md` (da `/metodo-funil`).
+
+> **Honestidade de dados:** nunca invente número, depoimento ou case — a prova vem da pesquisa e do `offerbook.md`.
+
 ## Gate de pré-requisito (execute ANTES de tudo)
 
 Esta skill parte do output das etapas anteriores do funil. Todo o trabalho de um nicho vive em **`projetos/{slug}/`** (convenção de projeto acima).
@@ -141,7 +148,7 @@ COMPRA do front-end
 
 **SEMPRE:** raciocinar por LTV (vender mais de uma vez ao mesmo cliente) · oferecer o upsell logo depois da compra · fazer a OTO ser realmente única · usar plausibilidade na oferta (mesmo frete, porquê) · oferecer downsell a quem recusa · colocar a página de upsell na janela de dopamina (3–7s) · agir dentro da janela de 4h.
 
-**NUNCA:** medir lucro pelo front-end · deixar quem recusa o upsell sair sem downsell · reoferecer a OTO depois (mata a credibilidade) · esperar e-mail frio pra oferecer o upgrade (a janela esfria) · escrever a copy final pela skill (a copy é sua).
+**NUNCA:** medir lucro pelo front-end · deixar quem recusa o upsell sair sem downsell · reoferecer a OTO depois (mata a credibilidade) · esperar e-mail frio pra oferecer o upgrade (a janela esfria) · inventar número, depoimento ou case (prova vem da pesquisa/offerbook) · escrever a copy final pela skill (a copy é sua).
 
 ---
 

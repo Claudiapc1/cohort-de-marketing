@@ -24,6 +24,15 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
+## Passo 0 — Checar insumos antes de rodar
+
+Rode `ls projetos/{slug}/` e veja o que já existe. Insumos desta skill:
+
+- **Obrigatórios:** `offerbook.md` aprovado (sai da skill `/offerbook`) e `DESIGN.md` (sai da skill `/design-md`).
+- **Recomendados:** `avatar.md` (dores e objeções verbatim do público), `espiao/dossie-*.md` (brechas do concorrente viram diferenciais e quebra de objeção na página), `swipe/briefing-swipe-file.md` (hooks validados pra headline).
+
+Se faltar um obrigatório, aponte a skill que o gera e **PERGUNTE** se o usuário quer seguir mesmo assim — não trave silenciosamente, não assuma.
+
 ## Gate de pré-requisito (execute ANTES de tudo)
 
 Esta skill parte do output das etapas anteriores — a **copy** (skill `/copy-funil`) e o **DESIGN.md** da sua marca (skill `/design-md`). Todo o trabalho de um nicho vive em **`projetos/{slug}/`** (convenção de projeto acima).
@@ -50,6 +59,12 @@ Antes de fechar a headline, a oferta ou a prova social da página, verifique se 
 - Use **linguagem de possibilidade**: "pode ajudar", "muitas pessoas relatam", "com dedicação". Todo depoimento na prova social entra com ressalva: *"resultados variam de pessoa pra pessoa"*.
 - Recomende ao aluno **conferir as regras e os órgãos reguladores do mercado dele** — este gate só **alerta**, não é aconselhamento jurídico, e validar é responsabilidade do aluno.
 - Isto é um **aviso, não um bloqueio**: a skill segue montando a página, só com a headline/oferta calibradas pra não prometer o proibido.
+
+## Regra de honestidade de prova
+
+- **Nunca inventar** depoimento, número, case ou citação na página. Toda prova social vem do offerbook ou de pesquisa real.
+- **Sem prova disponível** → use estratégia alternativa no bloco de prova (garantia forte, bastidor, transparência) e marque `[SEM PROVA AINDA]`.
+- **Nicho regulado** → linguagem de possibilidade, sem "resultado garantido" (respeite o gate de compliance do offerbook).
 
 ## Como usar
 

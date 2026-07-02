@@ -26,6 +26,17 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 ---
 
+## Passo 0 — Checar insumos antes de rodar
+
+Rode `ls projetos/{slug}/` e veja o que já existe. Insumos desta skill:
+
+- **Obrigatório:** `offerbook.md` — sem ele não dá pra prescrever o funil (sai da skill `/offerbook`).
+- **Recomendados:** `avatar.md` (dores e público reais), `espiao/dossie-*.md` (brechas do concorrente), `swipe/briefing-swipe-file.md` (referências validadas).
+
+Se faltar um obrigatório, aponte a skill que o gera e **PERGUNTE** se o usuário quer seguir mesmo assim — não trave silenciosamente, não assuma.
+
+---
+
 ## Como usar
 
 Quando você precisar montar/diagnosticar um funil ou decidir o tipo de funil/anúncio:
@@ -110,6 +121,14 @@ Antes de prescrever a oferta, a headline ou a página, verifique se o nicho é *
 - Use **linguagem de possibilidade**: "pode ajudar", "muitas pessoas relatam", "com dedicação". Todo depoimento entra com ressalva: *"resultados variam de pessoa pra pessoa"*.
 - Recomende ao aluno **conferir as regras e os órgãos reguladores do mercado dele** — este gate só **alerta**, não é aconselhamento jurídico, e validar é responsabilidade do aluno.
 - Isto é um **aviso, não um bloqueio**: a skill segue prescrevendo o funil, só com a oferta e a headline calibradas pra não prometer o proibido.
+
+---
+
+## Regra de honestidade de prova
+
+- **Nunca inventar** depoimento, número, case ou citação. Toda prova prescrita (depoimento, estudo de caso) vem do offerbook ou de pesquisa real.
+- **Sem prova disponível** → prescreva a estratégia alternativa (garantia forte, bastidor, transparência) e marque `[SEM PROVA AINDA]` no mapa.
+- **Nicho regulado** → linguagem de possibilidade, sem "resultado garantido" (respeite o gate de compliance do offerbook).
 
 ---
 

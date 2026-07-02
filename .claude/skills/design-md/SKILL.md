@@ -1,6 +1,6 @@
 ---
 name: design-md
-description: 'Extracts Google-spec DESIGN.md from any URL via static HTML/CSS analysis (no headless browser). Outputs tokens.json, preview.html, lint report, optional drift vs local DESIGN.md.'
+description: 'Gera um DESIGN.md (Google-spec) da identidade visual da marca. Começa oferecendo 5 modos: usar um design pronto, extrair de um site (URL, análise estática de HTML/CSS), fazer do zero, a partir de referências/mood board/Pinterest (o Claude autora via visão), ou neutro. Também: tokens.json, preview.html, lint, drift vs DESIGN.md local.'
 version: 1.0.0
 ---
 
@@ -32,6 +32,18 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 - User wants a stack/style fingerprint of an unknown site
 
 Skip if the user wants TSX components (use `/print-to-code` style skills instead) or motion-only extraction.
+
+## Modo de partida — SEMPRE oferecer o menu primeiro
+
+Ao ser invocada sem um caminho já definido, a skill **começa perguntando qual modo** o usuário quer, e **PARA** até a escolha. Não assuma URL. Apresente estas 5 opções:
+
+1. **Usar um design já pronto** — o usuário já tem um `DESIGN.md` (dele ou de outro projeto) e quer reaproveitar/copiar pra `projetos/{slug}/DESIGN.md`. Sem extração — só localizar, confirmar e copiar.
+2. **Extrair de um site (URL)** — o pipeline padrão de 8 fases. Pedir a URL pública e rodar `run.cjs --url`. É o único modo que usa o extrator estático.
+3. **Fazer do zero (custom)** — não tem site nem referência pronta. Perguntar a vibe (ex: elegante/tech/minimalista), as cores da marca (ou deixar sugerir), fonte preferida e o público (acessibilidade 50+ → fonte ≥18px, alto contraste). O Claude **autora** o `DESIGN.md` no schema Google-spec a partir dessas respostas.
+4. **A partir de referências (mood board / Pinterest / imagens)** — o usuário tem inspiração visual, não código. Ele **cola as imagens** aqui (prints do Pinterest, paleta, fotos de referência), ou manda o link do board (se o Pinterest bloquear o fetch, pedir os prints). O Claude usa **visão** pra extrair paleta, tipografia e vibe das imagens e **autora** o `DESIGN.md` no mesmo schema. (O `run.cjs` NÃO enxerga imagem — este modo é autoria direta do Claude, fora do pipeline estático.)
+5. **Neutro** — sem marca definida ainda. Gerar um `DESIGN.md` neutro (tons neutros, tipografia system-ui, espaçamento padrão) pra usar como está e ajustar depois.
+
+Regras dos modos de autoria (3, 4, 5): o `DESIGN.md` gerado segue **o mesmo schema Google-spec** dos modos de extração (frontmatter YAML com `colors`, `typography`, `spacing`, `radius`, etc.), pra as skills seguintes (página, e-mails, mockups, carrossel) lerem igual. Salvar direto em `projetos/{slug}/DESIGN.md`. Opcionalmente, rodar o lint `npx @google/design.md@0.1.0` e gerar um `preview.html` pra o usuário conferir. Se o usuário já veio com URL ou modo explícito no comando, pular o menu e ir direto.
 
 ## Install
 

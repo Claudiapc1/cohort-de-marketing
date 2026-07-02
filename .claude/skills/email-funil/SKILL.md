@@ -17,6 +17,13 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
+## Passo 0 — Checar insumos antes de rodar
+
+- **Obrigatórios:** `offerbook.md` (a oferta/copy vem dele) e `DESIGN.md` (identidade visual dos e-mails).
+- **Recomendados:** `avatar.md` (voz do cliente) e `espiao/dossie-*.md` (quebra de objeção com as brechas do concorrente).
+
+Se faltar um obrigatório, aponte a skill que o gera (`/offerbook`, `/design-md`) e PERGUNTE se o aluno quer seguir mesmo assim.
+
 ## Gate de pré-requisito (execute ANTES de tudo)
 
 Esta skill parte do output das etapas anteriores do funil. Todo o trabalho de um nicho vive em `projetos/{slug}/` (convenção de projeto). Antes de qualquer coisa:
@@ -67,6 +74,12 @@ Se algum elemento não estiver no DESIGN.md, gere o DESIGN.md primeiro (skill `d
 - **Conferir o texto inteiro** (ortografia, acentuação, nome de marca) antes de fechar.
 - Personalização: use a variável de primeiro nome da sua ferramenta de disparo (ex.: um merge tag de FIRSTNAME).
 - Evite o contraste espelhado "não é sobre X, é sobre Y".
+
+## Honestidade de prova (NON-NEGOTIABLE)
+
+- **Nunca invente** depoimento, número, case ou citação nos e-mails. Prova vem do `offerbook.md`/pesquisa — nunca da imaginação.
+- Sem prova real → use garantia, bastidor ou transparência, e marque o trecho com **[SEM PROVA AINDA]**.
+- Nicho regulado → linguagem de possibilidade, respeitando o gate de compliance do offerbook.
 
 ## Tipos de email (esqueleto)
 - **Convite (evento/live):** eyebrow do evento → headline com a promessa → corpo (o que a pessoa vai ver) → agenda/cards → CTA. Se quiser aplicar uma tag no clique, aponte o botão para um endpoint do seu sistema que aplique a tag e redirecione.

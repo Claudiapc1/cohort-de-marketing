@@ -44,6 +44,16 @@ ls projetos/{slug}/offerbook.md projetos/{slug}/DESIGN.md 2>/dev/null
 
 Não invente de cabeça o conteúdo que deveria vir da etapa anterior.
 
+## Passo 0 — Checar insumos antes de rodar
+
+Além dos obrigatórios do gate acima (`offerbook.md` e `DESIGN.md`), confira em `projetos/{slug}/` os insumos recomendados da Fase 1:
+
+- `swipe/briefing-swipe-file.md` — padrões de criativo winners já organizados (da `/swipe-file`).
+- `espiao/dossie-*.md` — os ads do concorrente já dissecados (da `/espiao-do-concorrente`).
+- `trends/variacoes-teste-*.md` — ângulos com o timing certo (da `/trend-hunting`).
+
+Leia os que existirem e use-os na análise e nos roteiros. Se faltar algum, avise o que falta (e qual skill gera) e PERGUNTE se o aluno quer rodar antes ou seguir sem.
+
 ---
 
 ## Ativação
@@ -67,6 +77,7 @@ Não invente de cabeça o conteúdo que deveria vir da etapa anterior.
 ## Gates de qualidade (NÃO pular)
 
 - **Anúncio pago é "Meta-safe":** sem cifra de renda nem promessa financeira. Você pega a ESTRUTURA do concorrente e tira as cifras dele. Cifra de faturamento só vale em conteúdo orgânico/página, nunca em ad pago.
+- **Honestidade de prova:** nunca invente depoimento, número, case ou citação no roteiro — toda prova vem do offerbook/pesquisa real. Sem prova, troque por garantia/bastidor/transparência e marque `[SEM PROVA AINDA]`; nicho regulado usa linguagem de possibilidade, sem promessa garantida.
 - **CTA por canal:** ad pago = "inscreva-se"/"clique"; orgânico/isca = "comenta PALAVRA".
 - **Voz:** zero emoji, frases curtas, hook nos primeiros 3 segundos, e nada de fórmulas com cara de IA ("não é X, é Y").
 - **Checagem antes de entregar:** confira a quantidade de roteiros, releia as falas (sem CTA trocado, sem cara de IA) e confirme datas e nomes corretos.

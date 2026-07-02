@@ -1,14 +1,14 @@
 ---
 name: vsl-funil
-description: "Estrutura um funil de VSL Direct Response do zero, seguindo o metodo de oferta -> funil -> escala -> ticket. Entra nicho + produto, sai a estrutura completa: oferta (dor, mecanismo do problema, mecanismo da solucao), funil de VSL com upsell, plano de escala por multiplos funis e estrategia de ticket cartao/Pix. Use quando voce pedir pra montar funil, VSL, estruturar oferta Direct Response ou planejar escala de funil."
+description: "Estrutura um funil de VSL Direct Response do zero, seguindo o método de oferta -> funil -> escala -> ticket. Entra nicho + produto, sai a estrutura completa: oferta (dor, mecanismo do problema, mecanismo da solução), funil de VSL com upsell, plano de escala por múltiplos funis e estratégia de ticket cartão/Pix. Use quando você pedir pra montar funil, VSL, estruturar oferta Direct Response ou planejar escala de funil."
 user_invocable: true
 ---
 
 # Funil VSL — Direct Response
 
-Skill que estrutura um funil de VSL (Video Sales Letter) no modelo Direct Response, do zero ate a escala. Baseada no metodo do Alan Nicolas.
+Skill que estrutura um funil de VSL (Video Sales Letter) no modelo Direct Response, do zero até a escala. Baseada no método do Alan Nicolas.
 
-> **Promessa do metodo:** estruturar um funil que escala por multiplos canais, onde o ticket de entrada e isca e o lucro real vem do upsell.
+> **Promessa do método:** estruturar um funil que escala por múltiplos canais, onde o ticket de entrada é isca e o lucro real vem do upsell.
 
 ---
 
@@ -23,6 +23,17 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
 > **Onde salvar:** o entregável desta skill sai em **`projetos/{slug}/vsl.md`** (+ `.html` e `.pdf`).
+
+---
+
+## Passo 0 — Checar insumos antes de rodar
+
+Rode `ls projetos/{slug}/` e veja o que já existe. Insumos desta skill:
+
+- **Obrigatório:** `offerbook.md` — dele saem a dor, o mecanismo e a oferta (sai da skill `/offerbook`).
+- **Recomendados:** `avatar.md` (dores e público reais), `espiao/dossie-*.md` (brechas do concorrente), `swipe/briefing-swipe-file.md` (hooks e referências validadas).
+
+Se faltar um obrigatório, aponte a skill que o gera e **PERGUNTE** se o usuário quer seguir mesmo assim — não trave silenciosamente, não assuma.
 
 ---
 
@@ -44,61 +55,69 @@ Não invente de cabeça o conteúdo que deveria vir da etapa anterior.
 
 ---
 
+## Regra de honestidade de prova
+
+- **Nunca inventar** depoimento, número, case ou citação. Toda prova vem do offerbook ou de pesquisa real.
+- **Sem prova disponível** → use estratégia alternativa (garantia forte, bastidor, transparência) e marque `[SEM PROVA AINDA]`.
+- **Nicho regulado** → linguagem de possibilidade, sem "resultado garantido" (respeite o gate de compliance do offerbook).
+
+---
+
 ## Como usar
 
-Quando voce pedir pra montar/estruturar um funil de VSL, uma oferta Direct Response ou um plano de escala:
+Quando você pedir pra montar/estruturar um funil de VSL, uma oferta Direct Response ou um plano de escala:
 
-1. **Coletar 2 inputs** (perguntar se nao vieram no briefing):
-   - **Nicho** do produto (ex: renda extra, nutricao, emagrecimento, desenvolvimento pessoal, IA/marketing)
-   - **Produto/transformacao** que vai ser vendido
+1. **Coletar 2 inputs** (perguntar se não vieram no briefing):
+   - **Nicho** do produto (ex: renda extra, nutrição, emagrecimento, desenvolvimento pessoal, IA/marketing)
+   - **Produto/transformação** que vai ser vendido
 2. **Rodar as 4 fases** abaixo, preenchendo cada bloco com o caso real.
-3. **Entregar a estrutura completa** pra voce aprovar — NUNCA executar/subir nada sem OK.
-4. Voce escreve a copy da VSL e da pagina a partir da estrutura — nao escrever de cabeca, partir sempre da oferta definida nas fases.
+3. **Entregar a estrutura completa** pra você aprovar — NUNCA executar/subir nada sem OK.
+4. Você escreve a copy da VSL e da página a partir da estrutura — não escrever de cabeça, partir sempre da oferta definida nas fases.
 
 ## O Framework — 4 Fases
 
-### Fase 1 — Construcao da Oferta
+### Fase 1 — Construção da Oferta
 
 A oferta nasce de 3 perguntas, nesta ordem:
 
 | Pergunta | O que extrair |
 |----------|---------------|
 | **Qual a dor?** | A dor que a pessoa acorda sentindo TODOS os dias e que o produto resolve |
-| **Por que ainda nao resolveu?** | A pessoa ja tentou e falhou — descobrir o motivo da falha |
+| **Por que ainda não resolveu?** | A pessoa já tentou e falhou — descobrir o motivo da falha |
 | **Mecanismo do problema** | A causa-raiz real por que as tentativas anteriores falharam |
-| **Mecanismo da solucao** | O metodo unico que resolve o mecanismo do problema |
+| **Mecanismo da solução** | O método único que resolve o mecanismo do problema |
 
-> Regra: primeiro o **mecanismo do problema**, depois o **mecanismo da solucao**. Sem mecanismo do problema, a solucao parece "mais um curso".
+> Regra: primeiro o **mecanismo do problema**, depois o **mecanismo da solução**. Sem mecanismo do problema, a solução parece "mais um curso".
 
-### Fase 2 — Construcao do Funil
+### Fase 2 — Construção do Funil
 
 - **Funil indicado:** VSL (Video Sales Letter)
-- **Duracao da VSL:** 20 a 50 minutos. **Nao existe padrao** — e o tempo necessario pra convencer o lead daquilo que esta sendo vendido. Mais curto se a consciencia for alta, mais longo se for baixa.
-- **Order bump:** NAO recomendado nesse funil.
-- **Upsell:** obrigatorio e tem que converter bem — **meta de 20 a 30% direto**.
-  - O upsell **NAO e um "proximo passo"** do produto.
-  - O upsell e um **facilitador** (faz o resultado vir mais rapido/com menos esforco) OU **maior acesso a voce** (mentoria, grupo, contato direto).
+- **Duração da VSL:** 20 a 50 minutos. **Não existe padrão** — é o tempo necessário pra convencer o lead daquilo que está sendo vendido. Mais curto se a consciência for alta, mais longo se for baixa.
+- **Order bump:** NÃO recomendado nesse funil.
+- **Upsell:** obrigatório e tem que converter bem — **meta de 20 a 30% direto**.
+  - O upsell **NÃO é um "próximo passo"** do produto.
+  - O upsell é um **facilitador** (faz o resultado vir mais rápido/com menos esforço) OU **maior acesso a você** (mentoria, grupo, contato direto).
 
 ### Fase 3 — Escala
 
-Montou o funil e botou a VSL pra rodar → escala por **multiplos funis simultaneos**:
+Montou o funil e botou a VSL pra rodar → escala por **múltiplos funis simultâneos**:
 
 1. VSL (base)
 2. Time comercial
-3. Webinario diario
-4. Ascensao quinzenal
-5. Lancamento
+3. Webinário diário
+4. Ascensão quinzenal
+5. Lançamento
 
-> A combinacao desses canais e o que sustenta volume alto e recorrente. Nao depender de um funil so.
+> A combinação desses canais é o que sustenta volume alto e recorrente. Não depender de um funil só.
 
-### Fase 4 — Ticket e Estrategia de Pagamento
+### Fase 4 — Ticket e Estratégia de Pagamento
 
-- **Ticket ideal da VSL:** R$297 a R$497 (entrada baixa de proposito).
-- **O lucro vem do upsell**, nao do front-end.
-- **Cartao > Pix:** pra rodar One Click Buy (compra do upsell em 1 clique), a pessoa precisa ter comprado no **cartao**.
-- **Alavanca de ticket:** se o ticket esta baixo (ex: R$297) mas tem muita compra no **Pix**, **suba o ticket** — ticket maior empurra mais gente pro cartao, o que aumenta a taxa de upsell.
+- **Ticket ideal da VSL:** R$297 a R$497 (entrada baixa de propósito).
+- **O lucro vem do upsell**, não do front-end.
+- **Cartão > Pix:** pra rodar One Click Buy (compra do upsell em 1 clique), a pessoa precisa ter comprado no **cartão**.
+- **Alavanca de ticket:** se o ticket está baixo (ex: R$297) mas tem muita compra no **Pix**, **suba o ticket** — ticket maior empurra mais gente pro cartão, o que aumenta a taxa de upsell.
 
-## Template de Saida
+## Template de Saída
 
 Entregar sempre neste formato preenchido com o caso real:
 
@@ -106,39 +125,39 @@ Entregar sempre neste formato preenchido com o caso real:
 # Funil VSL — [Produto] ([Nicho])
 
 ## 1. Oferta
-- Dor diaria: ...
-- Por que nao resolveu: ...
+- Dor diária: ...
+- Por que não resolveu: ...
 - Mecanismo do problema: ...
-- Mecanismo da solucao: ...
+- Mecanismo da solução: ...
 
 ## 2. Funil
-- VSL: ~[X] min (justificativa do tempo pela consciencia do lead)
-- Order bump: nao
-- Upsell: [facilitador OU maior acesso] — meta 20-30% conversao
+- VSL: ~[X] min (justificativa do tempo pela consciência do lead)
+- Order bump: não
+- Upsell: [facilitador OU maior acesso] — meta 20-30% conversão
 
 ## 3. Escala
 - [ ] VSL
 - [ ] Time comercial
-- [ ] Webinario diario
-- [ ] Ascensao quinzenal
-- [ ] Lancamento
+- [ ] Webinário diário
+- [ ] Ascensão quinzenal
+- [ ] Lançamento
 
 ## 4. Ticket
 - Front-end: R$[297-497]
-- Estrategia cartao/Pix: ...
-- Upsell (onde esta o lucro): R$... — ...
+- Estratégia cartão/Pix: ...
+- Upsell (onde está o lucro): R$... — ...
 ```
 
 ## Regras
 
-- Sempre **mostrar a estrutura pra voce revisar** antes de qualquer execucao — nunca subir copy/pagina sem OK.
-- Copy da VSL/pagina sai da oferta definida nas 4 fases. Voce escreve a copy a partir da estrutura, nao de cabeca.
-- Numeros (ticket, % de upsell) sao **referencias do metodo** — validar contra os dados reais do seu negocio antes de prometer em publico.
-- Este e um framework de **referencia** — ao aplicar no SEU produto, adapte ao seu contexto (publico, oferta, tickets reais).
+- Sempre **mostrar a estrutura pra você revisar** antes de qualquer execução — nunca subir copy/página sem OK.
+- Copy da VSL/página sai da oferta definida nas 4 fases. Você escreve a copy a partir da estrutura, não de cabeça.
+- Números (ticket, % de upsell) são **referências do método** — validar contra os dados reais do seu negócio antes de prometer em público.
+- Este é um framework de **referência** — ao aplicar no SEU produto, adapte ao seu contexto (público, oferta, tickets reais).
 
 ---
 
-**Metodo:** Alan Nicolas
+**Método:** Alan Nicolas
 
 ---
 

@@ -26,6 +26,13 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 ---
 
+## Passo 0 — Checar insumos antes de rodar
+
+- **Obrigatório:** o funil já montado — `projetos/{slug}/funil.md` e/ou `projetos/{slug}/pagina/` existentes. CRO sem funil não tem o que otimizar. Se faltar, aponte a skill que gera (`/metodo-funil` pro funil; `/pagina-vendas` pra página) e **PERGUNTE se o usuário quer seguir mesmo assim**.
+- **Recomendados:** `offerbook.md` (contexto da oferta) e **dados reais de tráfego** — peça-os ao usuário; **NUNCA invente números de conversão**.
+
+---
+
 ## Gate de pré-requisito (execute ANTES de tudo)
 
 Esta skill parte do output anterior do funil. Primeiro descubra o projeto ativo (`ls projetos/`), depois confira que os arquivos existem:
@@ -74,6 +81,8 @@ Preencha com os números do **seu projeto**:
 | **Compras** | compras / taxa de conversão final | `____` |
 
 > Cada etapa é uma "vitória" a ser otimizada separadamente. *"No mínimo, mil views únicos, mil pessoas diferentes que caíram na tua página"* antes de decidir qualquer coisa.
+
+> **Honestidade de dados:** KPIs e taxas de conversão vêm de dados REAIS do usuário — nunca inventar benchmark como se fosse dado do funil. Benchmark de mercado entra sempre rotulado como benchmark, com fonte.
 
 ---
 
@@ -156,7 +165,7 @@ Pra cada pedido de otimização, entregar um **plano estruturado** pra você rev
 
 **SEMPRE:** montar a planilha de KPIs por etapa antes de otimizar · testar primeiro o elemento de maior alavancagem (headline) · 1 teste A/B por vez · mín. 1.000 views únicos antes de decidir · A/B da headline toda semana · escalar verba quando converte bem e barato · apresentar a estrutura pra você revisar e aprovar.
 
-**NUNCA:** otimizar sem medir (achismo) · testar cor de botão/footer achando que move conversão · rodar A/B/C/D ao mesmo tempo · decidir com < 1.000 views únicos · escalar tráfego em funil com etapa furada · alterar/subir/rodar nada no seu funil sem sua aprovação.
+**NUNCA:** otimizar sem medir (achismo) · inventar número de conversão ou benchmark como se fosse dado do funil · testar cor de botão/footer achando que move conversão · rodar A/B/C/D ao mesmo tempo · decidir com < 1.000 views únicos · escalar tráfego em funil com etapa furada · alterar/subir/rodar nada no seu funil sem sua aprovação.
 
 ---
 

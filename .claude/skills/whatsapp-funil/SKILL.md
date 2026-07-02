@@ -26,6 +26,13 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 > **Onde salvar:** o entregável desta skill sai em **`projetos/{slug}/whatsapp.md`**.
 
+## Passo 0 — Checar insumos antes de rodar
+
+- **Obrigatório:** `offerbook.md` (produto, ticket, público e momentos do funil vêm dele).
+- **Recomendados:** `avatar.md` (voz e objeções do cliente) e `recuperacao.md` (se existir, alinhe as mensagens de recuperação com a cascata dele).
+
+Se faltar o obrigatório, aponte a skill que o gera (`/offerbook`) e PERGUNTE se o aluno quer seguir mesmo assim.
+
 ---
 
 ## Gate de pré-requisito (execute ANTES de tudo)
@@ -119,6 +126,8 @@ Antes de montar a sequência, confirme: **quais momentos seu funil consegue dete
 - Link do evento perto da hora; **a agenda** vai antes, **o link** vai na hora.
 - Boleto/pix: agir **antes de vencer** ou esfriar.
 
+**Honestidade de prova:** nunca invente depoimento, número, case ou citação nas mensagens — prova vem do `offerbook.md`/pesquisa. Sem prova → garantia/bastidor/transparência e marque **[SEM PROVA AINDA]**; nicho regulado → linguagem de possibilidade (gate de compliance do offerbook).
+
 ---
 
 ## Regras de ouro
@@ -152,3 +161,13 @@ Antes de montar a sequência, confirme: **quais momentos seu funil consegue dete
 ---
 
 *Skill whatsapp-funil v1 — sequência de WhatsApp/DM de funil por momento de consciência. Método do Alan Nicolas. Toda prescrição calibra no KB. A skill estrutura a sequência; o texto final de cada mensagem é trabalho de copy seu. NUNCA executa ou dispara nada.*
+
+---
+
+## Ao terminar — SEMPRE diga o próximo passo
+
+Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
+
+> Pronto. **Próximo passo:** rode `/recuperacao` — o que fazer quando o lead chega no checkout e não compra.
+
+Nunca encerre sem o próximo passo.

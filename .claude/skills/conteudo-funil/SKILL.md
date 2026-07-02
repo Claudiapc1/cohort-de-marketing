@@ -20,6 +20,15 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
+## Passo 0 — Checar insumos antes de rodar
+
+Nenhum insumo trava esta skill, mas estes **recomendados** melhoram muito o resultado — leia os que existirem em `projetos/{slug}/`:
+
+- `avatar.md` — a voz do público (dores e verbatim pra calibrar hooks e temas).
+- `offerbook.md` — a oferta e o nicho (pra casar o conteúdo de FUNDO com o que se vende).
+- `swipe/briefing-swipe-file.md` — padrões de hook já validados.
+- `trends/` — ângulos com timing (o que está em alta agora).
+
 ## Gate de pré-requisito (execute ANTES de tudo)
 O conteúdo puxa o nicho e a identidade das etapas anteriores. Primeiro descubra o projeto ativo (`ls projetos/`), depois confira:
 ```
@@ -122,6 +131,7 @@ Alternativa completa à trilha automática, pensada pra quem não roda ferrament
 
 ## Gates
 - Valide 1 amostra antes do lote.
+- **Honestidade de dados:** nunca invente número (views, likes), depoimento ou case — métricas vêm da coleta real; prova vem da pesquisa e do offerbook.
 - Checagem antes de exportar: voz consistente, sem emoji, sem cara de IA, contagem de roteiros conferida, português correto (ortografia, acento, pontuação).
 - Roteiros de notícia: confirme o fato e a data em fontes confiáveis antes de gravar.
 
