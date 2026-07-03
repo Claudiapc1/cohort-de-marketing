@@ -156,7 +156,7 @@ Reconstruída da aula (ordem que o Alan crava, incluindo "offer book ANTES do fu
 - **Upsell / OTO / Downsell** (KB §2.7): janela de **4h**; OTO tem que ser *realmente* única; melhores funis têm 2º upsell.
 - **Front-end / Back-end / LTV** (KB §2.6): front-end financia o tráfego e captura lead; o lucro está no back-end.
 - **Oferta de entrada que financia o tráfego** (KB §2.5): zoom de R$48 ≠ lucro — filtra cartão e banca os ads. Convertendo demais e barato → **bota mais dinheiro em ads**.
-- **Página de alta conversão** (KB §8): 16 elementos topo→fundo (headline → sub → vídeo → mecanismo único → stack/ancoragem → prova → benefícios → bônus → garantia → escassez/urgência → naming → FAQ → CTA repetido → footer). Headline = item de maior alavancagem.
+- **Página de alta conversão** (KB §8): 16 elementos topo→fundo (headline → sub → vídeo → CTA abaixo do vídeo, centralizado (nunca acima) → mecanismo único → stack/ancoragem → prova → benefícios → bônus → garantia → escassez/urgência → naming → FAQ → CTA repetido → footer). Headline = item de maior alavancagem. No mobile, o vídeo aparece assim que a página abre (primeira dobra). Jargão interno do método ("Big Idea", "mecanismo único", "ancoragem", "prova social") NUNCA aparece como rótulo/eyebrow visível na página do lead.
 - **Apresentação que vende** (KB §2.10): estrutura do workshop Hormozi (US$100M); **script é lei**, slides feios e densos de propósito, escassez plausível, reforço pós-oferta.
 - **Swipe file** (KB §2.11): modelar do comprovado, nunca do zero. Ferramentas: GoFullPage, SiteSucker/HTTrack, Claude Code.
 - **Aquisição** (KB §2.13): reduzir **percepção de esforço** entre a pessoa e o que ela **quer**; mostrar poucos caminhos (2); hook tem que conectar com contexto.
@@ -205,32 +205,38 @@ Estágio [N] → Funil: [tipo de funil]
 PEÇA            SKILL             O QUE ENTREGA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 01 Offerbook    (pré-requisito)   oferta, mecanismo, ancoragem, bônus ← precisa existir antes
-02 Funil        (pelo nível)      o formato de funil de topo casado ao estágio:
-   (formato)    nível 5 → /advertorial-funil ou /lancamento-funil (+ /vsl-funil)
+02 Formato      (DECISÃO — só     o formato de funil de topo casado ao estágio; NÃO rode
+   do funil     anote, NÃO rode   a skill da peça agora (ela precisa do copy.md do 03 e
+                agora)            do DESIGN.md do 04):
+                nível 5 → /advertorial-funil ou /lancamento-funil (+ /vsl-funil)
                 nível 4 → /webinario-funil ou /quiz-funil
                 nível 3 → /webinario-funil
                 nível 2-1 → /pagina-vendas-funil
-03 Copy         /copy-funil       fundação da copy (Big Idea, mecanismos, banco de
-                                  headlines/bullets) → copy.md, a fonte única; a copy
-                                  APLICADA de cada peça é gerada na skill da própria
-                                  peça a partir do copy.md
-04 Página       /design-md        identidade visual da sua marca
-                /pagina-vendas-funil    estrutura da página/checkout + copy aplicada (do copy.md)
+03 Copy         /copy-funil       ← PRÓXIMO COMANDO A RODAR. fundação da copy (Big Idea,
+                                  mecanismos, banco de headlines/bullets) → copy.md, a
+                                  fonte única; a copy APLICADA de cada peça é gerada na
+                                  skill da própria peça a partir do copy.md
+04 Design       /design-md        identidade visual da sua marca
+05 Peça do      (a skill anotada  estrutura da peça + copy aplicada (do copy.md)
+   funil        no 02)
+   + página     /pagina-vendas-funil    estrutura da página/checkout + copy aplicada (do copy.md)
                 /mockup-produto-funil   mockups dos produtos/bônus na identidade da marca
                 ← ordem é lei: a página/peça SÓ se monta com a FUNDAÇÃO da
                   copy aprovada (copy.md, do 03); a copy aplicada da peça
                   nasce na própria skill da peça, a partir dessa fundação.
                   Nunca montar peça sem copy.md aprovado.
-05 Email        /email-funil      sequência nutrição → venda → recuperação
-06 Conteúdo     /conteudo-funil   Reels + carrosséis + stories por estágio
-07 Back-end     /backend-funil         upsell / OTO / downsell / janela 4h / LTV
-08 Recuperação  /recuperacao-funil      carrinho / cartão recusado / boleto / re-elevação
-09 Teste        /cro-funil        KPIs por etapa + A/B headline + quando escalar
+06 Email        /email-funil      sequência nutrição → venda → recuperação
+07 Conteúdo     /conteudo-funil   Reels + carrosséis + stories por estágio
+08 Back-end     /backend-funil         upsell / OTO / downsell / janela 4h / LTV
+09 Recuperação  /recuperacao-funil      carrinho / cartão recusado / boleto / re-elevação
+10 Teste        /cro-funil        KPIs por etapa + A/B headline + quando escalar
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Execute nessa ordem. Cada skill usa o output da anterior.
 ```
 
 > **Regra:** o mapa de execução é o entregável mais importante desta skill. Sem ele, o usuário não sabe o que construir. Sempre entregar — mesmo que o pedido seja só um diagnóstico rápido.
+
+> **O mapa sempre diz qual é o PRÓXIMO comando.** Ao entregar o mapa, feche dizendo explicitamente qual comando o aluno roda em seguida (normalmente `/copy-funil`, se o `copy.md` ainda não existe) — nunca deixe o aluno deduzir. A skill do formato (02) é uma DECISÃO anotada, não o próximo passo: apontá-la como próximo comando antes da fundação da copy existir contradiz o guia do aluno e gera retrabalho.
 
 > **Lacunas conhecidas** (KB §7): os "17 elementos" originais e KPIs de aquisição/CAC e recorrência/MRR não estavam na transcrição — a skill cobre a espinha (consciência→funil→oferta→página) e os elementos de página são reconstrução fiel Hormozi+Alan (marcada no KB). Sinalizar isso quando o pedido cair nessas áreas.
 
@@ -273,7 +279,7 @@ Salve os 3 e confirme ao final. Nunca entregar só o `.md`.
 
 Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
 
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check: `ls "/Applications/Google Chrome.app" 2>/dev/null`. **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P > Salvar como PDF).
+- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
 
 ## Ao terminar — SEMPRE diga o próximo passo
 
@@ -281,6 +287,6 @@ Toda execução desta skill **termina apontando o próximo passo** — pra o alu
 
 > Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
 
-Nunca encerre sem o próximo passo.
+Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
 
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com `open <arquivo>.html` (macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo.
+> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo.

@@ -56,12 +56,12 @@ Os 5 estágios (Eugene Schwartz), do mais frio ao mais quente, e o que isso muda
 - **(c)** fonte secundária do DESIGN.md.
 
 ### 3. Vídeo / VSL no topo (player "vivo")
-- **(a)** O vídeo de vendas logo após a headline/sub. Alan elogia o uso de um **GIF que parece o vídeo já rodando**, com depoimentos pipocando, hospedado em player de conversão. *"enquanto o vídeo dele está tocando..."* `[ALAN]`
+- **(a)** O vídeo de vendas logo após a headline/sub. No **mobile**, o vídeo aparece assim que a página abre (visível na primeira dobra, sem rolar). Alan elogia o uso de um **GIF que parece o vídeo já rodando**, com depoimentos pipocando, hospedado em player de conversão. *"enquanto o vídeo dele está tocando..."* `[ALAN]`
 - **(b)** O vídeo carrega a transferência de crença (mecanismo + prova); o "player vivo" cria movimento que prende. Conteúdo segue a Value Equation: maximizar resultado-dos-sonhos e probabilidade percebida, minimizar tempo e esforço `[HORMOZI/síntese]`.
 - **(c)** cor de player/acento do DESIGN.md.
 
-### 4. CTA principal (acima da dobra)
-- **(a)** Botão/chamada repetido — começa no topo, junto da oferta. Ex.: *"Sim, quero raio-x completo do meu cursinho."* `[ALAN]`
+### 4. CTA principal (logo abaixo do vídeo)
+- **(a)** Botão/chamada repetido — o primeiro entra **logo abaixo do vídeo** (NUNCA acima dele), **centralizado** na página. Ex.: *"Sim, quero raio-x completo do meu cursinho."* `[ALAN]`
 - **(b)** Dá saída imediata pra quem já está quente; redação em 1ª pessoa ("quero X") aumenta a apropriação.
 - **(c)** cor de botão + contraste do DESIGN.md.
 

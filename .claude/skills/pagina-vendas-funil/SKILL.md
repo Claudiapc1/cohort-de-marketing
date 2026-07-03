@@ -65,6 +65,8 @@ Não invente o que deveria vir da etapa anterior (a fundação da copy, a identi
 
 > **O slot de vídeo nasce com roteiro (copy aplicada do vídeo).** O elemento 3 (vídeo/VSL) NUNCA fica só com placeholder: esta skill gera também o **roteiro do vídeo** (2-3 min: gancho, espelho, mecanismo do problema, inversão, convite, fecho; com fala pronta, texto na tela e notas de gravação) a partir do `copy.md`, salvo em `pagina/video-roteiro.html`. E o slot de vídeo na página inclui um botão **"Ver roteiro do vídeo"** DENTRO do próprio slot, apontando pro roteiro. O dono grava a partir dele e troca o slot pelo player.
 
+> **Layout da página do lead (regra dura).** Vale pra TODA página voltada ao lead gerada por esta skill: **(1) quando a página tem vídeo, o botão de CTA fica SEMPRE ABAIXO do vídeo, nunca acima** — a ordem do topo é headline → sub-headline → vídeo → CTA (badges, selos e números de credibilidade vêm DEPOIS do CTA, nunca entre a headline e o vídeo); **(2) o botão de CTA é sempre centralizado** na página, em toda dobra em que aparecer; **(3) no mobile, o vídeo aparece assim que a página abre** — visível na primeira dobra, sem rolar; se não couber, enxugue o que vem antes dele (headline mais curta, sub de 1 linha), nunca empurre o vídeo pra baixo; **(4) jargão interno do método NUNCA vira texto visível na página do lead** — nada de "Big Idea", "mecanismo único", "ancoragem", "stack de valor", "prova social", "escassez" como eyebrow/rótulo/título de seção em NENHUMA página. Esses nomes vivem nos documentos internos do dono; na página, cada seção mostra só a copy real que o lead deve ler.
+
 > **Seção "Quem será seu mentor" (obrigatória quando a oferta é pessoa: mentoria, consultoria, serviço 1-a-1).** Nessas ofertas, quem conduz é metade da decisão de compra e a página NÃO pode pular isso. Gerar a seção (posição: depois da jornada/benefícios, antes do investimento) com: foto real (placeholder `[DONO: FOTO]` com a direção "ambiente de trabalho, sem palco"), nome e credencial em 1 linha (`[DONO PREENCHE, sem inflar]`), bio curta na voz da marca gerada do `copy.md` (por que o método existe, o que faz diferente) e o bloco "o que você pode verificar sobre mim" (só fatos verificáveis). **Nunca inventar credencial, número ou história do mentor**: a estrutura e o ângulo saem da skill; os fatos, só do dono (regra de honestidade de prova).
 
 A copy do funil tem 2 camadas: a **fundação** (Big Idea, mecanismos, voz/léxico, banco de headlines/bullets) vive no `projetos/{slug}/copy.md`, gerado pela `/copy-funil`; a **copy aplicada da página** nasce **aqui**.
@@ -141,8 +143,8 @@ Monte nesta ordem. Cada elemento recebe a identidade visual do **seu DESIGN.md**
 |---|----------|-----------------------------------|--------------------------------------|
 | 1 | **Headline** | Fórmula: *"Como [resultado] em [tempo] sem [objeção]"*. Item de maior alavancagem. | fonte de título + cor primária |
 | 2 | **Sub-headline** | 1-2 linhas que nomeiam o mecanismo/promessa | fonte secundária |
-| 3 | **Vídeo / VSL** | vídeo de vendas no topo (player "vivo" prende) | cor de player / acento |
-| 4 | **CTA principal (acima da dobra)** | botão em 1ª pessoa: *"Sim, quero [resultado]"* | cor de botão + contraste do DESIGN.md |
+| 3 | **Vídeo / VSL** | vídeo de vendas no topo (player "vivo" prende); no mobile, visível assim que a página abre (primeira dobra, sem rolar) | cor de player / acento |
+| 4 | **CTA principal (abaixo do vídeo)** | botão centralizado, SEMPRE abaixo do vídeo (nunca acima), em 1ª pessoa: *"Sim, quero [resultado]"* | cor de botão + contraste do DESIGN.md |
 | 5 | **Mecanismo único** | nome do seu método/sistema proprietário | destaque tipográfico |
 | 6 | **Oferta / stack de valor** | core + entregáveis listados um a um, cada um com valor | grid/cards na sua paleta |
 | 7 | **Ancoragem de preço** | âncora estabelecido → percebido → final, com "porquê" | hierarquia de preço (cor de destaque) |
@@ -200,7 +202,7 @@ Pra cada pedido, entregar o **mapa estruturado da página**:
 
 **SEMPRE:** ter o DESIGN.md da sua marca antes (Passo 0 via `/design-md`) · casar a prova social ao estágio de consciência · headline na fórmula "como/em/sem" e passada nos 3 testes · "porquê" em cada mudança de preço · CTA repetido · formulário mínimo pra público quente · você [aluno] revisa antes de qualquer coisa.
 
-**NUNCA:** embutir cor/fonte/logo/marca de terceiros (a identidade é só a sua, via DESIGN.md) · depoimento puro pra público frio · mandar nível 1 pra página completa · testar cor de botão/footer achando que move conversão · decidir teste com < 1.000 views · subir/publicar/executar a página (a skill só estrutura).
+**NUNCA:** embutir cor/fonte/logo/marca de terceiros (a identidade é só a sua, via DESIGN.md) · botão de CTA acima do vídeo · jargão do método ("Big Idea", "mecanismo único", "prova social" etc.) como texto visível na página · depoimento puro pra público frio · mandar nível 1 pra página completa · testar cor de botão/footer achando que move conversão · decidir teste com < 1.000 views · subir/publicar/executar a página (a skill só estrutura).
 
 ---
 
@@ -223,7 +225,7 @@ Pra cada pedido, entregar o **mapa estruturado da página**:
 
 Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
 
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check: `ls "/Applications/Google Chrome.app" 2>/dev/null`. **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P > Salvar como PDF).
+- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
 
 ## Ao terminar — SEMPRE diga o próximo passo
 
@@ -231,6 +233,6 @@ Toda execução desta skill **termina apontando o próximo passo** — pra o alu
 
 > Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
 
-Nunca encerre sem o próximo passo.
+Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
 
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com `open <arquivo>.html` (macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo.
+> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo.

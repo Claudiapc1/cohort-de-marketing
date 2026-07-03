@@ -355,8 +355,8 @@ A página segue a lógica **AIDA modificada que Alan nomeia na agenda da aula: "
 - **(b) Por que converte:** o vídeo carrega a transferência de crença (mecanismo único + prova); o "player vivo" cria movimento que prende e dá sensação de que algo já está acontecendo. O **conteúdo** do vídeo segue a Value Equation `[HORMOZI/síntese]`: maximizar resultado-dos-sonhos e probabilidade percebida, minimizar tempo e esforço.
 - **(c) Fonte:** `[ALAN: "headline, sub-headline, vídeo"]` + `[ALAN: "VSL aqui vai estar, VSL pegando o offerbook"]`; Value Equation `[HORMOZI]`.
 
-**4. CTA principal (acima da dobra)**
-- **(a) O que é:** o botão/chamada de ação repetido — começa logo no topo, junto da oferta. Ex.: *"Sim, quero raio-x completo do meu cursinho"* `[ALAN]`.
+**4. CTA principal (logo abaixo do vídeo)**
+- **(a) O que é:** o botão/chamada de ação repetido — o primeiro entra **logo abaixo do vídeo** (NUNCA acima dele), **centralizado** na página. Ex.: *"Sim, quero raio-x completo do meu cursinho"* `[ALAN]`.
 - **(b) Por que converte:** dá saída imediata pra quem já está quente (não obriga a rolar a página inteira); a redação em 1ª pessoa ("quero X") aumenta a apropriação.
 - **(c) Fonte:** `[ALAN: "o CTA vai ser isso... sim quero raio-x completo meu cursinho"]`. CTA repetido ao longo da página = `[HORMOZI/síntese]` (padrão de página longa).
 
