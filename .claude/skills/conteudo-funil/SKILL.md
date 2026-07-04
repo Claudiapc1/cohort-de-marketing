@@ -102,6 +102,8 @@ Todo lote de conteúdo cobre os **3 estágios do funil**, casados com o nível d
 Distribua os roteiros pelos 3 estágios e **marque cada um com o estágio (TOPO/MEIO/FUNDO)**. Um funil que só produz topo atrai e não converte; só fundo converte pouco porque não atrai.
 
 > **Carrossel: 3 de cada nível (regra dura).** Se o formato escolhido for carrossel, o lote é **3 carrosséis de CADA estágio — 3 TOPO + 3 MEIO + 3 FUNDO = 9 carrosséis**. Cada um com ângulo e hook próprios (nunca o mesmo hook reaproveitado nos 3 do estágio): varie a mecânica (listicle, jeito errado/jeito certo, narrativo). Todos entram na mesma galeria do Book, agrupados por estágio.
+>
+> **Checkpoint de pauta ANTES de gerar (regra dura).** NUNCA saia renderizando os 9 direto. Primeiro apresente a **pauta do lote**: os 9 propostos numa lista numerada com estágio + hook + mecânica de cada um, e pergunte quais aprovar, trocar ou cortar — o dono marca e você só gera o que ele aprovou. Aprovada a pauta, **renderize o carrossel 1 e MOSTRE** (abra a galeria com ele) antes de rodar o resto: o dono valida o visual num carrossel só; se pedir ajuste, corrija ANTES de gerar os outros 8. Lote inteiro sem validar o primeiro = retrabalho em 9.
 
 ## Carrossel: estrutura pra save/share/engajamento + render HTML → PNG
 
