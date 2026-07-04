@@ -108,7 +108,11 @@ Assim que o checkout começar a registrar os comportamentos, volte e rode `/recu
 ---
 
 
-> **Toda mensagem sai SEPARADA e com botão Copiar (regra dura).** Além do documento da peça, cada mensagem individual sai em arquivo próprio pronto pra usar: e-mail = 1 HTML por e-mail no padrão do disparador (tabela, inline, preheader, merge tags) com um botão flutuante "Copiar HTML do e-mail" que copia o código LIMPO (o botão remove a si mesmo do que é copiado); WhatsApp/DM = página com as mensagens em texto, botão "Copiar texto" em cada uma. Tudo listado num índice clicável (`emails/index.html` ou equivalente). O dono nunca precisa garimpar copy dentro de documento: é clicar, copiar, colar.
+> **Toda mensagem sai SEPARADA e com botão Copiar (regra dura).** Além do documento da peça, cada mensagem individual sai em arquivo próprio pronto pra usar: e-mail = 1 HTML por e-mail no padrão do disparador (tabela, inline, preheader, merge tags) com DOIS botões fixos no canto superior direito do preview: "Copiar texto" (só o texto do e-mail, pronto pra colar no editor da ferramenta) e "Copiar HTML" (o código LIMPO do e-mail, pronto pra colar no modo HTML da ferramenta); os botões removem a si mesmos do que é copiado; WhatsApp/DM = página com as mensagens em texto, botão "Copiar texto" em cada uma. Tudo listado num índice clicável (`emails/index.html` ou equivalente). O dono nunca precisa garimpar copy dentro de documento: é clicar, copiar, colar.
+
+> **Mesmo layout dos e-mails da trilha (regra dura).** O e-mail de recuperação chega na MESMA caixa de entrada que os e-mails da trilha — tem que ser visivelmente a mesma marca. Antes de gerar os HTML: procure os e-mails já gerados pela `/email-funil` em `projetos/{slug}/emails/` e REUSE exatamente o mesmo template base (header, footer, cores, fontes, blocos — a versão de e-mail do `DESIGN.md`), trocando só o conteúdo. Se ainda não existir e-mail de trilha no projeto, monte o template a partir do `DESIGN.md` seguindo o mesmo padrão da `/email-funil` (preheader, eyebrow, headline, parágrafos, CTA, fecho). NUNCA invente um layout novo só pra recuperação.
+
+> **Numeração de cadência invisível (regra dura).** E01/E02, "e-mail 1 de 3" ou qualquer notação de esteira NUNCA aparece renderizada: nem no assunto, nem no eyebrow, nem no corpo do e-mail, nem em badge no preview do dono. No preview, identifique o e-mail pelo comportamento e timing ("Cartão recusado · 15 min pós-falha"), sem código. A numeração vive só no nome do arquivo (`e01.html`) e na ordem do índice.
 
 ## Processo passo a passo
 
