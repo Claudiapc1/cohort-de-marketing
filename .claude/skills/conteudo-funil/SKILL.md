@@ -82,7 +82,7 @@ Modelar a estrutura da referência NÃO basta. Todo roteiro passa por engenharia
 - **No carrossel, loop SLIDE A SLIDE:** todo slide termina puxando o próximo (mini-teaser entre os itens do listicle: "o 2 é onde você perde venda sem ver"). Capa = conflito espelho na língua do avatar; clímax retido pro fim.
 - **Moldes validados de dono:** opinião contrarian + história com número REAL + tese de mentalidade no fecho. E **comment-gate** ("comenta PALAVRA") SÓ quando a entrega é um artefato específico e desejável (diagnóstico, skill, guia), com DM automatizada ou manual.
 
-**Gate antes de entregar o lote, roteiro a roteiro:** tem conflito ou loop aberto nos 3 primeiros segundos? tem contraste? o carrossel puxa slide a slide? o CTA casa com o estágio? Se algum falhar, reescreva ANTES de mostrar. E declare no entregável qual mecânica cada roteiro usa.
+**Gate antes de entregar o lote, roteiro a roteiro:** tem conflito ou loop aberto nos 3 primeiros segundos? tem contraste? o carrossel puxa slide a slide? o CTA casa com o estágio E é UM só, no slide final? Se algum falhar, reescreva ANTES de mostrar. E declare no entregável qual mecânica cada roteiro usa.
 
 ## Conteúdo por estágio de funil (TOPO · MEIO · FUNDO — obrigatório)
 
@@ -102,7 +102,7 @@ Carrossel não sai só como texto — ele é **montado em slides visuais** (form
 - **Slide 1 (CAPA) — para o scroll:** hook forte (dor/curiosidade/promessa numerada), texto GRANDE, imagem/contraste que chama atenção. É o slide que decide se a pessoa desliza.
 - **Slides 2–8 (CONTEÚDO) — geram SAVE:** valor real e consultável, **1 ideia por slide**, em formato de lista/passos/checklist ("os 6 sinais", "o passo a passo"). Conteúdo que a pessoa quer **guardar pra depois** = salvamento.
 - **Slide de IDENTIFICAÇÃO — gera SHARE:** uma frase-espelho forte que a pessoa quer mandar pra uma amiga ("marca aquela amiga que…") ou que ela se orgulha de repostar.
-- **Slide final (CTA) — gera ENGAJAMENTO:** pergunta aberta ("qual desses você sente?") + CTA claro (**comenta** X · **salva** pra não esquecer · **segue**).
+- **Slide final (CTA) — gera ENGAJAMENTO:** **UM CTA só, e só neste slide** (nenhum outro slide pede ação). Nunca empilhe pedidos ("comenta + salva + segue" = o lead não faz nenhum). VOCÊ escolhe o único CTA pelo nível de consciência do público e pelo estágio do funil de conteúdo: **TOPO** (nível 5-4, descoberta) → seguir ou comentar uma palavra (alcance/conversa); **MEIO** (nutrição) → salvar ("salva pra não esquecer") ou comentar a palavra-chave que dispara o material; **FUNDO** (decisão, quente) → CTA direto pra oferta (link na bio, DM, página). Pergunta aberta pode acompanhar o CTA de topo/meio como gancho de comentário, mas o pedido de ação é um só. Declare no entregável qual CTA escolheu e por quê.
 
 ### Passo obrigatório — Pesquisa de mercado do nicho (modele o que dá certo, NÃO invente o layout)
 
