@@ -882,15 +882,14 @@
     <div style="background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--status-warning, #d97706); padding: 16px 20px; border-radius: 0.5rem; font-family: var(--font-ui); font-size: 0.9rem; line-height: 1.7; margin-bottom: 24px;">
       <p style="font-weight: 700; margin: 0 0 8px;">⚙️ Pré-requisito desta skill: Apify (obrigatório)</p>
       <p style="margin: 0 0 8px;">Diferente das outras skills, a <code style="font-family: var(--font-mono);">/trend-hunting</code> <strong>precisa do Apify</strong> para raspar Reels, TikTok e perfis de concorrentes. Sem ele a skill não roda. É <strong>grátis para começar</strong>: o plano Free dá <strong>US$ 5 de crédito por mês, sem cartão</strong> — suficiente para uso leve.</p>
-      <p style="font-weight: 600; margin: 0 0 4px;">Setup (1 vez só — só o token, sem MCP):</p>
+      <p style="font-weight: 600; margin: 0 0 4px;">Setup (1 vez só):</p>
       <ol style="margin: 0 0 8px; padding-left: 20px;">
         <li>Crie a conta grátis em <code style="font-family: var(--font-mono);">console.apify.com/sign-up</code> e copie o <strong>Personal API token</strong> (Settings → Integrations → API tokens).</li>
         <li>Cole o token no arquivo <code style="font-family: var(--font-mono);">.env</code> na raiz, na variável <code style="font-family: var(--font-mono);">APIFY_API_TOKEN</code> (se não tiver <code style="font-family: var(--font-mono);">.env</code>, rode <code style="font-family: var(--font-mono);">cp .env.example .env</code>).</li>
-        <li>Pronto. A skill usa a <strong>API REST do Apify</strong> direto — <strong>não precisa instalar MCP nem reiniciar o Claude Code</strong>.</li>
+        <li>Instale o MCP no Claude Code: <code style="font-family: var(--font-mono);">claude mcp add apify --env APIFY_API_TOKEN=$APIFY_API_TOKEN -- npx -y @apify/actors-mcp-server</code></li>
+        <li>Reinicie o Claude Code e confirme com <code style="font-family: var(--font-mono);">claude mcp list</code> que o <code style="font-family: var(--font-mono);">apify</code> aparece conectado.</li>
       </ol>
-      <p style="margin: 0 0 8px;">O <code style="font-family: var(--font-mono);">.env</code> nunca vai para o GitHub (já está no <code style="font-family: var(--font-mono);">.gitignore</code>).</p>
-      <p style="margin: 0 0 4px; font-weight: 600;">Por que <code style="font-family: var(--font-mono);">.env</code> e <code style="font-family: var(--font-mono);">.env.example</code> são dois arquivos?</p>
-      <p style="margin: 0;">São dois de propósito, pra resolver um paradoxo: o repositório precisa <strong>mostrar quais chaves existem</strong> (isso vai pro GitHub) sem <strong>vazar a sua chave secreta</strong> (isso fica fora). Por isso: o <code style="font-family: var(--font-mono);">.env.example</code> é o <strong>molde vazio</strong> (<code style="font-family: var(--font-mono);">APIFY_API_TOKEN=</code> sem valor) e <strong>vai</strong> pro GitHub — serve de guia pra todo mundo que clona. O <code style="font-family: var(--font-mono);">.env</code> é a <strong>sua cópia preenchida</strong> com o token real e <strong>fica só na sua máquina</strong>. Cada aluno roda <code style="font-family: var(--font-mono);">cp .env.example .env</code> e cola a <strong>própria</strong> chave Apify — nunca a sua. Por isso você nunca escreve um token de verdade no <code style="font-family: var(--font-mono);">.env.example</code>.</p>
+      <p style="margin: 0;">O <code style="font-family: var(--font-mono);">.env</code> nunca vai para o GitHub (já está no <code style="font-family: var(--font-mono);">.gitignore</code>).</p>
     </div>
 
     <p style="font-family: var(--font-ui); font-weight: 600; margin-bottom: 8px;">Comando:</p>

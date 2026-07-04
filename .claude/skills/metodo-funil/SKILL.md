@@ -68,7 +68,7 @@ Esta skill **parte do offerbook** (a oferta que você montou na Aula 01). Antes 
    - Se achar **vários** projetos, liste-os e **pergunte qual usar**.
    - Se o aluno apontar um projeto específico, use esse.
 
-2. **Se NÃO existir nenhum `projetos/{slug}/offerbook.md`**, PARE e exiba este aviso:
+2. **Se NÃO existir nenhum `projetos/{slug}/offerbook.md`**, antes de parar, procure o offerbook no formato da Aula 1 (que salva na raiz): `ls offerbook-*.md 2>/dev/null`. Se achar, confirme com o aluno e **migre**: crie `projetos/{slug}/` (slug derivado do nicho) e copie o arquivo pra `projetos/{slug}/offerbook.md` — daí siga normal. Só se não achar em lugar nenhum, PARE e exiba este aviso:
 
    > Pra montar o funil eu preciso do seu **offerbook** — é nele que está a oferta (dor, mecanismo, entregáveis, preço-âncora, bônus, garantia), e é dele que eu leio o produto e o público (você não precisa redigitar nada).
    >

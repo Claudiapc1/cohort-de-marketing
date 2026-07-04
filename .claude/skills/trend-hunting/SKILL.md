@@ -69,7 +69,7 @@ Além do nicho, o usuário pode (opcionalmente) colar **links de concorrentes** 
 
 ## Pré-requisitos
 
-1. **Token do Apify no `.env`** (OBRIGATÓRIO) — só o `APIFY_API_TOKEN`. A skill usa a **API REST do Apify** (sem MCP, sem restart). Sem token ela não roda. Veja a seção **Setup do Apify** logo abaixo. É o que dá o scrape de Reels (Instagram), TikTok e perfis de concorrentes.
+1. **Apify configurado** (OBRIGATÓRIO) — token no `.env` + MCP no Claude Code. Sem isso a skill não roda. Veja a seção **Setup do Apify** logo abaixo. É o que dá o scrape de Reels (Instagram), TikTok e perfis de concorrentes.
 2. **Nicho ou palavras-chave** definidas (5-10 termos)
 3. **Acesso a Twitter/X** (busca pública, sem login obrigatório)
 4. **Output do `/avatar-funil`** (recomendado) — para filtrar tendências relevantes ao perfil do cliente
@@ -78,7 +78,7 @@ Além do nicho, o usuário pode (opcionalmente) colar **links de concorrentes** 
 
 ## Setup do Apify (OBRIGATÓRIO — fazer 1 vez)
 
-Esta skill **usa a API REST do Apify** para raspar Instagram Reels, TikTok e perfis de concorrentes. **Sem MCP, sem restart, sem `claude mcp add`.** O único pré-requisito é o `APIFY_API_TOKEN` no `.env`. Faça esse setup uma única vez; depois é só usar.
+Esta skill **depende do Apify** para raspar Instagram Reels, TikTok e perfis de concorrentes. Sem o token e o MCP configurados, ela não tem como coletar as fontes visuais. Faça esse setup uma única vez; depois é só usar.
 
 ### É grátis?
 
@@ -88,7 +88,7 @@ Sim, dá pra começar de graça. O plano **Free** da Apify não pede cartão e e
 
 1. Acesse https://console.apify.com/sign-up e crie a conta gratuita (sem cartão).
 2. No console, vá em **Settings -> Integrations -> API tokens**.
-3. Copie o **Personal API token** (começa com `apify_api_...`).
+3. Copie o **Personal API token**.
 
 ### Passo 2 — Colocar a chave no `.env`
 
@@ -98,45 +98,34 @@ Na raiz do projeto, abra (ou crie a partir do `.env.example`) o arquivo `.env` e
 APIFY_API_TOKEN=apify_api_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-Se ainda não tem `.env`, rode na raiz: `cp .env.example .env` e depois edite a linha do `APIFY_API_TOKEN`. O `.env` já está no `.gitignore` — sua chave não vai pro GitHub. **É só isso. Não precisa instalar MCP nem reiniciar o Claude Code.**
+Se ainda não tem `.env`, rode na raiz: `cp .env.example .env` e depois edite a linha do `APIFY_API_TOKEN`. O `.env` já está no `.gitignore` — sua chave não vai pro GitHub.
 
-### Passo 3 — Verificar antes de rodar a skill
+### Passo 3 — Instalar o Apify MCP no Claude Code
 
-No início de cada execução, **cheque se o token está pronto e válido**:
+O MCP é o que deixa o Claude chamar o Apify de dentro do chat. Adicione o servidor uma vez:
 
 ```
-grep -q "APIFY_API_TOKEN=apify" .env 2>/dev/null && echo "token presente" || echo "token faltando"
-# valida na API (opcional, confirma que o token funciona):
-source .env && curl -s "https://api.apify.com/v2/users/me?token=$APIFY_API_TOKEN" | grep -q '"data"' && echo "token valido" || echo "token invalido"
+claude mcp add apify --env APIFY_API_TOKEN=$APIFY_API_TOKEN -- npx -y @apify/actors-mcp-server
 ```
 
-- Se o token estiver faltando ou inválido, **PARE** e mostre ao usuário:
+Referência oficial: https://docs.apify.com/platform/integrations/mcp
 
-  > Esta skill precisa do `APIFY_API_TOKEN` no `.env` para raspar Reels, TikTok e perfis de concorrentes, e ele ainda não está pronto aqui. Siga o **Setup do Apify** (2 passos): criar conta (US$ 5 grátis, sem cartão) e colar o `APIFY_API_TOKEN` no `.env`. Quando terminar, rode `/trend-hunting [nicho]` de novo.
+Depois de adicionar, reinicie o Claude Code e confirme com `claude mcp list` que o `apify` aparece como conectado.
+
+### Passo 4 — Verificar antes de rodar a skill
+
+No início de cada execução, **cheque se o Apify está pronto**:
+
+```
+grep -q "APIFY_API_TOKEN=apify" .env 2>/dev/null && echo "token ok" || echo "token faltando"
+```
+
+- Se o token estiver faltando OU o MCP `apify` não estiver conectado, **PARE** e mostre ao usuário:
+
+  > Esta skill precisa do Apify configurado para raspar Reels, TikTok e perfis de concorrentes, e ele ainda não está pronto aqui. Siga o **Setup do Apify** (4 passos) na SKILL: criar conta (US$ 5 grátis, sem cartão), colar o `APIFY_API_TOKEN` no `.env` e adicionar o MCP com `claude mcp add apify`. Quando terminar, rode `/trend-hunting [nicho]` de novo.
 
   Não tente cair para coleta manual: o Apify é pré-requisito desta skill agora.
-- Se o token estiver válido, siga o pipeline normalmente.
-
-### Como a skill chama o Apify (API REST, via script)
-
-A coleta usa o script `scripts/apify_scraper.py`, que chama a API REST do Apify (endpoint `run-sync-get-dataset-items`) e devolve os itens em JSON. Ele lê o token do `.env` sozinho e degrada graciosamente (sem token, imprime o roteiro manual).
-
-```
-# Instagram por hashtag do nicho:
-python3 scripts/apify_scraper.py instagram-hashtag "autoestima50mais" --limit 30
-
-# TikTok por hashtag:
-python3 scripts/apify_scraper.py tiktok-hashtag "menopausa" --limit 30
-
-# Perfil específico (concorrente):
-python3 scripts/apify_scraper.py instagram-profile "https://www.instagram.com/perfil/" --limit 30
-python3 scripts/apify_scraper.py tiktok-profile "@perfil" --limit 30
-
-# Actor arbitrário (avançado):
-python3 scripts/apify_scraper.py run apify~instagram-scraper --input '{"search":"x","searchType":"hashtag","resultsLimit":30}'
-```
-
-A saída é JSON: leia as legendas/textos como o autor escreveu (verbatim) e extraia hook, formato, engajamento. Cada chamada consome um pouco do crédito Apify — colete com foco, não rode em loop.
+- Se estiver tudo pronto, siga o pipeline normalmente.
 
 ---
 
@@ -158,12 +147,12 @@ A partir do nicho, gerar 5-10 termos de busca em 3 categorias:
 - Capturar: texto do post, formato (thread, single, vídeo), engajamento
 
 **B. Instagram Reels** (via Apify — obrigatório)
-- Rode `python3 scripts/apify_scraper.py instagram-hashtag "HASHTAG" --limit 30` por hashtag do nicho
+- Buscar hashtags do nicho com o scraper de Instagram
 - Capturar Reels com 50k+ views dos últimos 14 dias
 - Estrutura: hook (primeiros 3s), formato, narrativa, CTA
 
 **C. TikTok** (via Apify — obrigatório)
-- Rode `python3 scripts/apify_scraper.py tiktok-hashtag "HASHTAG" --limit 30`
+- Mesmo processo dos Reels, com o scraper de TikTok
 - Atentar a formatos específicos de TikTok (POV, story, tutorial)
 
 **D. LinkedIn** (se nicho B2B)
@@ -360,7 +349,7 @@ E recomende qual testar primeiro e por quê.
 ## Checklist de qualidade
 
 **Fundação**
-- [ ] `APIFY_API_TOKEN` no `.env` e válido (API REST, sem MCP) — pré-requisito bloqueante
+- [ ] Apify configurado (token no `.env` + MCP conectado) — pré-requisito bloqueante
 - [ ] Nicho e palavras-chave definidos (5-10 termos)
 - [ ] Fontes scaneadas (Twitter/X + Reels + TikTok; LinkedIn se B2B; concorrentes se houver links)
 - [ ] Janela de 14 dias respeitada

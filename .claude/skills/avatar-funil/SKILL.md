@@ -22,18 +22,6 @@ Princípio central: pesquisa antes da oferta. A dor real não está na sua cabe�
 
 Regra de honestidade que vem antes de tudo: a matéria-prima é a palavra literal do cliente (verbatim). Quando você não tiver a palavra literal, diga que é leitura sua, não dado. Nunca parafraseie uma citação e apresente como se fosse do cliente. Nunca invente review, comentário, número ou persona.
 
-## Onde salvar e ler — convenção de projeto
-
-Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). Um projeto = uma pasta, com todas as peças do funil dentro. Nada solto na raiz.
-
-**Como descobrir o projeto ativo:**
-1. Se o usuário passou o slug/nicho no comando, use-o.
-2. Senão, `ls projetos/ 2>/dev/null`: **uma** pasta → use-a; **várias** → pergunte qual; **nenhuma** → o funil ainda não começou.
-
-**Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
-
-Esta é a skill de partida do funil (Aula 1): não exige nenhuma peça anterior. Se ainda não existe `projetos/{slug}/` e você já tem o nicho, **crie a pasta** `projetos/{slug}/` e salve o avatar em `projetos/{slug}/avatar.md` (+ `.html`/`.pdf`) lá dentro.
-
 ## Passo 0 — Entender o alvo e perguntar ao usuário como seguir
 
 Quando o usuário informar um nicho ou produto, primeiro identifique:
@@ -199,7 +187,7 @@ Cuidado com viés: se as personas dão nota alta para uma headline obviamente fr
 
 ## Passo 5 — Entregar o relatório (3 formatos: MD + HTML + PDF)
 
-Sempre entregue o relatório nos **três formatos**, salvos na pasta do projeto (`projetos/{slug}/`, ou onde o usuário pedir). A estrutura do conteúdo é a mesma nos três:
+Sempre entregue o relatório nos **três formatos**, salvos na mesma pasta (`pesquisa-avatar-{slug}/` por padrão, ou onde o usuário pedir). A estrutura do conteúdo é a mesma nos três:
 
 1. **Resumo executivo** (1 parágrafo: o nicho, a dor número 1 com a frase do cliente, e o que fazer com ela).
 2. **Fontes consultadas** (quais frentes você cobriu e o que cada uma rendeu).
@@ -213,16 +201,16 @@ Se a amostra foi pequena, veio de poucas fontes ou do modo offline, diga isso no
 
 ### Como gerar os 3 arquivos
 
-1. **Markdown** (`projetos/{slug}/avatar.md`): escreva o relatório completo no formato de `templates/relatorio.md`. É a versão de trabalho.
-2. **HTML** (`projetos/{slug}/avatar.html`): copie `templates/relatorio.html` e substitua os placeholders:
+1. **Markdown** (`relatorio-avatar.md`): escreva o relatório completo no formato de `templates/relatorio.md`. É a versão de trabalho.
+2. **HTML** (`relatorio-avatar.html`): copie `templates/relatorio.html` e substitua os placeholders:
    - `{{TITULO}}` — nicho/produto pesquisado (ex: "Escritórios de contabilidade").
    - `{{SUBTITULO}}` — fonte e tamanho da amostra (ex: "Reviews e comunidades · 246 trechos").
    - `{{DATA}}` — data de hoje.
    - `{{CONTEUDO}}` — as 7 seções renderizadas em HTML, usando `<h2>` por seção, `<h3>` por subitem, `<table>` para as dores/distribuições, `<blockquote class="verbatim">` para CADA citação literal do cliente, e `<div class="callout">` para o aviso de honestidade da fonte. Mantenha o verbatim sempre em `.verbatim` — é a matéria-prima.
-   - **Material visual usa o `DESIGN.md` da marca:** se você usa a skill `design-md` e tem um `DESIGN.md` do seu negócio, aplique JÁ os tokens dele no HTML — cores, fontes, borda/raio, tamanho, logo. NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto). Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). Sem `DESIGN.md`, o template vem em estilo neutro (sem marca) — pode usar como está, ou gere o `DESIGN.md` com `/design-md` antes.
-3. **PDF** (`projetos/{slug}/avatar.pdf`): rode o script sobre o HTML gerado:
+   - Se você usa a skill `design-md` e tem um `DESIGN.md` do seu negócio, aplique as cores, fontes e logo dele no HTML. Sem isso, o template vem em estilo neutro (sem marca) — pode usar como está.
+3. **PDF** (`relatorio-avatar.pdf`): rode o script sobre o HTML gerado:
    ```
-   bash scripts/gerar_pdf.sh projetos/{slug}/avatar.html
+   bash scripts/gerar_pdf.sh pesquisa-avatar-{slug}/relatorio-avatar.html
    ```
    Ele usa Chrome headless (fallback wkhtmltopdf, depois instrução manual). Se o PDF não sair, avise o usuário e entregue MD + HTML mesmo assim.
 
@@ -272,34 +260,3 @@ Não pule esse anúncio — é o que orienta o aluno a seguir o trilho da Aula 0
 - Persona sintética não substitui pesquisa com cliente real. Substitui o teste cego de headline. Ela depende da qualidade da dor minerada no Passo 2.
 - Sem login alheio, sem engenharia social, sem burlar paywall ou termos de uso.
 - Sem acesso à rede, o modo offline entrega a mesma análise sobre o material colado.
-
----
-
-## Processo carregando — narrar o andamento (obrigatório em coleta longa)
-
-Coletas e pesquisas desta skill rodam em segundo plano e podem levar vários minutos. O usuário NUNCA pode ficar no escuro sem saber o que está acontecendo. Ao disparar qualquer coleta/pesquisa:
-
-1. **Anuncie o que foi disparado**, em linguagem de progresso: quantos coletores, o que CADA um está fazendo (ex.: "coletor 1/2: conteúdos do @fulano no Instagram · coletor 2/2: top criadores do nicho").
-2. **Dê a estimativa honesta de tempo** (ex.: "isso leva de 5 a 10 minutos; te aviso a cada retorno").
-3. **Avise a cada retorno parcial**: "coletor 1 de 2 voltou: N itens" — nunca silêncio até o fim.
-4. **Estourou a estimativa?** Atualize o usuário proativamente ("o coletor X está demorando por [motivo]; opções: esperar ou seguir com o parcial").
-5. **Sempre ofereça o atalho**: seguir com o material parcial já disponível enquanto o resto roda — entregar algo revisável cedo vale mais que esperar o completo.
-
-
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
-
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Apify (API REST, com o SEU token)** — coleta com métrica real (Instagram, TikTok, X etc.). NÃO é MCP: a chamada é direto na `api.apify.com`, via o script `scripts/apify_scraper.py` da skill `/conteudo-funil` (só stdlib do Python). Check: `APIFY_API_TOKEN` no `.env` ou no ambiente (`echo $APIFY_API_TOKEN`). Sem token: conta gratuita em apify.com > Settings > API tokens. Se vier "Monthly usage hard limit exceeded", AVISE na hora (cota mensal da conta) e caia pros fallbacks: YouTube raspado da página pública (views reais), Threads via fetch, trilha manual, e "métrica não obtida" no que faltar. Nunca invente número.
-- **WebSearch / WebFetch** — pesquisa aberta na internet. Já vem no Claude Code, sem instalação. Se um site bloquear (login wall/Cloudflare), diga QUAL fonte falhou e o que veio de snippet.
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-
-## Ao terminar — SEMPRE diga o próximo passo
-
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
-
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo.

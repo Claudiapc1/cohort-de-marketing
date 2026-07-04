@@ -33,7 +33,7 @@ Mapear mercado, ler concorrentes e desenhar uma oferta que sai da gaveta. Skills
 
 ### Aula 2 · Funil e Páginas
 
-**Status:** em breve (publicada na semana da aula)
+**Status:** disponível
 
 Estruturar o funil, gerar a página de venda e produzir uma bateria de criativos prontos para rodar. Skills usadas: `/metodo-funil`, `/pagina-vendas-funil`, `/vsl-funil`, `/copy-funil`, `/criativos-funil`, `/email-funil`, `/whatsapp-funil`, `/recuperacao-funil`, `/cro-funil`, `/backend-funil`, `/conteudo-funil`, `/design-md`.
 
