@@ -35,6 +35,16 @@ Se responder `s`, prossiga em modo manual (aluno cola criativos um a um).
 
 **Se algum existir**, leia os arquivos e use os criativos ja identificados como base do swipe file. Mencione: *"Encontrei {N} dossies e {M} arquivos de variacoes. Vou usar como base do swipe file."*
 
+### Gate — ler o Perfil do Projeto (buscar winner do TIPO certo)
+
+Antes de capturar/organizar, **leia o Perfil do Projeto** em `.claude/skills/_shared/perfil.md` (Voz da marca + Tipo de negócio). O swipe file só vale se guardar winners **do mesmo tipo** que o projeto — não presuma que todo criativo vencedor é um VSL de infoproduto.
+
+**Perfil ainda não existe (Aula 1 em ordem — o Perfil só nasce no `/offerbook`, skill 5)?** INFIRA o ramo pelo nicho/negócio que o aluno informou e CONFIRME em 1 linha antes de capturar (ex.: *"estúdio de pilates → trato como negócio local, certo?"*) — nunca caia no ramo genérico de infoproduto em silêncio.
+
+> **Buscar o winner certo pro tipo certo.** Se o Tipo do projeto for **B2B**, priorize case studies, posts de LinkedIn, whitepapers, anúncios de geração de lead — não reels de dancinha. Se for **negócio local**, priorize criativos de raio geográfico, prova de bairro, Google local, WhatsApp. Se for **regulado** (saúde, finanças, jurídico), priorize criativos que convertem SEM promessa proibida (linguagem de conformidade, prova indireta). Catalogar winner de infoproduto pra um projeto B2B/local/regulado enche a biblioteca de referência inútil.
+
+> **Guard de enquadramento (segue `.claude/skills/_shared/perfil.md`).** Se **Voz = marca** ou **Tipo ∈ {físico, saas-app, serviço, b2b}**, é **proibido** classificar ou adaptar criativos sob o enquadramento de especialista/curso/depoimento-de-aluno. Nesses tipos, o padrão extraído e a adaptação ao ICP falam de produto/empresa/cliente, nunca de "aluno", "mentoria" ou "método do professor". Ao gerar as `## Adaptações sugeridas ao meu ICP`, respeite o enquadramento do Perfil.
+
 ---
 
 Esta skill mantem **biblioteca viva** de criativos vencedores (anuncios, posts, hooks, CTAs, paginas) **organizados por padrao**, para alimentar Copy e Media Buyer com referencias acionaveis.
@@ -68,7 +78,9 @@ Se nao vier acao, mostrar o menu.
 
 1. **Output do `/espiao-do-concorrente`** OU **`/trend-hunting`** (lista de criativos para capturar)
 2. **Figma** (opcional, recomendado para visual) ou Notion/Google Drive
-3. **ICP definido** (`/pesquisa-de-avatar`) — filtro de relevancia
+3. **ICP definido** (`/avatar-funil`) — filtro de relevância
+
+> **Nunca travar o aluno (segue `.claude/skills/_shared/nunca-travar.md`).** Explique todo pré-requisito e ferramenta em **linguagem de leigo**, com glossário inline na primeira vez (ex.: "swipe file = biblioteca de referências de anúncios que funcionaram"; "winner = criativo que já provou performance"; "ICP = seu cliente ideal"). A coleta de criativos das skills anteriores usa **Apify** como ferramenta central — nunca a trate como opcional; só caia pra captura manual (aluno cola print + link) se a cota do Apify estourar. Nunca prometa que o HTML "abre sozinho": sempre entregue **o caminho do arquivo + como abrir** (macOS `open`, Windows `start`, Linux `xdg-open`). Se faltar input, ofereça o caminho manual em vez de encerrar.
 
 ---
 
@@ -446,6 +458,9 @@ fonte: https://www.facebook.com/ads/library/?id=...
 
 ## Padrao extraido (acionavel)
 [1 paragrafo: o que faz esse criativo funcionar e como adaptar ao meu nicho. NAO copiar literalmente.]
+
+## Restricao de uso pro MEU nicho
+[O que desse criativo NAO pode ser reproduzido no meu ramo. Ex.: "antes/depois catalogado como referencia de ESTRUTURA, PROIBIDO reproduzir em saude (regra do CFM)"; "promessa de renda garantida serve so de anti-modelo, nao replicar em financeiro". Se o meu nicho nao tem restricao, escreva "sem restricao".]
 
 ## Adaptacoes sugeridas ao meu ICP
 - Adaptacao A: [variacao para meu nicho]

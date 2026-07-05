@@ -14,10 +14,10 @@ Esta é a **Skill 3 de 5** da Aula 01 do Cohort de Marketing.
 
 ### Gate de pré-requisito (executar ANTES de qualquer coisa)
 
-Antes de começar, **verifique no diretório atual** se existe `relatorio-avatar.md`:
+Antes de começar, **verifique** se o avatar já foi rodado — ele pode ter sido salvo na raiz OU na pasta de pesquisa/projeto (qualquer um dos caminhos vale):
 
 ```
-ls relatorio-avatar.md 2>/dev/null
+ls relatorio-avatar.md pesquisa-avatar-*/relatorio-avatar.md projetos/*/avatar.md 2>/dev/null
 ```
 
 **Se NÃO existir**, exiba este aviso e pergunte:
@@ -31,6 +31,12 @@ Se o usuário responder `n`, encerre dizendo: *"Beleza. Rode `/avatar-funil [nic
 Se responder `s`, prossiga mas marque no relatório que as variações não foram ancoradas em avatar real.
 
 **Se EXISTIR**, leia rapidamente o avatar (vocabulário do cliente, dor principal) e use essa linguagem nas variações de hook. Mencione: *"Encontrei seu avatar. Vou ancorar as variações na linguagem dele."*
+
+### Gate — ler o Perfil do Projeto (antes de caçar tendência)
+
+> **Leia o Perfil do Projeto** (topo do `projetos/{slug}/offerbook.md`) seguindo `.claude/skills/_shared/perfil.md`. O Perfil (Tipo de oferta, Voz, Nicho) muda o que conta como "tendência" e como as variações são enquadradas. **Perfil ainda não existe (Aula 1 em ordem — o Perfil só nasce no `/offerbook`, skill 5)?** INFIRA o ramo pelo nicho/negócio que o aluno informou e CONFIRME em 1 linha antes de coletar (ex.: *"estúdio de pilates → trato como negócio local, certo?"*) — nunca caia no ramo genérico de infoproduto em silêncio. Se mesmo assim não der pra inferir, use o padrão e siga — nunca trave.
+>
+> **Guard (regra dura):** se **Voz = marca** ou **Tipo ∈ {físico, saas-app, serviço, b2b}**, é **PROIBIDO** enquadrar as variações como especialista/curso/mentoria ou usar depoimento-de-aluno. Use voz do cliente / prova de uso / case. O default "curso de especialista" só vale quando Tipo = especialista.
 
 ---
 
@@ -69,7 +75,7 @@ Além do nicho, o usuário pode (opcionalmente) colar **links de concorrentes** 
 
 ## Pré-requisitos
 
-1. **Apify configurado** (OBRIGATÓRIO) — token no `.env` + MCP no Claude Code. Sem isso a skill não roda. Veja a seção **Setup do Apify** logo abaixo. É o que dá o scrape de Reels (Instagram), TikTok e perfis de concorrentes.
+1. **Apify configurado** (OBRIGATÓRIO) — a **chave** no `.env` (`APIFY_API_TOKEN` ou `APIFY_API_KEY`). **NÃO é MCP:** a coleta roda por **API REST direta** (chamada à `api.apify.com`, com o SEU token), do mesmo jeito que a `/conteudo-funil` faz pelo `scripts/apify_scraper.py`. Sem a chave a skill não coleta. Veja a seção **Setup do Apify** logo abaixo. É o que dá o scrape de Reels (Instagram), TikTok e perfis de concorrentes.
 2. **Nicho ou palavras-chave** definidas (5-10 termos)
 3. **Acesso a Twitter/X** (busca pública, sem login obrigatório)
 4. **Output do `/avatar-funil`** (recomendado) — para filtrar tendências relevantes ao perfil do cliente
@@ -78,7 +84,7 @@ Além do nicho, o usuário pode (opcionalmente) colar **links de concorrentes** 
 
 ## Setup do Apify (OBRIGATÓRIO — fazer 1 vez)
 
-Esta skill **depende do Apify** para raspar Instagram Reels, TikTok e perfis de concorrentes. Sem o token e o MCP configurados, ela não tem como coletar as fontes visuais. Faça esse setup uma única vez; depois é só usar.
+Esta skill **depende do Apify** para raspar Instagram Reels, TikTok e perfis de concorrentes. A coleta é por **API REST direta** (chamada à `api.apify.com` com o SEU token) — **NÃO é MCP**: não precisa instalar servidor, nem `claude mcp add`, nem reiniciar nada. O único pré-requisito é a **chave** no `.env`. É o mesmo padrão da `/conteudo-funil`, que chama a API pelo `scripts/apify_scraper.py` (só stdlib do Python). Faça esse setup uma única vez; depois é só usar.
 
 ### É grátis?
 
@@ -98,38 +104,38 @@ Na raiz do projeto, abra (ou crie a partir do `.env.example`) o arquivo `.env` e
 APIFY_API_TOKEN=apify_api_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-Se ainda não tem `.env`, rode na raiz: `cp .env.example .env` e depois edite a linha do `APIFY_API_TOKEN`. O `.env` já está no `.gitignore` — sua chave não vai pro GitHub.
+Se ainda não tem `.env`, rode na raiz: `cp .env.example .env` e depois edite a linha do `APIFY_API_TOKEN`. O `.env` já está no `.gitignore` — sua chave não vai pro GitHub. (Se você configurou pela `/comecar`, a chave pode estar salva como `APIFY_API_KEY` — tudo bem, os dois nomes funcionam.)
 
-### Passo 3 — Instalar o Apify MCP no Claude Code
+### Passo 3 — Verificar antes de rodar a skill
 
-O MCP é o que deixa o Claude chamar o Apify de dentro do chat. Adicione o servidor uma vez:
-
-```
-claude mcp add apify --env APIFY_API_TOKEN=$APIFY_API_TOKEN -- npx -y @apify/actors-mcp-server
-```
-
-Referência oficial: https://docs.apify.com/platform/integrations/mcp
-
-Depois de adicionar, reinicie o Claude Code e confirme com `claude mcp list` que o `apify` aparece como conectado.
-
-### Passo 4 — Verificar antes de rodar a skill
-
-No início de cada execução, **cheque se o Apify está pronto**:
+No início de cada execução, **cheque se a chave está no `.env`** (aceite qualquer um dos dois nomes):
 
 ```
-grep -q "APIFY_API_TOKEN=apify" .env 2>/dev/null && echo "token ok" || echo "token faltando"
+grep -qE "APIFY_API_(TOKEN|KEY)=apify" .env 2>/dev/null && echo "chave ok" || echo "chave faltando"
 ```
 
-- Se o token estiver faltando OU o MCP `apify` não estiver conectado, **PARE** e mostre ao usuário:
+- Se a **chave** estiver faltando, **PARE** e ajude a configurar (não caia para coleta manual — o Apify é pré-requisito desta skill):
 
-  > Esta skill precisa do Apify configurado para raspar Reels, TikTok e perfis de concorrentes, e ele ainda não está pronto aqui. Siga o **Setup do Apify** (4 passos) na SKILL: criar conta (US$ 5 grátis, sem cartão), colar o `APIFY_API_TOKEN` no `.env` e adicionar o MCP com `claude mcp add apify`. Quando terminar, rode `/trend-hunting [nicho]` de novo.
+  > Esta skill precisa da sua chave do Apify para raspar Reels, TikTok e perfis de concorrentes, e ela ainda não está no `.env`. Siga o **Setup do Apify** na SKILL: criar conta (US$ 5 grátis, sem cartão) → pegar o token no **console.apify.com > Settings > Integrations > API tokens** → colar no `.env` como `APIFY_API_TOKEN=apify_api_...`. Quando terminar, rode `/trend-hunting [nicho]` de novo.
 
-  Não tente cair para coleta manual: o Apify é pré-requisito desta skill agora.
-- Se estiver tudo pronto, siga o pipeline normalmente.
+- Se a chave estiver lá, siga o pipeline normalmente (a coleta usa a API REST com o script `apify_scraper.py`).
+
+> **Apify é central, nunca opcional — fallback só em cota estourada** (segue `.claude/skills/_shared/nunca-travar.md`). Se faltar a chave, o certo é **ajudar a configurar** (os passos acima), não pular. Só existe um caso de fallback: quando o Apify **realmente falha por cota mensal estourada** (os US$ 5 grátis do mês acabaram). Aí, avise em texto: *"A cota do Apify estourou este mês. Sigo pelas fontes que dão pra buscar manualmente (Twitter/X público, busca por hashtag no navegador) e retomo o scrape completo quando a cota renovar."* Nunca "pular Apify" por padrão nem falhar em silêncio. Glossário: *cota* (limite de crédito do mês); *fallback* (plano B).
 
 ---
 
 ## Pipeline (passo a passo)
+
+### Gate — o que é "tendência" muda por ramo (ler o Perfil primeiro)
+
+> Nem todo negócio caça Reel viral. Ajuste as fontes e o conceito de tendência ao **Tipo de oferta** do Perfil:
+>
+> - **Serviço / B2B** → tendência **não** é Reel/TikTok viral. São **pautas de LinkedIn**, **relatórios de setor**, **eventos/feiras**, mudanças regulatórias e temas que a decisão do comprador acompanha. Priorize a fonte D (LinkedIn) e busca de relatórios/notícias do setor; formatos = carousel PDF, post longo, artigo, palestra. Variações enquadram autoridade/ROI, não hook de dopamina.
+> - **Físico / varejo-local** → tendência é **sazonal e regional**: datas locais (feriado da cidade, festa regional), sazonalidade do produto (verão, volta às aulas, Dia das Mães), clima e evento local. Menos "formato viral global", mais gancho de calendário e proximidade. Fontes = Google/redes locais + calendário sazonal, não só hashtags nacionais.
+> - **Especialista / saas-app** → segue o pipeline padrão abaixo (Reels, TikTok, threads, carrosséis).
+> - **Nicho REGULADO (saúde / jurídico / psico / financeiro)** → as variações saem **só em linguagem de possibilidade**: sem promessa de cura, sem prazo de resultado, sem antes/depois. A tendência de formato pode ser modelada, mas o hook e a copy da variação respeitam as regras do conselho (mesmo que o formato viral original prometa o proibido — não replique a promessa, só a estrutura).
+>
+> Glossário: *sazonal* (que varia com a época do ano). Na dúvida sobre o Tipo, pergunte antes de escolher as fontes.
 
 ### Etapa 1 — Definir palavras-chave de busca
 
@@ -349,7 +355,7 @@ E recomende qual testar primeiro e por quê.
 ## Checklist de qualidade
 
 **Fundação**
-- [ ] Apify configurado (token no `.env` + MCP conectado) — pré-requisito bloqueante
+- [ ] Apify configurado (chave `APIFY_API_TOKEN` ou `APIFY_API_KEY` no `.env`) — pré-requisito bloqueante
 - [ ] Nicho e palavras-chave definidos (5-10 termos)
 - [ ] Fontes scaneadas (Twitter/X + Reels + TikTok; LinkedIn se B2B; concorrentes se houver links)
 - [ ] Janela de 14 dias respeitada
@@ -363,6 +369,7 @@ E recomende qual testar primeiro e por quê.
 - [ ] 2-4 variações geradas para cada padrão escolhido
 - [ ] Hook, estrutura, formato, CTA preenchidos
 - [ ] Adaptadas ao ICP (se ICP disponível)
+- [ ] Texto pronto pra gravação: **sem emoji** por padrão, **sem gíria escrita** ("rs", "kkk"), e releitura antifrase-quebrada — sem palavra duplicada nem frase truncada (ex.: "antes da colega escolher antes"). As variações vão direto pro especialista gravar, então cada hook tem que ler limpo em voz alta.
 
 **Briefing**
 - [ ] Orçamento de teste sugerido

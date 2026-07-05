@@ -28,7 +28,7 @@ No dossiê, cada achado vem com a fonte de onde saiu.
 ### No Claude Code (terminal)
 
 1. Descompacte a pasta `espiao-do-concorrente`.
-2. Coloque ela dentro de `~/.claude/skills/` (uso pessoal) ou de `.claude/skills/` (dentro de um projeto).
+2. Coloque ela dentro de `~/.claude/skills/` (uso pessoal; no Windows, `C:\Users\SeuNome\.claude\skills\`) ou de `.claude/skills/` (dentro de um projeto).
 3. Abra o Claude Code e peça: **"espião, analisa o concorrente [nome]"**. A skill carrega sozinha quando o assunto bate.
 
 > Dica: o nome da pasta tem que continuar com o `SKILL.md` dentro dela. Não renomeie o arquivo `SKILL.md`.

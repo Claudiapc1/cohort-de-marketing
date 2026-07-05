@@ -1,5 +1,5 @@
 ---
-name: recuperacao
+name: recuperacao-funil
 description: "Estrutura a sequência de recuperação de um funil — o que fazer quando o lead chega no checkout e não compra. Cada comportamento tem uma abordagem diferente: carrinho abandonado, cartão recusado, boleto gerado, downsell e re-elevação de consciência (jogar o lead de volta pro nível do problema). Funciona pelo princípio de que recuperar um lead que já chegou no checkout é mais barato do que adquirir um lead novo. Use quando precisar montar/diagnosticar a recuperação de um funil, decidir como abordar cada tipo de lead que não converteu, ou estruturar a cascata de re-engajamento. A skill estrutura a sequência e gera a copy aplicada das mensagens a partir do copy.md (quando ele existe); o aluno revisa e aprova."
 user_invocable: true
 ---
@@ -24,7 +24,7 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
-> **Recriar NUNCA apaga o que existe (regra dura).** Se a peça que você vai gerar JÁ EXISTE no projeto (arquivo, lote de PNGs, pasta), o novo sai como **versão nova** (sufixo `-v2`, `-v3`… ou subpasta `v2/`) e o antigo fica intocado. Apagar ou sobrescrever trabalho existente SÓ com ordem explícita do dono nesta conversa ("pode apagar", "substitui"). O dono compara as versões e decide qual usar; índices, galerias e o Book mostram as duas, com a mais nova primeiro, e **cada versão antiga leva um botão ✕ "Excluir esta versão"**: o ✕ NUNCA apaga arquivo do disco — ele só tira a versão da visualização, pra não poluir o Book/galeria. Ao clicar, abre a confirmação: *"Tem certeza que quer excluir esta versão do Book do Funil? Os arquivos continuam no disco."* Confirmou, a seção some (persistido em `localStorage`) e um link discreto **"Mostrar versões ocultas (N)"** no rodapé traz de volta quando quiser. Apagar do disco de verdade continua exigindo ordem explícita do dono no chat.
+> **Versões, pendências e Book do Funil (regra dura — texto completo em `.claude/skills/_shared/book-do-funil.md`; LEIA-o ao fechar a peça).** Recriar nunca apaga: peça existente ganha versão nova (`-v2`), e o ✕ das versões antigas só esconde do Book (nunca apaga do disco). Pendências do dono vão pra `projetos/{slug}/pendencias.md` com CHAVE por decisão (re-run reconcilia, nunca soma). Ao terminar: atualize o card da peça no Book (`projetos/{slug}/index.html` — cards linkam sempre o `.html`, nunca `.md`) e o "VOCÊ ESTÁ AQUI" do mapa; documentos internos levam "← Voltar" + "← Book do Funil" (roteiro/VSL leva os DOIS botões, com caminho relativo real); amostra/checkpoint entra no Book ANTES de ir pro chat; feche com "Preencha as pendências" e abra o Book. Se o Perfil disser agência, ofereça a "versão cliente" do Book.
 
 ## Passo 0 — Checar insumos antes de rodar
 
@@ -36,10 +36,6 @@ Se faltar o obrigatório, aponte a skill que o gera (`/offerbook`) e PERGUNTE se
 ## Copy aplicada — gerada NESTA skill a partir do copy.md
 
 > **Sem cara de IA na copy (regra dura).** Em TODA copy voltada ao cliente final (headline, bullet, página, e-mail, mensagem, roteiro): **sem travessão (—)** — reescreva com ponto, vírgula ou dois-pontos; e **sem a construção "não é sobre X, é sobre Y"** (e variantes "não é X, é Y", "não se trata de X, e sim de Y") — esse contraste é assinatura de texto de IA. Afirme direto o que É, ou mostre o contraste com fato concreto do avatar. Vale pra copy aplicada gerada por esta skill.
-
-> **Pendências do dono em UM lugar só.** Sempre que esta skill deixar um placeholder pro dono ([DONO ...], [A PREENCHER], [PLUG ...], [SEM PROVA AINDA], [N]), registre/atualize a entrada correspondente em **`projetos/{slug}/pendencias.md`** (+ `.html` com checklist clicável; crie se não existir): O QUÊ decidir, ONDE aparece (arquivos afetados) e COMO resolver. Agrupar por DECISÃO (1 decisão resolve vários arquivos), não por arquivo. Quando o dono informar um valor, atualizar TODOS os arquivos afetados de uma vez e marcar o item. O `/status-funil` lê esse arquivo.
->
-> **Book do Funil (o hub do projeto) + fecho obrigatório:** o projeto tem um hub único em **`projetos/{slug}/index.html`, o Book do Funil**: cards clicáveis de TODAS as peças já geradas, agrupados por fase (Pesquisa · Oferta e Fundação · Peças do funil · Próximas peças), cada card com badge de status (feito / em revisão / ação do dono / fila), e cada card linka SEMPRE o `.html` da peça (o `.md` e o `.docx` são fonte interna; o que o dono abre pelo Book é o `.html`) — NUNCA linke `.md` no Book, e a seção de **pendências + mapa NO FINAL** do Book. **Todo DOCUMENTO interno gerado** (mapas, docs de copy, índices, checklists, roteiros: tudo que é do dono, nunca as páginas do lead) leva no topo o par de navegação: **"← Voltar"** (volta pra página de onde o leitor veio: `<a href="../index.html" onclick="if(history.length>1){history.back();return false}">` — usa o histórico do navegador, com o Book como fallback quando o arquivo foi aberto direto) e **"← Book do Funil"** (link fixo pro hub). Quem clica numa VSL a partir de uma página e volta, volta PRA PÁGINA, não pro Book. **Página de roteiro/VSL leva DOIS botões explícitos no topo (regra dura):** um **"← Voltar pra [a página a que ela pertence]"** (link DIRETO pro arquivo da página, ex.: `index.html` da própria pasta) E o **"← Book do Funil"** — nunca só o do Book, senão quem lê o roteiro e clica em voltar cai no hub em vez da página de onde veio. **O fallback do "← Voltar" resolve pro caminho relativo REAL do Book conforme a profundidade da pasta** (`../index.html`, `../../index.html`…), NUNCA um `index.html` fixo que não existe naquele nível: `href` errado faz o "Voltar" cair em nada. Ao terminar a skill: (1) **atualize o card da sua peça no Book** E o status da peça no mapa (`funil.md` + `funil.html`): o "VOCÊ ESTÁ AQUI" tem que apontar SEMPRE pro ponto real do dono, nunca pra etapa já vencida (crie o Book se ainda não existir, na identidade do DESIGN.md); (2) encerre com *"Preencha as pendências"* e **abra o Book no navegador** — dele o dono chega a qualquer peça e ao `pendencias.html` (checklist com CAMPO DE RESPOSTA em cada item e o botão "Copiar respostas pro Claude"). Instrua o dono: preencher os campos, clicar em Copiar respostas e COLAR de volta no chat. **Ao receber as respostas coladas, atualize todos os arquivos afetados, marque os itens no `pendencias.md`, REGENERE o `pendencias.html` refletindo o estado novo (placar aplicadas/parciais/abertas; itens aplicados em verde com o valor; parciais em laranja com o que falta; abertos com campo de resposta) e ABRA o html atualizado — o dono precisa VER o que continua pendente, não só ler no chat.**
 
 Se `projetos/{slug}/copy.md` existe (fundação da copy aprovada no `/copy-funil`: Big Idea, mecanismos, voz/léxico, banco de headlines e bullets, objeções), esta skill GERA a copy aplicada da sua peça a partir dele — o texto final das mensagens da cascata de recuperação. O aluno NÃO volta pro `/copy-funil` pra isso. Se o `copy.md` NÃO existe, aponte `/copy-funil` (a fundação) e PERGUNTE se o aluno quer seguir só com a estrutura. A copy aplicada obedece: Big Idea e mecanismos do `copy.md` · voz e léxico do avatar · regra de honestidade de prova (**[SEM PROVA AINDA]**) · compliance de nicho sensível. Depois de aplicada, a peça pode ser auditada na fase de validação do `/copy-funil` (nota Hopkins + checklist Sugarman).
 
@@ -86,6 +82,14 @@ A recuperação só funciona se você **distingue os comportamentos**. Tratar to
 > *"Se ela abandonou o carrinho... ela está com objeções. Se ela chegou a colocar o cartão e recusou, percebe que ela tentou... a tua abordagem vai ser completamente diferente."*
 
 Antes de montar a sequência, confirme: **quais comportamentos seu checkout/CRM consegue identificar?** Você só pode ativar a abordagem certa pros comportamentos que consegue medir.
+
+> **CTA "falar com o time / IA de atendimento" (regra dura).** Pergunte se o dono tem um canal de atendimento humano ou IA. Se tiver, **insira em cada sequência** (sobretudo **cartão recusado** e **boleto/Pix**) um CTA "fale com a gente / tirar dúvida no WhatsApp" além do link de pagamento. Reabrir a conversa com uma pessoa converte muito no lead que travou. Registre o link como `[PLUG: canal de atendimento]` se ainda não houver.
+
+> **Downsell — NÃO inventar nome nem preço** (mesma regra do `/backend-funil`): se o dono não definiu o produto/preço do downsell, marque `[DONO: definir downsell]` em `pendencias.md` e, no máximo, proponha candidatos pra ele escolher. Nunca gere "Ebook X por R$ 27" como oferta pronta.
+
+> **Recuperação muda pelo Perfil** (topo do offerbook · `.claude/skills/_shared/perfil.md`): **B2B / ticket alto** → não é carrinho abandonado, é **no-show / reagendamento de reunião** (lembrete, "perdeu o horário? remarca aqui"). **Físico/local** → recuperação por **WhatsApp** local. **Afiliado** → a recuperação de checkout é do PRODUTOR (você não tem o checkout); avise em 1 linha e aponte a próxima peça do afiliado (`/conteudo-funil` ou `/criativos-funil`), sem gerar nada.
+
+> **Pendências:** grave com **chave por decisão** (dedup no re-run) — regra em `.claude/skills/_shared/pendencias.md`.
 
 ---
 
@@ -140,6 +144,8 @@ Assim que o checkout começar a registrar os comportamentos, volte e rode `/recu
 
 **Regra de leitura:** quem **tentou pagar** (cartão recusado) está mais quente do que quem **só abandonou** o carrinho. A abordagem do cartão recusado é mais quente e direta; a do carrinho é mais cuidadosa, porque ali existe objeção.
 
+> **Nicho regulado — saúde (regra dura):** onde a tabela prescreve **desconto** (cartão recusado, boleto), em **saúde/médico** o incentivo **NUNCA é desconto anunciado** (vedação do conselho): é **facilitar o pagamento** (parcelar, trocar o meio, reenviar) e **reagendar**, nunca "R$ X off" na mensagem.
+
 > **Sequência, NUNCA mensagem única (regra dura).** 1 mensagem por comportamento não é recuperação, é lembrete. Cada comportamento ativo gera uma **sequência de no mínimo 3 toques com timing definido**, e cada toque tem um ângulo DIFERENTE (nunca a mesma mensagem reenviada). Cadência padrão (o "Quando" da tabela acima é só o 1º toque; ajuste ao ciclo de compra do nicho e declare o que ajustou):
 >
 > | Comportamento | Toque 1 | Toque 2 | Toque 3 |
@@ -147,6 +153,7 @@ Assim que o checkout começar a registrar os comportamentos, volte e rode `/recu
 > | **Cartão recusado** | 15 min: ajuda operacional (limite? banco travou?) + parcelado + Pix | 24h: quebra a objeção real + prova | 48h: urgência honesta (vaga/turma/condição expira) |
 > | **Pix/boleto gerado** | 30 min: reenvia o código + facilita (copia e cola) | 24h ou véspera do vencimento: "vence hoje" + o que ele perde | Após vencer: gera código novo + última condição |
 > | **Carrinho abandonado** | 30 min: leve, "aconteceu algo?" (sem vender) | 24h: quebra a objeção nº 1 do avatar + prova | 72h: escassez real ou ponte pro downsell |
+> | **No-show de reunião (B2B/serviço)** | 15 min: "imprevisto? remarca aqui" + link | 24h: valor da conversa + 2 horários | 72h: última janela honesta |
 >
 > A progressão de ângulo é sempre: **1º toque remove atrito · 2º quebra objeção com prova · 3º dá o motivo honesto de agir agora.** Se o aluno tem WhatsApp além do e-mail, intercale os canais (ex.: toque 2 no WhatsApp). Downsell e re-nutrição entram DEPOIS da sequência direta esgotar, como degraus próprios da cascata. Cada toque sai como arquivo separado (`recuperacao/{comportamento}-{n}.html`) no índice, seguindo as regras de layout e numeração invisível acima.
 
@@ -208,34 +215,6 @@ Assim que o checkout começar a registrar os comportamentos, volte e rode `/recu
 
 ---
 
-## Output nos 3 formatos (md + html + pdf) — igual à Aula 1
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
-Todo entregável desta skill sai em **3 formatos**, com o mesmo nome-base `projetos/{slug}/recuperacao` (convenção da pasta):
-
-1. **`.md`** — o conteúdo (fonte de verdade).
-2. **`.html`** — versão estilizada aplicando os **tokens do `projetos/{slug}/DESIGN.md` da marca do aluno** (cores, fontes, borda/raio, tamanho, logo). NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto) — a identidade é sempre a do `DESIGN.md`. Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). **Contraste por fundo (regra dura):** texto sobre fundo ESCURO usa o token CLARO da marca (ex.: `on-deep`/creme), NUNCA o token `muted` (que é do fundo CLARO e some no escuro); e legenda/microcopy de apoio sai MENOR e mais leve (opacidade ~.7) que o corpo, pra não competir com headline nem com o botão. CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
-3. **`.pdf`** — gerado a partir do html:
-
-   ```
-   bash .claude/skills/recuperacao-funil/scripts/gerar_pdf.sh <arquivo>.html
-   ```
-
-Salve os 3 e confirme ao final. Nunca entregar só o `.md`.
-
----
-
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
-
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-
-## Ao terminar — SEMPRE diga o próximo passo
-
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
-
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do `projetos/{slug}/DESIGN.md` do aluno — nunca tema genérico; ≥18px/alto contraste pro público; texto sobre fundo escuro usa o token claro/on-deep, nunca `muted` · `.pdf` via `scripts/gerar_pdf.sh`). Toda entrega E todo checkpoint abrem o `.html` renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e enviam o arquivo na conversa; nunca peça aprovação sem o usuário ver renderizado. Feche SEMPRE apontando UM próximo comando (ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF; Apify é central nas skills de coleta, fallback só em cota estourada — `_shared/nunca-travar.md`).

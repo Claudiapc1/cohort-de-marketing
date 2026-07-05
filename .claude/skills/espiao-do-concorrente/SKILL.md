@@ -13,10 +13,10 @@ Esta é a **Skill 2 de 5** da Aula 01 do Cohort de Marketing.
 
 ### Gate de pré-requisito (executar ANTES de qualquer coisa)
 
-Antes de começar, **verifique no diretório atual** se existe `relatorio-avatar.md`:
+Antes de começar, **verifique** se o avatar já foi rodado — ele pode ter sido salvo na raiz OU na pasta de pesquisa/projeto (qualquer um dos caminhos vale):
 
 ```
-ls relatorio-avatar.md 2>/dev/null
+ls relatorio-avatar.md pesquisa-avatar-*/relatorio-avatar.md projetos/*/avatar.md 2>/dev/null
 ```
 
 **Se NÃO existir**, exiba este aviso e pergunte:
@@ -30,6 +30,23 @@ Se o usuário responder `n`, encerre dizendo: *"Beleza. Rode `/avatar-funil [nic
 Se responder `s`, prossiga normalmente mas avise no relatório final que a análise foi feita **sem o contexto do avatar** (entra como nota na seção "Limitações").
 
 **Se EXISTIR**, leia rapidamente o avatar (em especial: dor número 1, frase verbatim, objeções) e use esse contexto durante toda a análise. Mencione no início: *"Encontrei seu avatar. Vou usar como lente para ler este concorrente."*
+
+---
+
+## Gate — Perfil do Projeto (ler ANTES de escolher quem espiar)
+
+> Antes de mirar num alvo, leia o **Perfil do Projeto** (topo de `projetos/{slug}/offerbook.md`) — regra completa em `.claude/skills/_shared/perfil.md`. O Perfil muda **quem** é o concorrente e **onde** ele deixa rastro. **Perfil ainda não existe (Aula 1 em ordem — o Perfil só nasce no `/offerbook`, skill 5)?** INFIRA o ramo pelo nicho/negócio que o aluno informou e CONFIRME em 1 linha antes de coletar (ex.: *"estúdio de pilates → trato como negócio local, certo?"*) — nunca caia no ramo genérico de infoproduto em silêncio. **Guard:** se `Voz = marca` ou `Tipo ∈ {físico, saas-app, serviço, b2b}`, é PROIBIDO ler o concorrente pela lente de "especialista/curso/depoimento-de-aluno" — leia oferta, prova de uso e case do jeito que aquele tipo de negócio realmente vende.
+
+### Ramos por tipo de nicho (onde o concorrente realmente aparece)
+
+O concorrente nem sempre está na Meta Ad Library. Ajuste as frentes de coleta ao Perfil:
+
+- **B2B** → o concorrente pode **não anunciar** na Meta Ad Library nem viver no Instagram. Cace onde B2B deixa rastro: **LinkedIn** (posts, página da empresa, gente-chave), **site institucional**, **cases/estudos de caso**, **materiais de proposta** (PDFs, webinars, whitepapers) e **eventos** (palestras, feiras, patrocínios). A brecha aqui costuma ser de posicionamento e prova, não de hook de vídeo.
+- **Local / físico** → o concorrente é **local**, não um anunciante nacional. Espione o **Google Perfil da Empresa / Maps** dele e os **reviews da região** (o que a vizinhança elogia e reclama), promoções locais e presença no ponto. Não procure ad nacional de quem só vende no bairro.
+- **Agência** (`Quem opera = agência`) → você espiona o concorrente **DO CLIENTE**, não o concorrente do operador/agência. 1 cliente = 1 alvo por dossiê. Confirme com o usuário quem é o cliente antes de mirar.
+- **Regulado** (`Nicho regulado ∈ {saúde/médico, jurídico, psico, financeiro}`) → note **o que é permitido anunciar** naquele nicho (regras de CFM/OAB/conselho): o que o concorrente pode e não pode prometer molda a comunicação dele. Uma comunicação "morna" pode ser limite regulatório, não fraqueza — e o que ele NÃO diz pode ser justamente o proibido (não vira brecha explorável).
+
+Sempre diga ao usuário qual ramo você identificou e quais frentes vai priorizar por causa dele.
 
 ---
 
@@ -52,6 +69,8 @@ Sempre diga ao usuário em qual modo você está rodando antes de começar.
 ## Passo 1A — Coletar a presença pública (Modo Rede)
 
 No modo rede você usa as ferramentas (bash, WebSearch, WebFetch, scripts) para varrer TODA a presença pública do concorrente. Não pare na primeira fonte: quanto mais fontes você cruzar, mais sólida é a análise e mais brechas aparecem. Colete em quatro frentes.
+
+> **Apify é central aqui, NÃO opcional** (regra completa em `.claude/skills/_shared/nunca-travar.md`). A coleta de anúncios e social depende dele. Se faltar a **chave**, PARE e ajude a configurar em linguagem de leigo: pegue a chave no console do Apify (é o "cadastro de acesso" da ferramenta de coleta) → salve no arquivo `.env` do projeto como `APIFY_API_TOKEN` (ou `APIFY_API_KEY` — os dois nomes valem; o check procura os dois) → rode de novo. Não siga cego sem a chave. O **fallback** (WebSearch / colar manual no Modo Offline) só entra quando o Apify **realmente falha por cota mensal estourada** — aí avise: *"a cota do Apify estourou este mês; sigo por WebSearch e retomo a coleta cheia quando a cota renovar"*. Nunca "pular o Apify" por padrão.
 
 ### Frente 1 — Anúncios pagos (o que ele paga para você ver)
 

@@ -30,6 +30,7 @@ if (!yamlInstalled) {
     execFileSync('npm', ['install', '--silent', '--no-audit', '--no-fund'], {
       cwd: skillDir,
       stdio: 'inherit',
+      shell: process.platform === 'win32', // no Windows o npm e npm.cmd; sem shell o execFileSync nao acha
     });
   } catch (e) {
     log('Falha ao instalar dependências automaticamente.');

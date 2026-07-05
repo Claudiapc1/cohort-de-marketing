@@ -1,5 +1,5 @@
 ---
-name: back-end
+name: backend-funil
 description: "Estrutura o back-end de um funil pelo método de Alan Nicolas — a parte onde mora o lucro. Dado o produto de entrada (front-end) e o público, monta a estrutura ramificada de maximização de ticket: upsell (e segundo upsell), OTO (One Time Offer), order bump, downsell, a janela de 4h pós-compra, a página de upsell com a janela de dopamina (3–7 segundos) e o raciocínio de LTV (lifetime value). Estrutura ramificada: comprou → sobe (upsell), não comprou → desce (downsell). Use quando você quiser montar/diagnosticar o back-end de um funil, decidir upsell vs downsell, desenhar a página de upsell ou planejar como vender mais de uma vez ao mesmo cliente. A skill estrutura e gera a copy aplicada (página de upsell/OTO e downsell) a partir do copy.md, quando ele existe; você revisa e aprova."
 user_invocable: true
 ---
@@ -24,8 +24,6 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
-> **Recriar NUNCA apaga o que existe (regra dura).** Se a peça que você vai gerar JÁ EXISTE no projeto (arquivo, lote de PNGs, pasta), o novo sai como **versão nova** (sufixo `-v2`, `-v3`… ou subpasta `v2/`) e o antigo fica intocado. Apagar ou sobrescrever trabalho existente SÓ com ordem explícita do dono nesta conversa ("pode apagar", "substitui"). O dono compara as versões e decide qual usar; índices, galerias e o Book mostram as duas, com a mais nova primeiro, e **cada versão antiga leva um botão ✕ "Excluir esta versão"**: o ✕ NUNCA apaga arquivo do disco — ele só tira a versão da visualização, pra não poluir o Book/galeria. Ao clicar, abre a confirmação: *"Tem certeza que quer excluir esta versão do Book do Funil? Os arquivos continuam no disco."* Confirmou, a seção some (persistido em `localStorage`) e um link discreto **"Mostrar versões ocultas (N)"** no rodapé traz de volta quando quiser. Apagar do disco de verdade continua exigindo ordem explícita do dono no chat.
-
 ## Passo 0 — Checar insumos antes de rodar
 
 - **Obrigatório:** `projetos/{slug}/offerbook.md` — o front-end/oferta de entrada é o gatilho de toda a ramificação. Se faltar, aponte a skill `/offerbook` (que o gera) e **PERGUNTE se o usuário quer seguir mesmo assim**.
@@ -37,13 +35,15 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 > **Sem cara de IA na copy (regra dura).** Em TODA copy voltada ao cliente final (headline, bullet, página, e-mail, mensagem, roteiro): **sem travessão (—)** — reescreva com ponto, vírgula ou dois-pontos; e **sem a construção "não é sobre X, é sobre Y"** (e variantes "não é X, é Y", "não se trata de X, e sim de Y") — esse contraste é assinatura de texto de IA. Afirme direto o que É, ou mostre o contraste com fato concreto do avatar. Vale pra copy aplicada gerada por esta skill.
 
-> **Pendências do dono em UM lugar só.** Sempre que esta skill deixar um placeholder pro dono ([DONO ...], [A PREENCHER], [PLUG ...], [SEM PROVA AINDA], [N]), registre/atualize a entrada correspondente em **`projetos/{slug}/pendencias.md`** (+ `.html` com checklist clicável; crie se não existir): O QUÊ decidir, ONDE aparece (arquivos afetados) e COMO resolver. Agrupar por DECISÃO (1 decisão resolve vários arquivos), não por arquivo. Quando o dono informar um valor, atualizar TODOS os arquivos afetados de uma vez e marcar o item. O `/status-funil` lê esse arquivo.
->
-> **Book do Funil (o hub do projeto) + fecho obrigatório:** o projeto tem um hub único em **`projetos/{slug}/index.html`, o Book do Funil**: cards clicáveis de TODAS as peças já geradas, agrupados por fase (Pesquisa · Oferta e Fundação · Peças do funil · Próximas peças), cada card com badge de status (feito / em revisão / ação do dono / fila), e cada card linka SEMPRE o `.html` da peça (o `.md` e o `.docx` são fonte interna; o que o dono abre pelo Book é o `.html`) — NUNCA linke `.md` no Book, e a seção de **pendências + mapa NO FINAL** do Book. **Todo DOCUMENTO interno gerado** (mapas, docs de copy, índices, checklists, roteiros: tudo que é do dono, nunca as páginas do lead) leva no topo o par de navegação: **"← Voltar"** (volta pra página de onde o leitor veio: `<a href="../index.html" onclick="if(history.length>1){history.back();return false}">` — usa o histórico do navegador, com o Book como fallback quando o arquivo foi aberto direto) e **"← Book do Funil"** (link fixo pro hub). Quem clica numa VSL a partir de uma página e volta, volta PRA PÁGINA, não pro Book. **Página de roteiro/VSL leva DOIS botões explícitos no topo (regra dura):** um **"← Voltar pra [a página a que ela pertence]"** (link DIRETO pro arquivo da página, ex.: `index.html` da própria pasta) E o **"← Book do Funil"** — nunca só o do Book, senão quem lê o roteiro e clica em voltar cai no hub em vez da página de onde veio. **O fallback do "← Voltar" resolve pro caminho relativo REAL do Book conforme a profundidade da pasta** (`../index.html`, `../../index.html`…), NUNCA um `index.html` fixo que não existe naquele nível: `href` errado faz o "Voltar" cair em nada. Ao terminar a skill: (1) **atualize o card da sua peça no Book** E o status da peça no mapa (`funil.md` + `funil.html`): o "VOCÊ ESTÁ AQUI" tem que apontar SEMPRE pro ponto real do dono, nunca pra etapa já vencida (crie o Book se ainda não existir, na identidade do DESIGN.md); (2) encerre com *"Preencha as pendências"* e **abra o Book no navegador** — dele o dono chega a qualquer peça e ao `pendencias.html` (checklist com CAMPO DE RESPOSTA em cada item e o botão "Copiar respostas pro Claude"). Instrua o dono: preencher os campos, clicar em Copiar respostas e COLAR de volta no chat. **Ao receber as respostas coladas, atualize todos os arquivos afetados, marque os itens no `pendencias.md`, REGENERE o `pendencias.html` refletindo o estado novo (placar aplicadas/parciais/abertas; itens aplicados em verde com o valor; parciais em laranja com o que falta; abertos com campo de resposta) e ABRA o html atualizado — o dono precisa VER o que continua pendente, não só ler no chat.**
+> **Versões, pendências e Book do Funil (regra dura — texto completo em `.claude/skills/_shared/book-do-funil.md`; LEIA-o ao fechar a peça).** Recriar nunca apaga: peça existente ganha versão nova (`-v2`), e o ✕ das versões antigas só esconde do Book (nunca apaga do disco). Pendências do dono vão pra `projetos/{slug}/pendencias.md` com CHAVE por decisão (re-run reconcilia, nunca soma). Ao terminar: atualize o card da peça no Book (`projetos/{slug}/index.html` — cards linkam sempre o `.html`, nunca `.md`) e o "VOCÊ ESTÁ AQUI" do mapa; documentos internos levam "← Voltar" + "← Book do Funil" (roteiro/VSL leva os DOIS botões, com caminho relativo real); amostra/checkpoint entra no Book ANTES de ir pro chat; feche com "Preencha as pendências" e abra o Book. Se o Perfil disser agência, ofereça a "versão cliente" do Book.
 
-> **Rastreamento: a página nasce PIXEL-READY; os IDs entram na Aula 3 (Tráfego).** Nenhuma página do funil nasce cega, mas esta etapa também não cria fricção: **NÃO mande o aluno pro Gerenciador de Eventos agora.** Toda página gerada já sai com os snippets de **Meta Pixel** (recomendado: é o que constrói a audiência de remarketing) e **GTM** (opcional: gerencia tags sem mexer em código; junto com o Pixel dá o melhor rastreamento) **prontos porém COMENTADOS** no `<head>` (+ `<noscript>` após `<body>`), com placeholders `[PLUG: SEU_PIXEL_ID]` / `[PLUG: GTM-XXXXXXX]` e os eventos-padrão da peça já ligados no código. Diga ao aluno em 1 linha: *"a página já nasce pronta pra rastreamento; os IDs a gente cria e pluga na Aula 3 (Tráfego): é colar 2 códigos e descomentar"*. Exceção: se o aluno JÁ tiver Pixel/GTM, pergunte os IDs e entregue plugado. Lembrete de LGPD: aviso de cookies/consentimento é responsabilidade do aluno. Os eventos alimentam a planilha de KPIs do `/cro-funil`. Eventos desta peça: Purchase (front) · view da página de upsell · Purchase do upsell/OTO · downsell aceito. Sem esses eventos não existe conta de LTV.
+> **Pixel-ready + layout de página do lead (texto completo em `.claude/skills/_shared/rastreamento.md` — LEIA-o ao gerar página).** Snippets Meta Pixel/GTM prontos porém COMENTADOS no `<head>` com `[PLUG: IDs]` (entram na Aula 3; se o aluno já tiver, plugue). Eventos desta peça: Purchase (front) · view da página de upsell · Purchase do upsell/OTO · downsell aceito (sem esses eventos não existe conta de LTV). Layout: CTA sempre ABAIXO do vídeo e centralizado; vídeo na 1ª dobra no mobile; jargão interno do método NUNCA visível pro lead; slot de vídeo nasce com roteiro (botão "Ver roteiro"); sem barra de revisão na página.
 
-> **Layout da página do lead (regra dura).** Vale pra TODA página voltada ao lead gerada por esta skill (upsell, OTO, downsell): **(1) quando a página tem vídeo, o botão de CTA fica SEMPRE ABAIXO do vídeo, nunca acima** — badges, selos e números de credibilidade vêm DEPOIS do CTA, nunca entre a headline e o vídeo; **(2) o botão de CTA é sempre centralizado** na página, em toda dobra em que aparecer; **(3) no mobile, o vídeo aparece assim que a página abre** — visível na primeira dobra, sem rolar; se não couber, enxugue o que vem antes dele, nunca empurre o vídeo pra baixo; **(4) jargão interno do método NUNCA vira texto visível na página do lead** — nada de "Big Idea", "mecanismo único", "ancoragem", "stack de valor", "prova social", "OTO", "upsell", "downsell" como eyebrow/rótulo/título de seção em NENHUMA página. Esses nomes vivem nos documentos internos do dono; na página, cada seção mostra só a copy real que o lead deve ler.
+> **Tarja de urgência (específico desta peça).** A página de upsell/OTO sai por padrão com a TARJA DE URGÊNCIA no topo ("Espere, não saia desta página" / "sua compra ainda não terminou") — ajuda muito a conversão da janela de dopamina.
+
+> **Downsell — NÃO inventar nome nem preço (regra dura, No Invention).** Se o dono não informou o produto/preço do downsell (ou do order bump), NÃO gere um produto fechado tipo "Ebook X por R$ 27". Marque `[DONO: definir produto e preço do downsell]` e mande pra `pendencias.md`. Você pode PROPOR candidatos (formato + faixa) casados ao mecanismo, mas apresentados como proposta pro dono escolher, nunca como oferta pronta.
+
+> **Back-end muda pelo Perfil do Projeto** (ler o topo do offerbook; regra em `.claude/skills/_shared/perfil.md`): **B2B** → o "back-end" é expansão de conta, renovação, programa de indicação e material de venda interna (não upsell/OTO digital). **Físico/varejo local** → fidelidade, recompra, clube/assinatura. **Afiliado** → não há back-end próprio (o back-end é do produtor).
 
 Se `projetos/{slug}/copy.md` existe (fundação da copy aprovada no `/copy-funil`: Big Idea, mecanismos, voz/léxico, banco de headlines e bullets, objeções), esta skill GERA a copy aplicada da sua peça a partir dele — a copy da página de upsell/OTO e do downsell. O aluno NÃO volta pro `/copy-funil` pra isso. Se o `copy.md` NÃO existe, aponte `/copy-funil` (a fundação) e PERGUNTE se o aluno quer seguir só com a estrutura. A copy aplicada obedece: Big Idea e mecanismos do `copy.md` · voz e léxico do avatar · regra de honestidade de prova (**[SEM PROVA AINDA]**) · compliance de nicho sensível. Depois de aplicada, a peça pode ser auditada na fase de validação do `/copy-funil` (nota Hopkins + checklist Sugarman).
 
@@ -95,6 +95,9 @@ Quando você quiser montar ou diagnosticar o back-end de um funil:
 | **Um produto mais barato** pra downsell | sem ele, quem recusa o upsell sai sem nada — perde-se a recuperação |
 
 Se faltar algum, **PARAR e definir antes** — não dá pra estruturar back-end sem os produtos das pontas.
+
+> **Exceção B2B/serviço de reunião (regra dura — lê o Perfil do topo do offerbook):** **Perfil = B2B / serviço de reunião → os 3 pré-requisitos viram: conta pra EXPANDIR, oferta de RENOVAÇÃO e programa de INDICAÇÃO — a ramificação upsell/OTO/janela de dopamina NÃO se aplica; monte o back-end B2B com esses 3.**
+> **Exceção afiliado (regra dura):** **Perfil = afiliado → o back-end é do PRODUTOR (você não controla o checkout); avise em 1 linha e aponte a próxima peça do afiliado (`/conteudo-funil` ou `/criativos-funil`), sem gerar nada.**
 
 ---
 
@@ -202,40 +205,14 @@ Pra cada pedido de back-end, entregar um **plano estruturado**:
 | Pediram a copy pronta (textos finais) | Gerar a copy aplicada a partir do `copy.md`; se ele não existir, apontar `/copy-funil` e perguntar se segue só com a estrutura |
 | Vão subir sem revisão | PARAR → apresentar a estrutura, esperar seu OK |
 
+> **Exceções do Perfil (ver Gate acima):** **B2B / serviço de reunião** não para por falta de upsell/downsell — monta EXPANSÃO + RENOVAÇÃO + INDICAÇÃO (a ramificação upsell/OTO/dopamina não se aplica). **Afiliado** não gera back-end (é do produtor): avise em 1 linha e aponte `/conteudo-funil` ou `/criativos-funil`.
+
 ---
 
 *Skill back-end v1 — método extraído do funil de Alan Nicolas (Workshop de Funis): Front-end/Back-end e LTV, Upsell/OTO/Downsell, página de upsell e janela de dopamina. Toda estrutura calibra no KB. A copy aplicada é gerada nesta skill a partir do copy.md (quando ele existe); o aluno revisa e aprova.*
 
 ---
 
-## Output nos 3 formatos (md + html + pdf) — igual à Aula 1
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
-Todo entregável desta skill sai em **3 formatos**, com o mesmo nome-base `projetos/{slug}/backend-funil`:
-
-1. **`.md`** — o conteúdo (fonte de verdade).
-2. **`.html`** — versão estilizada aplicando os **tokens do `projetos/{slug}/DESIGN.md` da marca do aluno** (cores, fontes, borda/raio, tamanho, logo). NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto) — a identidade é sempre a do `DESIGN.md`. Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). **Contraste por fundo (regra dura):** texto sobre fundo ESCURO usa o token CLARO da marca (ex.: `on-deep`/creme), NUNCA o token `muted` (que é do fundo CLARO e some no escuro); e legenda/microcopy de apoio sai MENOR e mais leve (opacidade ~.7) que o corpo, pra não competir com headline nem com o botão. CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
-3. **`.pdf`** — gerado a partir do html:
-
-   ```
-   bash .claude/skills/backend-funil/scripts/gerar_pdf.sh <arquivo>.html
-   ```
-
-Salve os 3 e confirme ao final. Nunca entregar só o `.md`.
-
----
-
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
-
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-
-## Ao terminar — SEMPRE diga o próximo passo
-
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
-
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do `projetos/{slug}/DESIGN.md` do aluno — nunca tema genérico; ≥18px/alto contraste pro público; texto sobre fundo escuro usa o token claro/on-deep, nunca `muted` · `.pdf` via `scripts/gerar_pdf.sh`). Toda entrega E todo checkpoint abrem o `.html` renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e enviam o arquivo na conversa; nunca peça aprovação sem o usuário ver renderizado. Feche SEMPRE apontando UM próximo comando (ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF; Apify é central nas skills de coleta, fallback só em cota estourada — `_shared/nunca-travar.md`).

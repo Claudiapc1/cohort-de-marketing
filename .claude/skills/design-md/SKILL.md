@@ -8,42 +8,51 @@ version: 1.0.0
 
 > Built by **Alan Nicolas** ([@oalanicolas](https://github.com/oalanicolas)) — [github.com/oalanicolas](https://github.com/oalanicolas)
 
-## ⚡ Execução no Cohort — Fluxo de 3 caminhos (USE SEMPRE ISTO)
+## ⚡ Execução no Cohort — Fluxo de 5 caminhos (USE SEMPRE ISTO)
 
 Quando o aluno acionar a skill (`/design-md`), **primeiro pergunte como ele quer criar a marca** (não assuma que ele tem uma URL):
 
 > **Como você quer criar o seu design.md?**
-> 1. **Do zero** — eu monto a identidade a partir de **referências visuais que você cola aqui** (prints do Pinterest, moodboard, marcas/páginas que você curte)
-> 2. **Com o que eu já tenho** — me manda seus arquivos de marca (logo, cores, manual) e eu monto
-> 3. **A partir de um site** — extraio a identidade de uma URL (o seu site ou uma referência)
-> 4. **Nenhuma agora** — seguir no brand neutro padrão (dark + cinza) e criar a sua marca depois
+> 1. **Usar um design já pronto** — você já tem um `DESIGN.md` (seu ou de outro projeto): eu localizo, confirmo e copio pra pasta do projeto. Sem extração.
+> 2. **A partir de um site** — extraio a identidade de uma URL (o seu site ou uma referência)
+> 3. **Do zero** — você me diz a vibe (3 palavras), as cores e o público, e eu autoro a marca (com os seus arquivos de marca, se tiver: logo, paleta, manual)
+> 4. **A partir de referências** — você **cola imagens** aqui (prints do Pinterest, moodboard, marcas que curte) e eu extraio paleta, tipografia e atmosfera por visão
+> 5. **Nenhuma agora** — seguir no brand neutro padrão (dark + cinza) e criar a sua marca depois
 
-Conduza conforme a resposta. Os caminhos **1, 2 e 3** terminam igual: `DESIGN.md` na **raiz do projeto** + `.cohort-brand-choice` = `design-md`. O **caminho 4** só marca o neutro (não gera DESIGN.md). Ao final, confirme pro aluno o que ficou ativo e que as próximas skills já seguem essa escolha.
+Conduza conforme a resposta. **Destino único: `projetos/{slug}/DESIGN.md`** — sempre que o projeto existir, o DESIGN.md é salvo lá (nunca na raiz). Os caminhos **1, 2, 3 e 4** terminam gravando `projetos/{slug}/DESIGN.md` + `design-md` em `.cohort-brand-choice`. O **caminho 5** só marca o neutro (não gera DESIGN.md). Antes de gerar, resolva o **Gate de projeto** abaixo (ele migra a Aula 1 sozinho — nunca peça pro aluno mover arquivo). Ao final, confirme pro aluno o que ficou ativo e que as próximas skills já seguem essa escolha.
 
-### Caminho 1 — Do zero (a partir de referências visuais)
-1. Pergunte: que negócio é, que sensação a marca deve passar (3 palavras), e **peça as referências visuais — peça pro aluno COLAR imagens/prints aqui no chat** (prints do Pinterest, moodboard, fotos de marcas/páginas que ele curte). 3-5 imagens é o ideal.
-   > **Pinterest por link não funciona** (o Pinterest bloqueia leitura automática). Peça pro aluno **printar ou salvar as imagens e colar aqui** — você é multimodal: **analise as imagens coladas** e extraia as cores (hex aproximado), a tipografia e o estilo/atmosfera.
-2. **PROPONHA você uma direção conforme o nicho/avatar do aluno** (não espere passivo): diga **o que ficaria bom** pro público dele — atmosfera, paleta de cores e dupla de fontes — e **explique o porquê pelo nicho** (ex.: público 50+ → fonte grande e alto contraste; mercado cético → tons sóbrios e anti-clichê; público jovem/tech → contraste alto e moderno). O aluno parte da sua proposta, das imagens dele, ou mistura os dois.
-3. Se ele der uma **URL de site** de referência forte, pode usá-la com o **Caminho 3** como ponto de partida e refinar.
-4. A partir das imagens + da sua proposta conforme o nicho, consolide a paleta (primary/secondary/accent/surface/text/text-muted) e a dupla de fontes (título + corpo), **explicando de qual referência/raciocínio saiu cada decisão**.
-5. Com o aval dele, preencha o template `data/cohort-brand-template.md` e escreva o resultado em `./DESIGN.md` (raiz). Escreva `design-md` em `.cohort-brand-choice`.
+### Gate de projeto — onde salvar o DESIGN.md (antes de gerar)
+Descubra o projeto ativo: `ls projetos/ 2>/dev/null`. **uma** pasta → use-a; **várias** → pergunte qual; **nenhuma** MAS existe `offerbook-*.md` na raiz → é um projeto da **Aula 1 ainda não migrado**: CRIE `projetos/{slug}/` (slug do nicho) e execute a **migração do pack da raiz** (a mesma lista do `/metodo-funil`, passo 2 — offerbook, avatar, espião, trends, swipe em md+html+pdf, mais `DESIGN.md`, `.cohort-brand-choice` e `pesquisa-avatar-*/`) ANTES de gerar, já salvando o novo `DESIGN.md` em `projetos/{slug}/`. Só se não houver offerbook nenhum na raiz, o funil ainda não começou (rode `/offerbook`). **Nunca peça pro aluno mover arquivo na mão.**
 
-### Caminho 2 — Com o que eu já tenho
-1. Peça os arquivos da marca (logo, paleta, manual, prints) e **leia o que ele enviar**.
-2. **Vá falando o que tem e o que falta** — ex.: "achei seu logo e a cor principal, mas preciso da fonte e da cor de fundo, qual é?". Complete com ele até ter o mínimo (cores, fontes, logo).
-3. Preencha o template `data/cohort-brand-template.md` com os dados reais e escreva em `./DESIGN.md` (raiz). Escreva `design-md` em `.cohort-brand-choice`.
+### Caminho 1 — Usar um design já pronto
+O aluno já tem um `DESIGN.md`. Localize-o (na raiz, em outro `projetos/*/`, ou o arquivo que ele indicar), confirme com ele qual usar e **copie pra `projetos/{slug}/DESIGN.md`**. Escreva `design-md` em `.cohort-brand-choice`. Sem extração.
 
-### Caminho 3 — A partir de um site (extração automática)
+### Caminho 2 — A partir de um site (extração automática)
 Execute **um comando só**, a partir da raiz do projeto:
 
 ```bash
 node .claude/skills/design-md/cohort.cjs --url <URL>
 ```
 
-O wrapper instala as dependências (1ª vez), gera, **copia o `DESIGN.md` para a raiz** e marca o brand-choice. Não rode `npm install` nem `run.cjs` direto, e não peça pro aluno mover arquivo — o `cohort.cjs` já cuida disso. (As seções abaixo são a referência técnica do extrator.)
+O wrapper instala as dependências (1ª vez), gera e marca o brand-choice. **Coloque o `DESIGN.md` gerado em `projetos/{slug}/DESIGN.md`** (é de lá que as skills seguintes leem). Não rode `npm install` nem `run.cjs` direto, e não peça pro aluno mover arquivo. (As seções abaixo são a referência técnica do extrator.)
 
-### Caminho 4 — Nenhuma agora (neutro)
+### Caminho 3 — Do zero
+1. Pergunte: que negócio é, que sensação a marca deve passar (3 palavras) e o público. Se ele tiver **arquivos de marca** (logo, paleta, manual), peça e **leia o que ele enviar** — vá dizendo o que tem e o que falta ("achei seu logo e a cor principal, mas preciso da fonte e da cor de fundo, qual é?") até ter o mínimo (cores, fontes, logo).
+2. **PROPONHA você uma direção conforme o nicho/avatar do aluno** (não espere passivo): diga **o que ficaria bom** pro público dele — atmosfera, paleta de cores e dupla de fontes — e **explique o porquê pelo nicho** (ex.: público 50+ → fonte grande e alto contraste; mercado cético → tons sóbrios e anti-clichê; público jovem/tech → contraste alto e moderno).
+3. Consolide a paleta (primary/secondary/accent/surface/text/text-muted) e a dupla de fontes (título + corpo), **explicando de qual referência/raciocínio saiu cada decisão**.
+4. Com o aval dele, preencha o template `data/cohort-brand-template.md` e escreva o resultado em `projetos/{slug}/DESIGN.md`. Escreva `design-md` em `.cohort-brand-choice`.
+
+### Caminho 4 — A partir de referências (mood board / Pinterest / imagens)
+1. **Peça pro aluno COLAR imagens/prints aqui no chat** (prints do Pinterest, moodboard, fotos de marcas/páginas que ele curte). 3-5 imagens é o ideal.
+   > **Pinterest por link não funciona** (o Pinterest bloqueia leitura automática). Peça pro aluno **printar ou salvar as imagens e colar aqui** — você é multimodal: **analise as imagens coladas** e extraia as cores (hex aproximado), a tipografia e o estilo/atmosfera.
+2. **PROPONHA você uma direção conforme o nicho/avatar do aluno** e **explique o porquê pelo nicho** (mesma lógica do Caminho 3). O aluno parte da sua proposta, das imagens dele, ou mistura os dois.
+3. Se ele der uma **URL de site** de referência forte, pode usá-la com o **Caminho 2** como ponto de partida e refinar.
+4. A partir das imagens + da sua proposta, consolide a paleta e a dupla de fontes **explicando de qual referência saiu cada decisão**, preencha o template `data/cohort-brand-template.md` e escreva em `projetos/{slug}/DESIGN.md`. Escreva `design-md` em `.cohort-brand-choice`.
+
+### Caminho 5 — Nenhuma agora (neutro)
 O aluno não quer criar marca agora. Escreva `neutro` em `.cohort-brand-choice` (raiz). As skills seguem no brand neutro padrão (dark + cinza). Avise que ele pode rodar a `/design-md` de novo quando quiser criar a marca dele — é só apagar `.cohort-brand-choice` e escolher outro caminho.
+
+> **Fecho — próximo passo:** com o `DESIGN.md` fechado (ou o neutro marcado), aponte explicitamente o próximo comando: **`/metodo-funil`** (o diagnóstico de consciência + o mapa de execução do funil), a menos que ele já exista — seguindo a ordem canônica do mapa.
 
 ---
 
@@ -57,11 +66,13 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Como descobrir o projeto ativo:**
 1. Se o usuário passou o slug/nicho no comando, use-o.
-2. Senão, `ls projetos/ 2>/dev/null`: **uma** pasta → use-a; **várias** → pergunte qual; **nenhuma** → o funil ainda não começou (rode `/offerbook` primeiro).
+2. Senão, `ls projetos/ 2>/dev/null`: **uma** pasta → use-a; **várias** → pergunte qual; **nenhuma** MAS existe `offerbook-*.md` na raiz → é um projeto da **Aula 1 ainda não migrado**: CRIE `projetos/{slug}/` e execute a **migração do pack da raiz** (a mesma lista do `/metodo-funil`, passo 2 — offerbook, avatar, espião, trends, swipe em md+html+pdf, mais `DESIGN.md`, `.cohort-brand-choice` e `pesquisa-avatar-*/`) ANTES de gerar, salvando o `DESIGN.md` já em `projetos/{slug}/`; **nenhuma e sem offerbook na raiz** → o funil ainda não começou (rode `/offerbook` primeiro). Nunca peça pro aluno mover arquivo na mão.
+
+**Agência / multi-cliente — a identidade é POR PROJETO:** quando existir **mais de um projeto** (`ls projetos/` com várias pastas) ou mais de um `DESIGN.md` no ambiente, **enumere por nome de cliente/projeto e peça a seleção** antes de gerar ou usar qualquer identidade. Cada marca vive em `projetos/{slug}/DESIGN.md` — **nunca** um DESIGN.md global na raiz servindo de escolha para todos. Regra fixa: **1 cliente = 1 projeto = 1 DESIGN.md**.
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
-> **Recriar NUNCA apaga o que existe (regra dura).** Se a peça que você vai gerar JÁ EXISTE no projeto (arquivo, lote de PNGs, pasta), o novo sai como **versão nova** (sufixo `-v2`, `-v3`… ou subpasta `v2/`) e o antigo fica intocado. Apagar ou sobrescrever trabalho existente SÓ com ordem explícita do dono nesta conversa ("pode apagar", "substitui"). O dono compara as versões e decide qual usar; índices, galerias e o Book mostram as duas, com a mais nova primeiro, e **cada versão antiga leva um botão ✕ "Excluir esta versão"**: o ✕ NUNCA apaga arquivo do disco — ele só tira a versão da visualização, pra não poluir o Book/galeria. Ao clicar, abre a confirmação: *"Tem certeza que quer excluir esta versão do Book do Funil? Os arquivos continuam no disco."* Confirmou, a seção some (persistido em `localStorage`) e um link discreto **"Mostrar versões ocultas (N)"** no rodapé traz de volta quando quiser. Apagar do disco de verdade continua exigindo ordem explícita do dono no chat.
+> **Versões, pendências e Book do Funil (regra dura — texto completo em `.claude/skills/_shared/book-do-funil.md`; LEIA-o ao fechar a peça).** Recriar nunca apaga: peça existente ganha versão nova (`-v2`), e o ✕ das versões antigas só esconde do Book (nunca apaga do disco). Pendências do dono vão pra `projetos/{slug}/pendencias.md` com CHAVE por decisão (re-run reconcilia, nunca soma). Ao terminar: atualize o card da peça no Book (`projetos/{slug}/index.html` — cards linkam sempre o `.html`, nunca `.md`) e o "VOCÊ ESTÁ AQUI" do mapa; documentos internos levam "← Voltar" + "← Book do Funil" (roteiro/VSL leva os DOIS botões, com caminho relativo real); amostra/checkpoint entra no Book ANTES de ir pro chat; feche com "Preencha as pendências" e abra o Book. Se o Perfil disser agência, ofereça a "versão cliente" do Book.
 
 > **Nota (convenção de projeto):** esta skill tem pipeline próprio e gera em `outputs/design-md/{slug-da-url}/`. Ao terminar, **copie o `DESIGN.md` gerado para `projetos/{slug}/DESIGN.md`** — é de lá que as skills seguintes (página, e-mails, conteúdo) leem a identidade visual.
 
@@ -82,6 +93,7 @@ Ao ser invocada sem um caminho já definido, a skill **começa perguntando qual 
 2. **Extrair de um site (URL)** — o pipeline padrão de 8 fases. Pedir a URL pública e rodar `run.cjs --url`. É o único modo que usa o extrator estático.
 3. **Fazer do zero (custom)** — não tem site nem referência pronta. Perguntar a vibe (ex: elegante/tech/minimalista), as cores da marca (ou deixar sugerir), fonte preferida e o público (acessibilidade 50+ → fonte ≥18px, alto contraste). O Claude **autora** o `DESIGN.md` no schema Google-spec a partir dessas respostas.
 4. **A partir de referências (mood board / Pinterest / imagens)** — o usuário tem inspiração visual, não código. Ele **cola as imagens** aqui (prints do Pinterest, paleta, fotos de referência), ou manda o link do board (se o Pinterest bloquear o fetch, pedir os prints). O Claude usa **visão** pra extrair paleta, tipografia e vibe das imagens e **autora** o `DESIGN.md` no mesmo schema. (O `run.cjs` NÃO enxerga imagem — este modo é autoria direta do Claude, fora do pipeline estático.)
+   - **Se o usuário mandar UMA imagem só:** avise explicitamente que *"a extração de 1 imagem é parcial — a paleta e a tipografia podem sair incompletas"* e **peça o logo + uma 2ª referência** antes de consolidar. Se ele quiser seguir só com 1, siga, mas **registre isso no `## Known Gaps`** do DESIGN.md gerado (extração feita de uma referência só; paleta/tipografia podem estar incompletas).
 5. **Neutro** — sem marca definida ainda. Gerar um `DESIGN.md` neutro (tons neutros, tipografia system-ui, espaçamento padrão) pra usar como está e ajustar depois.
 
 Regras dos modos de autoria (3, 4, 5): o `DESIGN.md` gerado segue **o mesmo schema Google-spec** dos modos de extração (frontmatter YAML com `colors`, `typography`, `spacing`, `radius`, etc.), pra as skills seguintes (página, e-mails, mockups, carrossel) lerem igual. Salvar direto em `projetos/{slug}/DESIGN.md`. Se o usuário já veio com URL ou modo explícito no comando, pular o menu e ir direto.
@@ -95,6 +107,7 @@ Pesquisado em 01/07/2026 no `google-labs-code/design.md` (spec) e `VoltAgent/awe
 - `colors` — `primary` é obrigatório (lint oficial). Incluir pares `on-*` (`on-primary`) e estados (`primary-hover`) quando a marca pedir.
 - `typography` (9-15 níveis), `spacing`, **`rounded`** (nome oficial do spec — não `radius`).
 - **`components` (machine-readable):** botão/card/input/badge como tokens, com as 8 propriedades válidas do spec (`backgroundColor`, `textColor`, `typography`, `rounded`, `padding`, `size`, `height`, `width`) e **variantes como entradas separadas** (`button-primary`, `button-primary-hover`). Usar **token references** `{path.to.token}` em vez de repetir hex — é o que impede o sistema de driftar.
+- **Superfície elevada / modal / pop-up (OBRIGATÓRIO):** o frontmatter DEVE trazer os tokens de camada elevada: `overlay` (o backdrop atrás do modal, ex.: `rgba(0,0,0,.6)`), `modal` (fundo do modal — **NUNCA o cinza default do navegador** —, mais borda, sombra e `rounded`) e um par de contraste (`on-modal`/`{colors.text}`) garantido pro conteúdo do modal. **Motivo:** nos testes da aula, quiz e páginas renderizaram pop-ups "quebradinhos" (fundo cinza, texto sem contraste) porque o DESIGN.md não tinha esses tokens; as skills consumidoras (`/quiz-funil`, `/pagina-vendas-funil`) usam esses tokens no lugar do cinza default — se eles não existem, o pop-up sai quebrado.
 - `shadow`/`motion` são extensão desta skill (tolerados pelo parser; documentar como extensão).
 
 **Corpo markdown (ordem canônica do spec — se a seção existe, tem que estar nesta ordem; duplicata = arquivo inválido):**
@@ -296,20 +309,10 @@ Alan Nicolas — [@oalanicolas](https://github.com/oalanicolas) — [github.com/
 
 ---
 
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
+Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do `projetos/{slug}/DESIGN.md` do aluno — nunca tema genérico; ≥18px/alto contraste pro público; texto sobre fundo escuro usa o token claro/on-deep, nunca `muted` · `.pdf` via `scripts/gerar_pdf.sh`). Toda entrega E todo checkpoint abrem o `.html` renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e enviam o arquivo na conversa; nunca peça aprovação sem o usuário ver renderizado. Feche SEMPRE apontando UM próximo comando (ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF; Apify é central nas skills de coleta, fallback só em cota estourada — `_shared/nunca-travar.md`).
 
-- **Node.js** — roda o `run.cjs` de extração de tokens. Check: `node --version`. **Fallback:** extrair os tokens manualmente (WebFetch da URL + leitura do CSS) e montar o DESIGN.md na mão.
-- **WebSearch / WebFetch** — pesquisa aberta na internet. Já vem no Claude Code, sem instalação. Se um site bloquear (login wall/Cloudflare), diga QUAL fonte falhou e o que veio de snippet.
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-
-## Ao terminar — SEMPRE diga o próximo passo
-
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
-
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+Ferramentas específicas desta skill:
+- **Node.js** — roda o `cohort.cjs`/`run.cjs` de extração de tokens. Check: `node --version`. **Fallback:** extrair os tokens manualmente (WebFetch da URL + leitura do CSS) e montar o DESIGN.md na mão.
+- **WebSearch / WebFetch** — pesquisa aberta na internet, já vem no Claude Code sem instalação. Se um site bloquear (login wall/Cloudflare), diga QUAL fonte falhou e o que veio de snippet.

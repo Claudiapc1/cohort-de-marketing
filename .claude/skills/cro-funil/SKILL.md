@@ -24,7 +24,7 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
-> **Recriar NUNCA apaga o que existe (regra dura).** Se a peça que você vai gerar JÁ EXISTE no projeto (arquivo, lote de PNGs, pasta), o novo sai como **versão nova** (sufixo `-v2`, `-v3`… ou subpasta `v2/`) e o antigo fica intocado. Apagar ou sobrescrever trabalho existente SÓ com ordem explícita do dono nesta conversa ("pode apagar", "substitui"). O dono compara as versões e decide qual usar; índices, galerias e o Book mostram as duas, com a mais nova primeiro, e **cada versão antiga leva um botão ✕ "Excluir esta versão"**: o ✕ NUNCA apaga arquivo do disco — ele só tira a versão da visualização, pra não poluir o Book/galeria. Ao clicar, abre a confirmação: *"Tem certeza que quer excluir esta versão do Book do Funil? Os arquivos continuam no disco."* Confirmou, a seção some (persistido em `localStorage`) e um link discreto **"Mostrar versões ocultas (N)"** no rodapé traz de volta quando quiser. Apagar do disco de verdade continua exigindo ordem explícita do dono no chat.
+> **Versões, pendências e Book do Funil (regra dura — texto completo em `.claude/skills/_shared/book-do-funil.md`; LEIA-o ao fechar a peça).** Recriar nunca apaga: peça existente ganha versão nova (`-v2`), e o ✕ das versões antigas só esconde do Book (nunca apaga do disco). Pendências do dono vão pra `projetos/{slug}/pendencias.md` com CHAVE por decisão (re-run reconcilia, nunca soma). Ao terminar: atualize o card da peça no Book (`projetos/{slug}/index.html` — cards linkam sempre o `.html`, nunca `.md`) e o "VOCÊ ESTÁ AQUI" do mapa; documentos internos levam "← Voltar" + "← Book do Funil" (roteiro/VSL leva os DOIS botões, com caminho relativo real); amostra/checkpoint entra no Book ANTES de ir pro chat; feche com "Preencha as pendências" e abra o Book. Se o Perfil disser agência, ofereça a "versão cliente" do Book.
 
 ---
 
@@ -51,6 +51,8 @@ ls projetos/{slug}/funil.md projetos/{slug}/copy.md 2>/dev/null
 > Pra otimizar a conversão do funil eu preciso de `projetos/{slug}/funil.md` (da skill `/metodo-funil`) e da headline em `projetos/{slug}/copy.md` (da skill `/copy-funil`). Rode `/metodo-funil` primeiro e volte.
 
 Não invente o que deveria vir da etapa anterior.
+
+> **Antes de tudo, leia os dois `_shared` (regra dura):** `.claude/skills/_shared/perfil.md` (Perfil do Projeto — Tipo, Voz e destino do funil; define quais KPIs medir — ver o Gate de KPIs abaixo) e `.claude/skills/_shared/nunca-travar.md` (o aluno nunca trava: todo pré-requisito e ferramenta explicados em linguagem de leigo, com glossário inline; **Apify é central, nunca "opcional"** — fallback só quando a cota estoura; **nunca prometa que o HTML abre sozinho** — sempre dê o caminho do arquivo + como abrir no SO do aluno).
 
 > **Onde salvar:** o resultado desta skill sai em **`projetos/{slug}/cro.md`** (+ `.html`/`.pdf` quando gerar). Mesma pasta do projeto.
 
@@ -99,6 +101,17 @@ Preencha com os números do **seu projeto**:
 > Cada etapa é uma "vitória" a ser otimizada separadamente. *"No mínimo, mil views únicos, mil pessoas diferentes que caíram na tua página"* antes de decidir qualquer coisa.
 
 > **Honestidade de dados:** KPIs e taxas de conversão vêm de dados REAIS do usuário — nunca inventar benchmark como se fosse dado do funil. Benchmark de mercado entra sempre rotulado como benchmark, com fonte.
+
+## Gate — KPIs conforme o Perfil do Projeto (não é sempre checkout)
+
+Antes de montar a planilha, **leia `.claude/skills/_shared/perfil.md`** (Perfil do Projeto) e pegue o **Tipo** e o campo **`Destino do fechamento`** (`venda-direta | reunião`) — **leia o campo, não re-deduza** (o `/quiz-funil` e o `/webinario-funil` já gravaram a escolha lá). A etapa final NEM SEMPRE é um checkout — a planilha de KPIs muda conforme o destino:
+
+- **B2B / serviço (destino = reunião):** os KPIs são de **PIPELINE**, não de checkout. As etapas viram: **leads → reuniões marcadas → reuniões feitas → propostas enviadas → fechamento**. O "gargalo que sangra" e o teste de maior alavancagem se leem sobre essa régua (ex.: lead → reunião marcada, no-show entre marcada e feita, proposta → fechamento).
+- **Físico / local (destino = presença/procura):** os KPIs são de **presença e procura**, não de compra online. As etapas viram: **visitas ao perfil/Google Maps → mensagens no WhatsApp → visitas à loja** (e, quando houver, venda registrada pelo dono). Nenhum pixel de checkout enxerga isso — grande parte é registro humano (ver a regra de "resultado de venda humana" acima).
+- **Digital com checkout (destino = compra online):** a régua padrão desta skill (visitas → cadastros → participantes → oferta → checkout → compras).
+- **Afiliado:** meça **até o clique no seu link de afiliado**; do **checkout → compra é do produtor** (você não controla o checkout) — peça os números a ele se estiverem disponíveis, e otimize o que é seu (criativo, hook, CTR até o clique).
+
+> **Guard de enquadramento (do `perfil.md`):** se o Perfil disser **Voz = marca** ou **Tipo ∈ {físico, saas-app, serviço, b2b}**, é **proibido** enquadrar a otimização como especialista/curso/depoimento-de-aluno (ex.: "prova = depoimento de aluno" só vale pra infoproduto). Ajuste a prova/criativo-hook ao Tipo real do negócio.
 
 ---
 
@@ -241,29 +254,6 @@ Pra cada pedido de otimização, entregar um **plano estruturado** pra você rev
 
 ---
 
-## Output nos 3 formatos (md + html + pdf) — igual à Aula 1
-
-Todo entregável desta skill sai em **3 formatos**, com o mesmo nome-base:
-
-1. **`.md`** — o conteúdo (fonte de verdade).
-2. **`.html`** — versão estilizada aplicando os **tokens do `projetos/{slug}/DESIGN.md` da marca do aluno** (cores, fontes, borda/raio, tamanho, logo). NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto) — a identidade é sempre a do `DESIGN.md`. Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). **Contraste por fundo (regra dura):** texto sobre fundo ESCURO usa o token CLARO da marca (ex.: `on-deep`/creme), NUNCA o token `muted` (que é do fundo CLARO e some no escuro); e legenda/microcopy de apoio sai MENOR e mais leve (opacidade ~.7) que o corpo, pra não competir com headline nem com o botão. CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
-3. **`.pdf`** — gerado a partir do html:
-
-   ```
-   bash .claude/skills/cro-funil/scripts/gerar_pdf.sh <arquivo>.html
-   ```
-
-Salve os 3 e confirme ao final. Nunca entregar só o `.md`.
-
----
-
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
-
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-- **Microsoft Clarity (grátis)** — heatmap + gravação de sessão (o qualitativo do CRO). Setup: criar projeto em clarity.microsoft.com e colar o script no `<head>` (as páginas geradas saem com o snippet COMENTADO + `[PLUG: CLARITY_ID]`; é descomentar na Aula de Dados). **Fallback:** seguir só com o quantitativo (planilha); o teste A/B não depende dele.
-
 ## Fecho da Aula 2 (esta é a última peça — o fecho é especial)
 
 O `/cro-funil` fecha o mapa de execução. Quando ele termina, NÃO aponte outra skill: aponte a LIÇÃO DE CASA. Após confirmar a entrega, **sempre** diga ao aluno em texto separado (mesmo padrão do fecho da Aula 01):
@@ -278,12 +268,9 @@ O `/cro-funil` fecha o mapa de execução. Quando ele termina, NÃO aponte outra
 
 Não pule esse anúncio — fecha o trilho completo da Aula 02.
 
-## Ao terminar — SEMPRE diga o próximo passo
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
+Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do `projetos/{slug}/DESIGN.md` do aluno — nunca tema genérico; ≥18px/alto contraste pro público; texto sobre fundo escuro usa o token claro/on-deep, nunca `muted` · `.pdf` via `scripts/gerar_pdf.sh`). Toda entrega E todo checkpoint abrem o `.html` renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e enviam o arquivo na conversa; nunca peça aprovação sem o usuário ver renderizado. Feche SEMPRE apontando UM próximo comando (ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF; Apify é central nas skills de coleta, fallback só em cota estourada — `_shared/nunca-travar.md`).
 
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+**Ferramentas específicas desta skill:**
+- **Microsoft Clarity (grátis)** — heatmap + gravação de sessão (o qualitativo do CRO). Setup: criar projeto em clarity.microsoft.com e colar o script no `<head>` (as páginas geradas saem com o snippet COMENTADO + `[PLUG: CLARITY_ID]`; é descomentar na Aula de Dados). **Fallback:** seguir só com o quantitativo (planilha); o teste A/B não depende dele.

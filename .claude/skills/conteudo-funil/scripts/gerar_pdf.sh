@@ -66,6 +66,11 @@ fi
 
 if [ -n "$CHROME" ]; then
   echo "[1/3] Usando Chrome/Edge headless..."
+  # No Windows o navegador exige file:///C:/... — cygpath -m converte /c/Users/... nesse formato.
+  # Fora do Git Bash (Mac/Linux) o cygpath nao existe: cai no caminho absoluto normal.
+  HTML_URL="file://$(cygpath -m "$HTML_ABS" 2>/dev/null || echo "$HTML_ABS")"
+  # set -e esta ativo: se o Chrome sair com codigo != 0, o || true evita matar o script
+  # antes dos fallbacks. O sucesso e checado pela EXISTENCIA do PDF logo abaixo.
   "$CHROME" \
     --headless \
     --disable-gpu \
@@ -74,7 +79,7 @@ if [ -n "$CHROME" ]; then
     --print-to-pdf-no-header \
     --no-pdf-header-footer \
     --virtual-time-budget=10000 \
-    "file://$HTML_ABS" 2>/dev/null
+    "$HTML_URL" 2>/dev/null || true
 
   if [ -f "$PDF_FILE" ]; then
     echo "PDF gerado: $PDF_FILE"

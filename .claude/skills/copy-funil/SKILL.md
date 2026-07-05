@@ -65,6 +65,8 @@ ls projetos/{slug}/offerbook.md 2>/dev/null
 
 > Pra escrever a copy eu preciso do `projetos/{slug}/offerbook.md` (da skill `/offerbook`). Rode `/offerbook` primeiro e volte.
 
+> **Exceção — Perfil = afiliado:** não há offerbook próprio. O gate se satisfaz com o **Registro da Oferta do Produtor** (`projetos/{slug}/offerbook.md` no formato do afiliado). Nesse caso, a **Fase 2 (Big Idea + mecanismo) LÊ a comunicação oficial do produtor** (promessa, mecanismo, prova que ele já usa) em vez de criar um mecanismo próprio — afiliado não inventa promessa que o produtor não faz.
+
 Não invente o que deveria vir da etapa anterior (a oferta, o avatar, o mecanismo).
 
 > **Onde salvar:** a copy desta skill sai em **`projetos/{slug}/copy.md`** (+ `.html`/`.pdf` quando gerar). Mesma pasta do projeto.
@@ -82,12 +84,22 @@ Antes de escrever qualquer linha, confira os insumos da Fase 1 dentro de `projet
 
 Se faltar o **obrigatório**, PARE, aponte a skill que gera (`/offerbook`) e PERGUNTE antes de seguir. Se faltar um recomendado, avise o que falta (e qual skill gera: `/avatar-funil`, `/espiao-do-concorrente`, `/swipe-file`) e pergunte se o aluno quer rodar antes ou seguir sem. Leia os que existirem e use-os como matéria-prima das fases.
 
+## Gate — Perfil do Projeto (ler ANTES de escrever a copy)
+
+Leia o **Perfil do Projeto** no topo do `projetos/{slug}/offerbook.md` (regra completa em `.claude/skills/_shared/perfil.md`) e adapte a copy. **Guard (regra dura):** se **Voz = marca** ou **Tipo ∈ {físico, saas-app, serviço, b2b}**, é PROIBIDO usar enquadramento de "especialista/curso/mentoria" e "depoimento de aluno" como padrão — use **voz do cliente / prova de uso / case**. O default de infoproduto de especialista só vale quando Tipo = especialista.
+
+- **B2B / serviço** → a copy vira **business case + ROI + autoridade + case**, decisor vs. usuário; não Big Idea emocional de transformação pessoal. Fechamento tende a **reunião**, não checkout.
+- **Físico / varejo local** → copy de **oferta local** (promoção, proximidade, urgência real da loja), não manifesto de transformação.
+- **SaaS/app** → copy de **antes/depois de produtividade** na voz do cliente ("levava X horas, agora minutos").
+- **Afiliado** → a copy se apoia na **oferta do produtor** (não invente mecanismo/promessa próprios além do que o produtor entrega).
+
 ## Gate de compliance — nicho sensível
 
-Antes de escrever qualquer promessa, headline ou oferta, verifique se o nicho é **regulado**: saúde/bem-estar/emagrecimento/estética, finanças/investimento/renda, jurídico, ou autoestima/relacionamento com promessa de resultado.
+Antes de escrever qualquer promessa, headline ou oferta, verifique se o nicho é **regulado**: saúde/bem-estar/emagrecimento/estética, finanças/investimento/renda, jurídico, **médico (CFM)**, **advocacia (OAB)**, **psicologia/terapia**, ou autoestima/relacionamento com promessa de resultado.
 
 - **Se for**, evite alegação que vira problema legal: "cura", "garantido", "resultado em X dias", "renda garantida", "sem esforço".
 - Use **linguagem de possibilidade**: "pode ajudar", "muitas pessoas relatam", "com dedicação". Todo depoimento entra com ressalva: *"resultados variam de pessoa pra pessoa"*.
+- **Exceção dura — médico (CFM) / psicologia (CRP) / jurídico (OAB):** depoimento de paciente/cliente **NÃO entra** (nem com ressalva — é vedação do conselho). A prova vira **credencial** (nome + registro no conselho), **método** e **conteúdo educativo**.
 - Recomende ao aluno **conferir as regras e os órgãos reguladores do mercado dele** — este gate só **alerta**, não é aconselhamento jurídico, e validar é responsabilidade do aluno.
 - Isto é um **aviso, não um bloqueio**: a skill segue normalmente, só com a copy calibrada pra não prometer o proibido.
 
@@ -287,7 +299,7 @@ Para funis EXISTENTES com dados.
 Apresente: fluxo usado, respostas da matriz de decisão, a fundação criada (diagnóstico, Big Idea + mecanismos, banco de headlines/bullets no `copy.md`), nota Hopkins e contagem Sugarman (quando a validação rodou), frameworks aplicados.
 
 ### Próximos Passos
-**O próximo passo é rodar a skill da peça do funil prescrito** (ex.: `/quiz-funil`, `/pagina-vendas-funil`, `/vsl-funil`, `/email-funil`) — ela gera a peça JÁ com a copy aplicada, lendo o `copy.md`. Ofereça também: revisar a fundação em detalhe, refazer uma fase, ou voltar aqui depois pra validar as peças prontas (Fase 6).
+**O próximo passo é UM comando só: a skill da peça de funil prescrita no `projetos/{slug}/funil.md`** (o formato que o `/metodo-funil` cravou pro estágio de consciência do projeto) — ela gera a peça JÁ com a copy aplicada, lendo o `copy.md`. Se ainda não existir `funil.md`, aponte **`/metodo-funil`** primeiro (é ele que decide o formato). Ofereça também: revisar a fundação em detalhe, refazer uma fase, ou voltar aqui depois pra validar as peças prontas (Fase 6).
 
 ## Notas
 - Comunicação entre fases sempre por arquivos do seu projeto (não por mensagens).
@@ -297,34 +309,6 @@ Apresente: fluxo usado, respostas da matriz de decisão, a fundação criada (di
 
 ---
 
-## Output nos 3 formatos (md + html + pdf) — igual à Aula 1
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
-Todo entregável desta skill sai em **3 formatos**, com o mesmo nome-base:
-
-1. **`.md`** — o conteúdo (fonte de verdade).
-2. **`.html`** — versão estilizada aplicando os **tokens do `projetos/{slug}/DESIGN.md` da marca do aluno** (cores, fontes, borda/raio, tamanho, logo). NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto) — a identidade é sempre a do `DESIGN.md`. Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). **Contraste por fundo (regra dura):** texto sobre fundo ESCURO usa o token CLARO da marca (ex.: `on-deep`/creme), NUNCA o token `muted` (que é do fundo CLARO e some no escuro); e legenda/microcopy de apoio sai MENOR e mais leve (opacidade ~.7) que o corpo, pra não competir com headline nem com o botão. CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
-3. **`.pdf`** — gerado a partir do html:
-
-   ```
-   bash .claude/skills/copy-funil/scripts/gerar_pdf.sh <arquivo>.html
-   ```
-
-Salve os 3 e confirme ao final. Nunca entregar só o `.md`.
-
----
-
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
-
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-
-## Ao terminar — SEMPRE diga o próximo passo
-
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
-
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do `projetos/{slug}/DESIGN.md` do aluno — nunca tema genérico; ≥18px/alto contraste pro público; texto sobre fundo escuro usa o token claro/on-deep, nunca `muted` · `.pdf` via `scripts/gerar_pdf.sh`). Toda entrega E todo checkpoint abrem o `.html` renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e enviam o arquivo na conversa; nunca peça aprovação sem o usuário ver renderizado. Feche SEMPRE apontando UM próximo comando (ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF; Apify é central nas skills de coleta, fallback só em cota estourada — `_shared/nunca-travar.md`).

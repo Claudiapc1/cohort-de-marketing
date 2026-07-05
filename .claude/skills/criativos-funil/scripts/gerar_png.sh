@@ -50,11 +50,27 @@ if [ -z "$CHROME" ] && [ -f "/Applications/Google Chrome.app/Contents/MacOS/Goog
   CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 fi
 
+# Windows (Git Bash): caminhos padrao do Chrome e do Edge (o Edge ja vem no Windows)
+if [ -z "$CHROME" ]; then
+  for p in \
+    "/c/Program Files/Google/Chrome/Application/chrome.exe" \
+    "/c/Program Files (x86)/Google/Chrome/Application/chrome.exe" \
+    "$LOCALAPPDATA/Google/Chrome/Application/chrome.exe" \
+    "/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe" \
+    "/c/Program Files/Microsoft/Edge/Application/msedge.exe"; do
+    if [ -f "$p" ]; then
+      CHROME="$p"
+      break
+    fi
+  done
+fi
+
 if [ -z "$CHROME" ]; then
   echo "Nenhum Chrome/Chromium encontrado automaticamente."
   echo ""
   echo "Para gerar os PNGs, instale o Chrome:"
-  echo "  brew install --cask google-chrome"
+  echo "  macOS:   brew install --cask google-chrome"
+  echo "  Windows: winget install Google.Chrome"
   echo ""
   echo "Ou abra cada ${PREFIX}-*.html no navegador e capture manualmente em ${W}x${H}."
   exit 1
@@ -79,6 +95,8 @@ for HTML in "${ARQUIVOS[@]}"; do
   BASENAME="$(basename "$HTML" .html)"
   OUT="$DIR_ABS/$BASENAME.png"
   echo "[$((COUNT+1))/${#ARQUIVOS[@]}] $BASENAME.html -> $BASENAME.png"
+  # No Windows o navegador exige file:///C:/... — cygpath -m converte; fora do Git Bash cai no caminho normal.
+  HTML_URL="file://$(cygpath -m "$HTML" 2>/dev/null || echo "$HTML")"
   "$CHROME" \
     --headless \
     --disable-gpu \
@@ -88,7 +106,7 @@ for HTML in "${ARQUIVOS[@]}"; do
     --force-device-scale-factor=1 \
     --window-size=${W},${H} \
     --screenshot="$OUT" \
-    "file://$HTML" 2>/dev/null || true
+    "$HTML_URL" 2>/dev/null || true
   if [ -f "$OUT" ]; then
     COUNT=$((COUNT+1))
   else

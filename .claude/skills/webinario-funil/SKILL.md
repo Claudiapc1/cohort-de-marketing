@@ -26,8 +26,6 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
-> **Recriar NUNCA apaga o que existe (regra dura).** Se a peça que você vai gerar JÁ EXISTE no projeto (arquivo, lote de PNGs, pasta), o novo sai como **versão nova** (sufixo `-v2`, `-v3`… ou subpasta `v2/`) e o antigo fica intocado. Apagar ou sobrescrever trabalho existente SÓ com ordem explícita do dono nesta conversa ("pode apagar", "substitui"). O dono compara as versões e decide qual usar; índices, galerias e o Book mostram as duas, com a mais nova primeiro, e **cada versão antiga leva um botão ✕ "Excluir esta versão"**: o ✕ NUNCA apaga arquivo do disco — ele só tira a versão da visualização, pra não poluir o Book/galeria. Ao clicar, abre a confirmação: *"Tem certeza que quer excluir esta versão do Book do Funil? Os arquivos continuam no disco."* Confirmou, a seção some (persistido em `localStorage`) e um link discreto **"Mostrar versões ocultas (N)"** no rodapé traz de volta quando quiser. Apagar do disco de verdade continua exigindo ordem explícita do dono no chat.
-
 ## Gate de pré-requisito (execute ANTES de tudo)
 
 Esta skill parte do output das etapas anteriores do funil. Todo o trabalho de um nicho vive em **`projetos/{slug}/`** (convenção de projeto acima).
@@ -60,17 +58,9 @@ Leia `projetos/{slug}/funil.md` (a prescrição do /metodo-funil). Se o funil pr
 
 > **Sem cara de IA na copy (regra dura).** Em TODA copy voltada ao cliente final (headline, bullet, página, e-mail, mensagem, roteiro): **sem travessão (—)** — reescreva com ponto, vírgula ou dois-pontos; e **sem a construção "não é sobre X, é sobre Y"** (e variantes "não é X, é Y", "não se trata de X, e sim de Y") — esse contraste é assinatura de texto de IA. Afirme direto o que É, ou mostre o contraste com fato concreto do avatar. Vale pra copy aplicada gerada por esta skill.
 
-> **Pendências do dono em UM lugar só.** Sempre que esta skill deixar um placeholder pro dono ([DONO ...], [A PREENCHER], [PLUG ...], [SEM PROVA AINDA], [N]), registre/atualize a entrada correspondente em **`projetos/{slug}/pendencias.md`** (+ `.html` com checklist clicável; crie se não existir): O QUÊ decidir, ONDE aparece (arquivos afetados) e COMO resolver. Agrupar por DECISÃO (1 decisão resolve vários arquivos), não por arquivo. Quando o dono informar um valor, atualizar TODOS os arquivos afetados de uma vez e marcar o item. O `/status-funil` lê esse arquivo.
->
-> **Book do Funil (o hub do projeto) + fecho obrigatório:** o projeto tem um hub único em **`projetos/{slug}/index.html`, o Book do Funil**: cards clicáveis de TODAS as peças já geradas, agrupados por fase (Pesquisa · Oferta e Fundação · Peças do funil · Próximas peças), cada card com badge de status (feito / em revisão / ação do dono / fila), e cada card linka SEMPRE o `.html` da peça (o `.md` e o `.docx` são fonte interna; o que o dono abre pelo Book é o `.html`) — NUNCA linke `.md` no Book, e a seção de **pendências + mapa NO FINAL** do Book. **Todo DOCUMENTO interno gerado** (mapas, docs de copy, índices, checklists, roteiros: tudo que é do dono, nunca as páginas do lead) leva no topo o par de navegação: **"← Voltar"** (volta pra página de onde o leitor veio: `<a href="../index.html" onclick="if(history.length>1){history.back();return false}">` — usa o histórico do navegador, com o Book como fallback quando o arquivo foi aberto direto) e **"← Book do Funil"** (link fixo pro hub). Quem clica numa VSL a partir de uma página e volta, volta PRA PÁGINA, não pro Book. **Página de roteiro/VSL leva DOIS botões explícitos no topo (regra dura):** um **"← Voltar pra [a página a que ela pertence]"** (link DIRETO pro arquivo da página, ex.: `index.html` da própria pasta) E o **"← Book do Funil"** — nunca só o do Book, senão quem lê o roteiro e clica em voltar cai no hub em vez da página de onde veio. **O fallback do "← Voltar" resolve pro caminho relativo REAL do Book conforme a profundidade da pasta** (`../index.html`, `../../index.html`…), NUNCA um `index.html` fixo que não existe naquele nível: `href` errado faz o "Voltar" cair em nada. Ao terminar a skill: (1) **atualize o card da sua peça no Book** E o status da peça no mapa (`funil.md` + `funil.html`): o "VOCÊ ESTÁ AQUI" tem que apontar SEMPRE pro ponto real do dono, nunca pra etapa já vencida (crie o Book se ainda não existir, na identidade do DESIGN.md); (2) encerre com *"Preencha as pendências"* e **abra o Book no navegador** — dele o dono chega a qualquer peça e ao `pendencias.html` (checklist com CAMPO DE RESPOSTA em cada item e o botão "Copiar respostas pro Claude"). Instrua o dono: preencher os campos, clicar em Copiar respostas e COLAR de volta no chat. **Ao receber as respostas coladas, atualize todos os arquivos afetados, marque os itens no `pendencias.md`, REGENERE o `pendencias.html` refletindo o estado novo (placar aplicadas/parciais/abertas; itens aplicados em verde com o valor; parciais em laranja com o que falta; abertos com campo de resposta) e ABRA o html atualizado — o dono precisa VER o que continua pendente, não só ler no chat.**
+> **Versões, pendências e Book do Funil (regra dura — texto completo em `.claude/skills/_shared/book-do-funil.md`; LEIA-o ao fechar a peça).** Recriar nunca apaga: peça existente ganha versão nova (`-v2`), e o ✕ das versões antigas só esconde do Book (nunca apaga do disco). Pendências do dono vão pra `projetos/{slug}/pendencias.md` com CHAVE por decisão (re-run reconcilia, nunca soma). Ao terminar: atualize o card da peça no Book (`projetos/{slug}/index.html` — cards linkam sempre o `.html`, nunca `.md`) e o "VOCÊ ESTÁ AQUI" do mapa; documentos internos levam "← Voltar" + "← Book do Funil" (roteiro/VSL leva os DOIS botões, com caminho relativo real); amostra/checkpoint entra no Book ANTES de ir pro chat; feche com "Preencha as pendências" e abra o Book. Se o Perfil disser agência, ofereça a "versão cliente" do Book.
 
-> **Rastreamento: a página nasce PIXEL-READY; os IDs entram na Aula 3 (Tráfego).** Nenhuma página do funil nasce cega, mas esta etapa também não cria fricção: **NÃO mande o aluno pro Gerenciador de Eventos agora.** Toda página gerada já sai com os snippets de **Meta Pixel** (recomendado: é o que constrói a audiência de remarketing) e **GTM** (opcional: gerencia tags sem mexer em código; junto com o Pixel dá o melhor rastreamento) **prontos porém COMENTADOS** no `<head>` (+ `<noscript>` após `<body>`), com placeholders `[PLUG: SEU_PIXEL_ID]` / `[PLUG: GTM-XXXXXXX]` e os eventos-padrão da peça já ligados no código. Diga ao aluno em 1 linha: *"a página já nasce pronta pra rastreamento; os IDs a gente cria e pluga na Aula 3 (Tráfego): é colar 2 códigos e descomentar"*. Exceção: se o aluno JÁ tiver Pixel/GTM, pergunte os IDs e entregue plugado. Lembrete de LGPD: aviso de cookies/consentimento é responsabilidade do aluno. Os eventos alimentam a planilha de KPIs do `/cro-funil`. Eventos desta peça: PageView · CompleteRegistration (inscrição) · show-up (clique no link da sala) · **chegou_na_oferta** (minuto do pitch, pixel pra remarketing) · InitiateCheckout.
-
-> **SEM barra de revisão dentro da página (a navegação mora no Book).** A página do lead NÃO leva barra de revisão, atalhos internos nem elemento de bastidor: a navegação entre as peças (copy, mapa, quiz, e-mails, pendências) fica no **Book do Funil** (`projetos/{slug}/index.html`), fora da página. Página de venda só carrega o que o LEAD deve ver.
-
-> **Slot de vídeo nasce com roteiro (copy aplicada do vídeo).** Página com vídeo NUNCA fica só com placeholder: gere também o ROTEIRO do vídeo (gancho, espelho/narrativa, mecanismo, convite, fecho; com fala pronta, texto na tela e notas de gravação) a partir do `copy.md`, como HTML próprio na pasta `pagina/`. Nesta skill o vídeo é o próprio webinário (o script é lei): o roteiro completo sai como HTML próprio em `pagina/webinario-roteiro.html`, e toda página gerada com vídeo (registro, obrigado, replay) inclui o botão "Ver roteiro do vídeo" DENTRO do slot. O dono grava a partir do roteiro e troca o slot pelo player.
-
-> **Layout da página do lead (regra dura).** Vale pra TODA página voltada ao lead gerada por esta skill (registro, obrigado, replay): **(1) quando a página tem vídeo, o botão de CTA fica SEMPRE ABAIXO do vídeo, nunca acima** — a ordem do topo é headline → sub-headline → vídeo → CTA (badges, selos e números de credibilidade vêm DEPOIS do CTA, nunca entre a headline e o vídeo); **(2) o botão de CTA é sempre centralizado** na página, em toda dobra em que aparecer; **(3) no mobile, o vídeo aparece assim que a página abre** — visível na primeira dobra, sem rolar; se não couber, enxugue o que vem antes dele (headline mais curta, sub de 1 linha), nunca empurre o vídeo pra baixo; **(4) jargão interno do método NUNCA vira texto visível na página do lead** — nada de "Big Idea", "mecanismo único", "ancoragem", "stack de valor", "prova social", "escassez" como eyebrow/rótulo/título de seção em NENHUMA página. Esses nomes vivem nos documentos internos do dono; na página, cada seção mostra só a copy real que o lead deve ler.
+> **Pixel-ready + layout de página do lead (texto completo em `.claude/skills/_shared/rastreamento.md` — LEIA-o ao gerar página).** Snippets Meta Pixel/GTM prontos porém COMENTADOS no `<head>` com `[PLUG: IDs]` (entram na Aula 3; se o aluno já tiver, plugue). Eventos desta peça: PageView · CompleteRegistration (inscrição) · show-up (clique no link da sala) · **chegou_na_oferta** (minuto do pitch, pixel pra remarketing) · InitiateCheckout. Layout: CTA sempre ABAIXO do vídeo e centralizado; vídeo na 1ª dobra no mobile; jargão interno do método NUNCA visível pro lead; slot de vídeo nasce com roteiro (botão "Ver roteiro"); sem barra de revisão na página.
 
 Se `projetos/{slug}/copy.md` existe (fundação da copy aprovada no /copy-funil: Big Idea, mecanismos, voz/léxico, banco de headlines e bullets, objeções), esta skill GERA a copy aplicada da sua peça a partir dele — o roteiro do webinário e as páginas de registro/obrigado. O aluno NÃO volta pro /copy-funil pra isso. Se `copy.md` NÃO existe, aponte /copy-funil (a fundação) e PERGUNTE se o aluno quer seguir só com a estrutura. A copy aplicada obedece: Big Idea e mecanismos do copy.md · voz e léxico do avatar · regra de honestidade de prova (`[SEM PROVA AINDA]`) · compliance de nicho sensível. Depois de aplicada, a peça pode ser auditada na fase de validação do /copy-funil (nota Hopkins + checklist Sugarman).
 
@@ -115,17 +105,51 @@ O webinário serve aos dois níveis mornos, mas **muda de peso**. Diagnostique a
 
 ---
 
+## Gate — Perfil do Projeto (ler ANTES de montar o webinário)
+
+Leia o **Perfil do Projeto** no topo do `projetos/{slug}/offerbook.md` — regra compartilhada em **`.claude/skills/_shared/perfil.md`**. Ele muda o webinário:
+
+- **Guard de enquadramento (regra dura):** se **Voz = marca** ou **Tipo ∈ {físico, saas-app, serviço, b2b}**, é **PROIBIDO** enquadrar o webinário como "mentoria do especialista" e usar "depoimento de aluno" como prova. O roteiro fala de **empresa / cliente / case** (voz do cliente, prova de uso, estudo de caso), NUNCA "mentoria do especialista" nem "depoimento de aluno". O enquadramento "especialista que ensina um método" só vale quando **Tipo = especialista**.
+- **Afiliado (regra dura):** **Perfil = afiliado → webinário só se o PRODUTOR fornece a estrutura; o afiliado promove, não apresenta oferta própria.**
+- Sem Perfil no offerbook → use o padrão (Tipo = especialista, Voz = pessoa) e siga, nunca trave.
+
+---
+
+## Gate de configuração (define ANTES de montar)
+
+Antes das 5 peças, resolva 3 coisas. O que dá pra ler do offerbook/avatar, leia (não pergunte); o que é decisão do dono, pergunte em opção clicável, sem pré-marcar nenhuma.
+
+### 1. Destino do fechamento — PERGUNTE (2 opções, nenhuma marcada)
+> **No fim do webinário, o que você quer?**
+> - **Venda direta (checkout)** — o lead compra ali mesmo, na oferta do webinário. Costuma casar com ticket que a pessoa decide sozinha.
+> - **Marcar reunião/diagnóstico** — o lead agenda uma conversa; o fechamento é na call. Costuma casar com ticket alto, serviço ou B2B, onde a venda precisa de conversa.
+
+Consequências: **venda direta** → Peça 4 é oferta + checkout (stack, ancoragem, escassez). **Marcar reunião** → Peça 4 é convite pra call + link de agendamento (não checkout), e a régua de e-mail **nutre até a reunião, NUNCA vende direto** (ciclo longo). O ticket do offerbook é só contexto pra sua decisão, não decide por você.
+
+> **GRAVAR a escolha:** quando o dono responder, grave a resposta como o campo **`Destino do fechamento: [venda-direta | reunião]`** no **Perfil do Projeto** (topo do `projetos/{slug}/offerbook.md`) — é de lá que `/recuperacao-funil`, `/cro-funil` e `/status-funil` leem pra não empurrar checkout onde o certo é agendar reunião (regra em `_shared/perfil.md`).
+
+### 2. Ao vivo ou gravado — leia do offerbook, pergunte só se faltar
+Webinário pode ser **ao vivo** (mais crença, mais trabalho) ou **gravado/evergreen** (escala, roda sempre). Se o offerbook não disser, pergunte. Pra ticket alto, gravado é aceitável (aquece o lead antes da reunião).
+
+### 3. Segmentação — LEIA do offerbook + avatar (não pergunte)
+- Se o avatar tem **1 dor dominante** e há **1 produto** → **1 webinário**.
+- Se há **dores/segmentos diferentes com produtos por dor** → **1 webinário por segmento** (mesmo apresentador serve). A skill decide isso lendo as dores ranqueadas do `avatar.md` + a oferta do `offerbook.md`.
+- **Apresentador:** default 1 (a marca ou o especialista). SÓ pergunte "1 apresentador ou vários consultores?" quando o tipo de oferta for **serviço / agência / B2B com time**; se vários, gere uma variante de roteiro por consultor (cada um na sua voz).
+- **Multi-nicho:** se cada apresentador atende um **nicho diferente**, isso são **projetos separados** (um offerbook por nicho). Não empilhe nichos num webinário só. Avise: *"Nicho diferente = projeto separado. Este webinário é do projeto atual; rode o pipeline uma vez por nicho."*
+
+---
+
 ## As 5 peças do funil de webinário
 
 Monte nesta ordem. Cada peça tem sua skill responsável.
 
 | # | Peça | O que entrega | Skill / fonte |
 |---|------|---------------|---------------|
-| 1 | **Página de registro** | captura nome + e-mail + WhatsApp; promessa + data/hora + o que vai aprender | `/design-md` (visual) + `/pagina-vendas-funil` (estrutura enxuta) + `/copy-funil` (copy) |
-| 2 | **Sequência de aquecimento** | e-mails + WhatsApp do registro até o "estamos ao vivo" — sobe show rate | `/email-funil` + `/whatsapp-funil` |
-| 3 | **Roteiro do webinário** | a apresentação fase a fase (abertura → 3 segredos → transição → stack → fechamento) | esta skill (estrutura) + `/copy-funil` (falas) |
-| 4 | **Oferta + checkout** | stack de valor, ancoragem, bônus, garantia, escassez real, CTA | `offerbook` / `/oferta-funil` + `/pagina-vendas-funil` |
-| 5 | **Pós-webinário** | replay + sequência de e-mails de venda até o fechamento do carrinho | `/email-funil` + `/recuperacao-funil` |
+| 1 | **Páginas de registro + obrigado** | **inscrição** (captura nome + e-mail + WhatsApp; promessa + data/hora + o que vai aprender) E **obrigado** com a **pesquisa de maturidade** (2-4 perguntas que segmentam o lead e, no B2B, qualificam pra reunião). GERAR os DOIS HTMLs de fato (`pagina/registro.html`, `pagina/obrigado.html`), não só o esqueleto. | `/design-md` (visual) + `/pagina-vendas-funil` (estrutura) + `/quiz-funil` (mecânica da pesquisa) + `/copy-funil` (copy) |
+| 2 | **Sequência de aquecimento** | e-mails + WhatsApp do registro até o "estamos ao vivo" — sobe show rate. No destino "marcar reunião", a régua **nutre até a reunião, nunca vende direto**. | `/email-funil` + `/whatsapp-funil` |
+| 3 | **Roteiro do webinário** | a apresentação fase a fase (abertura → 3 segredos → transição → stack → fechamento). Ao vivo ou gravado. | esta skill (estrutura) + `/copy-funil` (falas) |
+| 4 | **Fechamento (pelo destino escolhido)** | **venda direta** → oferta + checkout (stack, ancoragem, bônus, garantia, escassez, CTA). **Marcar reunião** → convite + link de agendamento (NÃO checkout); a venda fecha na call. | `offerbook` + `/pagina-vendas-funil` (venda direta) · `/pagina-vendas-funil` (modo B2B/agendar reunião — o back-end fica pro pós-fechamento/expansão) |
+| 5 | **Pós-webinário** | replay + sequência até o fechamento: **venda direta** → e-mails de carrinho; **reunião** → lembrete/no-show da call e re-agendamento. | `/email-funil` + `/recuperacao-funil` |
 
 ---
 
@@ -191,12 +215,13 @@ Pra cada pedido, entregar:
 
 1. **Diagnóstico** — nível (4 ou 3) + justificativa + tipo de webinário (educativo vs solução).
 2. **Big Domino** + os **3 segredos** mapeados (qual crença cada um quebra).
-3. **Mapa das 5 peças** — registro → aquecimento → roteiro → oferta → pós, cada uma com a skill responsável e o esqueleto a preencher.
-4. **Roteiro fase a fase** (as 5 fases, com tempos e o que entra em cada bloco — com as falas geradas nesta skill a partir do `copy.md`, pra você revisar).
-5. **Sequências** — aquecimento (e-mail + WhatsApp) e pós-webinário (replay + venda), como esqueleto pra `/email-funil`.
-6. **Checklist** pré / durante / pós-webinário (KB §7).
+3. **Mapa das 5 peças** — registro → aquecimento → roteiro → fechamento → pós, cada uma com a skill responsável.
+4. **As páginas GERADAS de fato** (HTML na identidade do `DESIGN.md`, não só esqueleto): `pagina/registro.html` (inscrição), `pagina/obrigado.html` (confirmação + **pesquisa de maturidade** clicável, mecânica do `/quiz-funil`), e — pelo destino escolhido — `pagina/oferta.html` (venda direta) OU o bloco de **convite + link de agendamento** (marcar reunião). Faltou isso ao vivo: NÃO entregue só a de vendas.
+5. **Roteiro fase a fase** (as 5 fases, com tempos e falas geradas do `copy.md`) em `pagina/webinario-roteiro.html`.
+6. **Sequências** — aquecimento (e-mail + WhatsApp) e pós-webinário, como esqueleto pra `/email-funil` (no destino "reunião", nutrição até a call, nunca venda direta).
+7. **Checklist** pré / durante / pós-webinário (KB §7).
 
-> A **copy aplicada** (roteiro + páginas de registro/obrigado) é gerada nesta skill a partir do `copy.md` — você revisa e aprova. `/email-funil` escreve os e-mails; o `DESIGN.md` dá a identidade visual da página.
+> A **copy aplicada** (roteiro + páginas de registro/obrigado + pesquisa) é gerada nesta skill a partir do `copy.md` — você revisa e aprova. `/email-funil` escreve os e-mails; o `DESIGN.md` dá a identidade visual das páginas.
 
 > **Onde salvar:** a estrutura desta skill sai em **`projetos/{slug}/webinario.md`** (+ `.html`/`.pdf` quando gerar). Mesma pasta do projeto.
 
@@ -239,34 +264,6 @@ PEÇA            SKILL                  O QUE ENTREGA
 
 ---
 
-## Output nos 3 formatos (md + html + pdf) — igual à Aula 1
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
-Todo entregável desta skill sai em **3 formatos**, com o mesmo nome-base `projetos/{slug}/webinario`:
-
-1. **`.md`** — o conteúdo (fonte de verdade).
-2. **`.html`** — versão estilizada aplicando os **tokens do `projetos/{slug}/DESIGN.md` da marca do aluno** (cores, fontes, borda/raio, tamanho, logo). NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto) — a identidade é sempre a do `DESIGN.md`. Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). **Contraste por fundo (regra dura):** texto sobre fundo ESCURO usa o token CLARO da marca (ex.: `on-deep`/creme), NUNCA o token `muted` (que é do fundo CLARO e some no escuro); e legenda/microcopy de apoio sai MENOR e mais leve (opacidade ~.7) que o corpo, pra não competir com headline nem com o botão. CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
-3. **`.pdf`** — gerado a partir do html:
-
-   ```
-   bash .claude/skills/webinario-funil/scripts/gerar_pdf.sh <arquivo>.html
-   ```
-
-Salve os 3 e confirme ao final. Nunca entregar só o `.md`.
-
----
-
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
-
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-
-## Ao terminar — SEMPRE diga o próximo passo
-
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
-
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do `projetos/{slug}/DESIGN.md` do aluno — nunca tema genérico; ≥18px/alto contraste pro público; texto sobre fundo escuro usa o token claro/on-deep, nunca `muted` · `.pdf` via `scripts/gerar_pdf.sh`). Toda entrega E todo checkpoint abrem o `.html` renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e enviam o arquivo na conversa; nunca peça aprovação sem o usuário ver renderizado. Feche SEMPRE apontando UM próximo comando (ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF; Apify é central nas skills de coleta, fallback só em cota estourada — `_shared/nunca-travar.md`).

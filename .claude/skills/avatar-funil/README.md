@@ -31,7 +31,7 @@ No relatório, cada dor vem com a fonte de onde saiu, e a frase entra como o cli
 ### No Claude Code (terminal)
 
 1. Descompacte a pasta `avatar-funil`.
-2. Coloque ela dentro de `~/.claude/skills/` (uso pessoal) ou de `.claude/skills/` (dentro de um projeto).
+2. Coloque ela dentro de `~/.claude/skills/` (uso pessoal; no Windows, `C:\Users\SeuNome\.claude\skills\`) ou de `.claude/skills/` (dentro de um projeto).
 3. Abra o Claude Code e peça: **"faz pesquisa de avatar do [nicho]"**. A skill carrega sozinha quando o assunto bate.
 
 > Dica: o nome da pasta tem que continuar com o `SKILL.md` dentro dela. Não renomeie o arquivo `SKILL.md`.

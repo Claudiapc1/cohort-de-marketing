@@ -41,9 +41,12 @@ ACTOR_TIKTOK = "clockworks~free-tiktok-scraper"
 
 
 def ler_token() -> str:
-    token = os.environ.get("APIFY_API_TOKEN", "").strip()
-    if token:
-        return token
+    # aceita qualquer um dos dois nomes (APIFY_API_TOKEN é o oficial do Apify;
+    # APIFY_API_KEY é o que a /comecar grava em algumas versões — ambos valem)
+    for nome in ("APIFY_API_TOKEN", "APIFY_API_KEY"):
+        token = os.environ.get(nome, "").strip()
+        if token:
+            return token
     # tenta ler do .env na raiz (procura subindo até achar)
     aqui = os.getcwd()
     for _ in range(6):
@@ -51,8 +54,9 @@ def ler_token() -> str:
         if os.path.isfile(env):
             with open(env, encoding="utf-8") as f:
                 for linha in f:
-                    if linha.strip().startswith("APIFY_API_TOKEN="):
-                        return linha.split("=", 1)[1].strip()
+                    for nome in ("APIFY_API_TOKEN=", "APIFY_API_KEY="):
+                        if linha.strip().startswith(nome):
+                            return linha.split("=", 1)[1].strip()
         pai = os.path.dirname(aqui)
         if pai == aqui:
             break

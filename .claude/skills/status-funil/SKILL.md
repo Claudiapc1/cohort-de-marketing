@@ -1,5 +1,5 @@
 ---
-name: funil-status
+name: status-funil
 description: "Mostra o estado do seu funil — quais peças já estão prontas e qual é a próxima. Lê a pasta projetos/{slug}/ e devolve um checklist do funil (avatar, offerbook, copy, design, página, e-mails, conteúdo, recuperação, CRO), marcando o que existe, o que falta e onde você está. Use quando quiser saber o que já fez e o que vem a seguir no seu funil."
 user_invocable: true
 ---
@@ -18,7 +18,7 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Como descobrir o projeto ativo:**
 1. Se o usuário passou o slug/nicho no comando, use-o.
-2. Senão, `ls projetos/ 2>/dev/null`: **uma** pasta → use-a; **várias** → liste e mostre o status de cada uma (ou pergunte qual); **nenhuma** → o funil ainda não começou (aponte `/offerbook` ou a Aula 1).
+2. Senão, `ls projetos/ 2>/dev/null`: **uma** pasta → use-a; **várias** → liste e mostre o status de cada uma (ou pergunte qual); **nenhuma** → o funil ainda não começou — aponte **`/comecar`** (se o aluno está montando o ambiente) ou **`/avatar-funil`** (pra começar a Aula 1 pela pesquisa). **Nunca aponte `/offerbook` aqui:** o offerbook exige o avatar e devolveria o aluno pro `/avatar-funil` — mande direto pro início certo.
 
 ---
 
@@ -30,13 +30,14 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 ```
 ls projetos/{slug}/avatar.md \
    projetos/{slug}/offerbook.md \
-   projetos/{slug}/copy.md \
    projetos/{slug}/DESIGN.md \
    projetos/{slug}/funil.md \
+   projetos/{slug}/copy.md \
    projetos/{slug}/pagina/ \
    projetos/{slug}/emails/ \
    projetos/{slug}/conteudo/ \
    projetos/{slug}/recuperacao.md \
+   projetos/{slug}/back-end.md \
    projetos/{slug}/cro.md 2>/dev/null
 ```
 
@@ -47,43 +48,74 @@ ls projetos/{slug}/avatar.md \
 
 ## A ordem do funil (referência)
 
+A ordem segue a **ordem canônica N12 do `/metodo-funil`** (design antes de copy; recuperação e back-end na posição do N12):
+
 | # | Peça | Arquivo em `projetos/{slug}/` | Skill |
 |---|------|-------------------------------|-------|
 | 1 | Avatar | `avatar.md` | `/avatar-funil` |
-| 2 | Offerbook | `offerbook.md` | `/offerbook` |
-| 3 | Diagnóstico do funil | `funil.md` | `/metodo-funil` |
-| 4 | Copy | `copy.md` | `/copy-funil` |
-| 5 | Identidade visual | `DESIGN.md` | `/design-md` |
+| 2 | Offerbook / Registro da oferta do produtor (afiliado) | `offerbook.md` | `/offerbook` |
+| 3 | Identidade visual | `DESIGN.md` | `/design-md` |
+| 4 | Diagnóstico do funil | `funil.md` | `/metodo-funil` |
+| 5 | Copy | `copy.md` | `/copy-funil` |
 | 6 | Página de vendas | `pagina/` | `/pagina-vendas-funil` |
 | 7 | E-mails | `emails/` | `/email-funil` |
 | 8 | Conteúdo | `conteudo/` | `/conteudo-funil` |
 | 9 | Recuperação | `recuperacao.md` | `/recuperacao-funil` |
-| 10 | CRO / teste | `cro.md` | `/cro-funil` |
+| 10 | Back-end | `back-end.md` | `/backend-funil` |
+| 11 | CRO / teste | `cro.md` | `/cro-funil` |
 
-> As peças de formato alternativo (`vsl.md`, `advertorial.md`, `quiz.md`, `webinario.md`, `lancamento.md`, `whatsapp.md`, `criativos/`, `mockups/`, `back-end.md`) entram conforme o `/metodo-funil` prescrever — se existirem, liste-as também.
+> As peças de formato alternativo (`vsl.md`, `advertorial.md`, `quiz.md`, `webinario.md`, `lancamento.md`, `whatsapp.md`, `criativos/`, `mockups/`) entram conforme o `/metodo-funil` prescrever — se existirem, liste-as também.
+
+> **Leia o Perfil do Projeto antes de mostrar o checklist (regra dura):** o caminho do funil muda com o tipo de negócio. Leia o **Perfil do Projeto** (topo do `projetos/{slug}/offerbook.md`, regra em `.claude/skills/_shared/perfil.md`) e adapte a lista e o "próximo passo" ao Tipo de oferta:
+> - **físico / varejo-local** → o funil é local/regional (Google Perfil/Maps, WhatsApp, oferta no ponto); não aponte quiz→checkout online como próximo passo.
+> - **saas-app** → funil de trial/demo; prova = voz do cliente + caso de uso, nunca depoimento de aluno.
+> - **serviço / b2b** → fechamento por **reunião** (webinário/quiz → marcar reunião), não checkout nem e-mail direto pra comprar.
+> - **afiliado** → o offerbook é o **Registro da Oferta do Produtor** (`offerbook.md` com `Situação de partida: afiliado`); a peça se apoia na oferta do produtor (foco em página-ponte/criativo), sem back-end próprio. Marque a peça 2 como existente quando esse registro estiver na pasta.
+>
+> **Leia também o campo `Destino do fechamento` do Perfil quando existir** (`venda-direta | reunião`, regra em `.claude/skills/_shared/perfil.md`): se o destino for **reunião**, o "próximo passo" e o checklist falam em agendar/qualificar, nunca em checkout; se for **venda-direta**, seguem no fluxo de checkout. Não presuma o destino — leia-o do Perfil.
+>
+> **Guard:** se **Voz = marca** ou **Tipo ∈ {físico, saas-app, serviço, b2b}**, é **PROIBIDO** enquadrar o funil como "curso/mentoria de especialista" ou sugerir "depoimento de aluno" como próximo passo — use voz do cliente / prova de uso / case. Se o Perfil não existir, use o padrão e siga (nunca trave). Termos técnicos sempre com uma explicação de leigo ao lado (regra em `.claude/skills/_shared/nunca-travar.md`), ex.: "trial (período de teste grátis)".
+
+---
+
+## Pendências do dono — placar por CHAVE (nunca por linha)
+
+Além das peças, o status lê `projetos/{slug}/pendencias.md` e mostra o placar de decisões que ainda dependem do dono (link de checkout, rosto do especialista, ID do Pixel, janela do bônus etc.).
+
+> **Conte por chave de decisão, não por linha (regra dura — mata o bug do re-run):** cada pendência tem uma **chave estável** = o slug da decisão (regra em `.claude/skills/_shared/pendencias.md`). O placar (abertas / resolvidas) conta **chaves únicas**, então rodar as skills de novo **reconcilia** a lista (mesma chave = mesmo item) e **nunca infla o número** — 14 pendências não viram 17 num re-run. Uma decisão pode afetar vários arquivos; ela conta **uma vez só**. Se `pendencias.md` não existir, não há pendências a mostrar (nunca trave).
+
+Formato:
+
+```
+Pendências do dono: 3 abertas · 11 resolvidas   (por decisão, não por linha)
+  [ ] checkout-link      afeta: pagina/, emails/, whatsapp.md
+  [ ] pixel-id           afeta: pagina/
+  [ ] especialista-rosto afeta: criativos/
+```
 
 ---
 
 ## Formato de saída
 
 ```
-Funil: {slug}   ({N}/10 peças)
+Funil: {slug}   ({N}/11 peças)
 
 [x] 1. Avatar          avatar.md
 [x] 2. Offerbook       offerbook.md
-[x] 3. Diagnóstico     funil.md
-[x] 4. Copy            copy.md
-[x] 5. Design          DESIGN.md
+[x] 3. Design          DESIGN.md
+[x] 4. Diagnóstico     funil.md
+[x] 5. Copy            copy.md
 [ ] 6. Página          pagina/          <- você está aqui
 [ ] 7. E-mails         emails/
 [ ] 8. Conteúdo        conteudo/
 [ ] 9. Recuperação     recuperacao.md
-[ ] 10. CRO            cro.md
+[ ] 10. Back-end       back-end.md
+[ ] 11. CRO            cro.md
 
 Próximo passo: rode /pagina-vendas-funil — monta a página de vendas com a copy + o DESIGN.md.
 ```
 
-Sempre termine com a linha **"Próximo passo:"** apontando a skill da primeira peça que falta. Se estiver tudo pronto (10/10), diga que o funil está completo e sugira `/cro-funil` pra otimizar quando tiver dados.
+Sempre termine com a linha **"Próximo passo:"** apontando a skill da primeira peça que falta. Se estiver tudo pronto (11/11), diga que o funil está completo e sugira `/cro-funil` pra otimizar quando tiver dados.
 
 ---
 
@@ -93,11 +125,7 @@ Sempre termine com a linha **"Próximo passo:"** apontando a skill da primeira p
 
 **NUNCA:** inventar que uma peça existe sem checar o arquivo · alterar qualquer peça · pular a descoberta do projeto ativo.
 
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
-
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
+Esta skill só LÊ o projeto, mas a entrega do checklist segue o padrão: abra o resultado renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e envie na conversa; nunca encerre entregando só o caminho. Feche SEMPRE apontando UM próximo comando (a primeira lacuna do checklist, pela ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF — `_shared/nunca-travar.md`).
 

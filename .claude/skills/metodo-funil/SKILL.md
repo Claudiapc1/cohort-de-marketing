@@ -24,7 +24,7 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
 
-> **Recriar NUNCA apaga o que existe (regra dura).** Se a peça que você vai gerar JÁ EXISTE no projeto (arquivo, lote de PNGs, pasta), o novo sai como **versão nova** (sufixo `-v2`, `-v3`… ou subpasta `v2/`) e o antigo fica intocado. Apagar ou sobrescrever trabalho existente SÓ com ordem explícita do dono nesta conversa ("pode apagar", "substitui"). O dono compara as versões e decide qual usar; índices, galerias e o Book mostram as duas, com a mais nova primeiro, e **cada versão antiga leva um botão ✕ "Excluir esta versão"**: o ✕ NUNCA apaga arquivo do disco — ele só tira a versão da visualização, pra não poluir o Book/galeria. Ao clicar, abre a confirmação: *"Tem certeza que quer excluir esta versão do Book do Funil? Os arquivos continuam no disco."* Confirmou, a seção some (persistido em `localStorage`) e um link discreto **"Mostrar versões ocultas (N)"** no rodapé traz de volta quando quiser. Apagar do disco de verdade continua exigindo ordem explícita do dono no chat.
+> **Versões, pendências e Book do Funil (regra dura — texto completo em `.claude/skills/_shared/book-do-funil.md`; LEIA-o ao fechar a peça).** Recriar nunca apaga: peça existente ganha versão nova (`-v2`), e o ✕ das versões antigas só esconde do Book (nunca apaga do disco). Pendências do dono vão pra `projetos/{slug}/pendencias.md` com CHAVE por decisão (re-run reconcilia, nunca soma). Ao terminar: atualize o card da peça no Book (`projetos/{slug}/index.html` — cards linkam sempre o `.html`, nunca `.md`) e o "VOCÊ ESTÁ AQUI" do mapa; documentos internos levam "← Voltar" + "← Book do Funil" (roteiro/VSL leva os DOIS botões, com caminho relativo real); amostra/checkpoint entra no Book ANTES de ir pro chat; feche com "Preencha as pendências" e abra o Book. Se o Perfil disser agência, ofereça a "versão cliente" do Book.
 
 ---
 
@@ -44,7 +44,7 @@ Se faltar um obrigatório, aponte a skill que o gera e **PERGUNTE** se o usuári
 Quando você precisar montar/diagnosticar um funil ou decidir o tipo de funil/anúncio:
 
 1. **Carregar o KB** (`KB-metodo-funil-alan.md`) pra ter os frameworks na mão.
-2. **Ler o offerbook e confirmar os 3 inputs** — o offerbook (output da Aula 01, skill `/offerbook`) é a **fonte primária**: dele saem nicho/mercado, produto/transformação/ticket e o avatar/público. Se o offerbook existir, **leia de lá e NÃO peça de novo** — só pergunte o que faltar.
+2. **Ler o offerbook e confirmar os 4 decisores** (detalhados no Gate abaixo) — o offerbook (output da Aula 01, skill `/offerbook`) é a **fonte primária**: dele saem o Perfil do Projeto, nicho/mercado, produto/transformação/ticket e o avatar/público. Se o offerbook existir, **leia de lá e NÃO peça de novo** — só pergunte o que faltar.
    - **Nicho / mercado** (ex.: cursinhos, estética, IA pra marketing)
    - **Produto / transformação** e **ticket** (front-end barato? back-end caro?)
    - **Público a atacar** — de onde ele vem (frio do ads? base quente? orgânico?) → isso define o **estágio de consciência**
@@ -70,9 +70,11 @@ Esta skill **parte do offerbook** (a oferta que você montou na Aula 01). Antes 
    - Se achar **vários** projetos, liste-os e **pergunte qual usar**.
    - Se o aluno apontar um projeto específico, use esse.
 
-2. **Se NÃO existir nenhum `projetos/{slug}/offerbook.md`**, antes de parar, procure o offerbook no formato da Aula 1 (que salva na raiz): `ls offerbook-*.md 2>/dev/null`. Se achar, confirme com o aluno e **migre o PACK INTEIRO da Aula 1, em TODOS os formatos (md + html + pdf)** — não só o offerbook, senão as pesquisas ficam pra trás e o Book acaba linkando `.md` solto. Crie `projetos/{slug}/` (slug derivado do nicho) e traga cada peça pra sua posição, mantendo os 3 formatos:
+2. **Se NÃO existir nenhum `projetos/{slug}/offerbook.md`**, antes de parar, procure o offerbook no formato da Aula 1 (que salva na raiz): `ls offerbook-*.md 2>/dev/null`. Se achar, confirme com o aluno e — **antes de mover, confirme com o dono que TODO o pack da raiz é do MESMO cliente/projeto** (agência com 2+ clientes: mova só o que for deste projeto; o resto migra no projeto certo) — **migre o PACK INTEIRO da Aula 1, em TODOS os formatos (md + html + pdf)** — não só o offerbook, senão as pesquisas/identidade ficam pra trás e o e-mail/página travam depois. Crie `projetos/{slug}/` (slug derivado do nicho) e traga cada peça pra sua posição, mantendo os 3 formatos:
    - offerbook: `offerbook-*.{md,html,pdf,docx}` → `projetos/{slug}/offerbook.{md,html,pdf,docx}`
    - avatar: `relatorio-avatar.{md,html,pdf}` → `projetos/{slug}/avatar.{md,html,pdf}`
+   - pesquisa de avatar: `pesquisa-avatar-*/` → `projetos/{slug}/pesquisa-avatar-*/`
+   - design: `DESIGN.md` → `projetos/{slug}/DESIGN.md` · `.cohort-brand-choice` → `projetos/{slug}/.cohort-brand-choice`
    - espião: `dossie-*.{md,html,pdf}` → `projetos/{slug}/espiao/`
    - trends: `trends-*.{md,html,pdf}` + `variacoes-*.{md,html,pdf}` → `projetos/{slug}/trends/`
    - swipe: `briefing-swipe-file.{md,html,pdf}` + `swipe-file-index.{md,html,pdf}` → `projetos/{slug}/swipe/`
@@ -84,13 +86,28 @@ Esta skill **parte do offerbook** (a oferta que você montou na Aula 01). Antes 
 
    **Não prossiga sem offerbook. Não invente a oferta de cabeça.**
 
-3. Com o offerbook em mãos, leia o nicho, o produto, o mecanismo, a dor e o público. **Antes de prescrever, confira os 3 decisores do funil — e pra cada um que estiver `[A DEFINIR]` ou ausente no offerbook, PERGUNTE. Não crave o funil sem eles:**
+   **Exceção — Perfil = afiliado:** não há offerbook próprio; o gate se satisfaz com o **Registro da Oferta do Produtor** (`projetos/{slug}/offerbook.md` no formato do afiliado — a comunicação oficial do produtor: promessa, mecanismo, preço, checkout). Leia dele o que o produtor já comunica; não invente promessa que o produtor não faz.
 
+3. Com o offerbook em mãos, leia o nicho, o produto, o mecanismo, a dor e o público. **Antes de prescrever, confira os 4 decisores do funil — e pra cada um que estiver `[A DEFINIR]` ou ausente no offerbook, PERGUNTE. Não crave o funil sem eles:**
+
+   - **Tipo de oferta** — leia do offerbook (Bloco 2): especialista/infoproduto · produto físico · SaaS/app · serviço · B2B/high-ticket. NÃO assuma "curso com especialista". O tipo muda o funil e a prova (produto/SaaS/app → voz do cliente e prova de uso, não depoimento de aluno; B2B → jornada longa com qualificação, não checkout direto).
    - **Origem do público** — de onde ele vem? (frio de ads · base quente · orgânico/lista) → decide o **nível de consciência** (o Gate de diagnóstico).
-   - **Valor: ticket + formato** — quanto custa o produto principal? tem entrada mais barata? formato (cohort ao vivo · curso gravado · curso + comunidade)? → decide o **tipo de funil** (ticket baixo → venda direta tipo VSL/quiz; ticket médio-alto → webinário/aquecimento).
-   - **Prova disponível** — já tem depoimento/estudo de caso de cliente real, ou ainda vai coletar? → **molda** o funil: sem prova, ele ganha uma fase pra construí-la antes de vender (crítico pra público cético).
+   - **Valor: ticket + formato** — quanto custa o produto principal? tem entrada mais barata? formato (varia com o tipo: curso gravado · cohort ao vivo · comunidade · assinatura de SaaS · pacote de serviço · produto físico)? → decide o **tipo de funil** (ticket baixo → venda direta tipo VSL/quiz; ticket médio-alto → webinário/aquecimento; B2B high-ticket → diagnóstico/qualificação + call).
+   - **Prova disponível** — já tem depoimento/estudo de caso/review real, ou ainda vai coletar? → **molda** o funil: sem prova, ele ganha uma fase pra construí-la antes de vender (crítico pra público cético).
 
-   Faça de uma vez as perguntas que faltarem, de forma objetiva. Só com os 3 decisores em mãos (do offerbook ou da resposta) siga pro **Gate de diagnóstico**.
+   Faça de uma vez as perguntas que faltarem, de forma objetiva. Só com os 4 decisores em mãos (do offerbook ou da resposta) siga pro **Gate de diagnóstico**.
+
+   **Leia o Perfil do Projeto (topo do offerbook) e adapte a prescrição — não force "funil de infoproduto de especialista":**
+
+   | Perfil | Como o funil muda |
+   |--------|-------------------|
+   | **Situação = afiliado** | Não há offerbook próprio: o funil é **página-ponte/advertorial + criativo + tráfego** pra oferta do produtor. Pule offerbook/back-end próprios; foco em pré-venda e clique pro checkout do produtor. |
+   | **Situação = sem-projeto** | PARE: mande pro `/avatar-funil` (research-first) achar a oportunidade antes de prescrever funil. |
+   | **Tipo = físico / varejo local** | Não é funil de checkout online. Prescreva **marketing local/regional**: presença (Google Perfil da Empresa/Maps), WhatsApp, promoção/oferta local, captação no ponto. Quiz/página só se houver venda online real. |
+   | **Tipo = SaaS/app** | Funil de trial/demo + onboarding; prova = voz do cliente e caso de uso, não depoimento de aluno. |
+   | **Tipo = serviço / B2B alto** | Webinário/quiz de maturidade → **marcar reunião** (nunca venda direta por e-mail). Ver `/webinario-funil` e `/quiz-funil` (destino = reunião). |
+   | **Quem opera = agência** | 1 cliente = 1 projeto/pasta; a voz e a oferta são do CLIENTE; ofereça "versão cliente" do Book (sem bastidor) no fecho. |
+   | **Nicho regulado** | Liga o Gate de compliance (saúde/médico/jurídico/psico/financeiro): linguagem de possibilidade, regras do conselho, sem promessa garantida; em saúde, triagem de risco antes de captar. |
 
 ---
 
@@ -127,6 +144,7 @@ Antes de prescrever a oferta, a headline ou a página, verifique se o nicho é *
 
 - **Se for**, evite alegação que vira problema legal: "cura", "garantido", "resultado em X dias", "renda garantida", "sem esforço".
 - Use **linguagem de possibilidade**: "pode ajudar", "muitas pessoas relatam", "com dedicação". Todo depoimento entra com ressalva: *"resultados variam de pessoa pra pessoa"*.
+- **Exceção dura — médico (CFM) / psicologia (CRP) / jurídico (OAB):** depoimento de paciente/cliente **NÃO entra** (nem com ressalva — é vedação do conselho). A prova vira **credencial** (nome + registro no conselho), **método** e **conteúdo educativo**.
 - Recomende ao aluno **conferir as regras e os órgãos reguladores do mercado dele** — este gate só **alerta**, não é aconselhamento jurídico, e validar é responsabilidade do aluno.
 - Isto é um **aviso, não um bloqueio**: a skill segue prescrevendo o funil, só com a oferta e a headline calibradas pra não prometer o proibido.
 
@@ -213,38 +231,54 @@ Estágio [N] → Funil: [tipo de funil]
 PEÇA            SKILL             O QUE ENTREGA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 01 Offerbook    (pré-requisito)   oferta, mecanismo, ancoragem, bônus ← precisa existir antes
-02 Formato      (DECISÃO — só     o formato de funil de topo casado ao estágio; NÃO rode
-   do funil     anote, NÃO rode   a skill da peça agora (ela precisa do copy.md do 03 e
-                agora)            do DESIGN.md do 04):
+02 Design       /design-md        identidade visual da sua marca
+03 Formato      (DECISÃO — só     o formato de funil de topo casado ao estágio; NÃO rode
+   do funil     anote, NÃO rode   a skill da peça agora (ela precisa do copy.md do 04 e
+                agora)            do DESIGN.md do 02):
                 nível 5 → /advertorial-funil ou /lancamento-funil (+ /vsl-funil)
                 nível 4 → /webinario-funil ou /quiz-funil
                 nível 3 → /webinario-funil
                 nível 2-1 → /pagina-vendas-funil
-03 Copy         /copy-funil       ← PRÓXIMO COMANDO A RODAR. fundação da copy (Big Idea,
-                                  mecanismos, banco de headlines/bullets) → copy.md, a
-                                  fonte única; a copy APLICADA de cada peça é gerada na
-                                  skill da própria peça a partir do copy.md
-04 Design       /design-md        identidade visual da sua marca
+04 Copy         /copy-funil       fundação da copy (Big Idea, mecanismos, banco de
+                                  headlines/bullets) → copy.md, a fonte única; a copy
+                                  APLICADA de cada peça é gerada na skill da própria
+                                  peça a partir do copy.md
 05 Peça do      (a skill anotada  estrutura da peça + copy aplicada (do copy.md)
-   funil        no 02)
+   funil        no 03)
    + página     /pagina-vendas-funil    estrutura da página/checkout + copy aplicada (do copy.md)
                 /mockup-produto-funil   mockups dos produtos/bônus na identidade da marca
                 ← ordem é lei: a página/peça SÓ se monta com a FUNDAÇÃO da
-                  copy aprovada (copy.md, do 03); a copy aplicada da peça
+                  copy aprovada (copy.md, do 04); a copy aplicada da peça
                   nasce na própria skill da peça, a partir dessa fundação.
                   Nunca montar peça sem copy.md aprovado.
 06 Email        /email-funil      sequência nutrição → venda → recuperação
 07 Conteúdo     /conteudo-funil   Reels + carrosséis + stories por estágio
-08 Back-end     /backend-funil         upsell / OTO / downsell / janela 4h / LTV
-09 Recuperação  /recuperacao-funil      carrinho / cartão recusado / boleto / re-elevação
+08 Recuperação  /recuperacao-funil      carrinho / cartão recusado / boleto / re-elevação
+09 Back-end     /backend-funil         upsell / OTO / downsell / janela 4h / LTV
 10 Teste        /cro-funil        KPIs por etapa + A/B headline + quando escalar
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Execute nessa ordem. Cada skill usa o output da anterior.
+Execute nessa ordem (a mesma do gate N12). O "← PRÓXIMO" cai sempre no primeiro
+item ainda faltante pela ordem N12 — pule o que já existe no projeto. Cada skill
+usa o output da anterior.
 ```
 
 > **Regra:** o mapa de execução é o entregável mais importante desta skill. Sem ele, o usuário não sabe o que construir. Sempre entregar — mesmo que o pedido seja só um diagnóstico rápido.
 
-> **O mapa sempre diz qual é o PRÓXIMO comando.** Ao entregar o mapa, feche dizendo explicitamente qual comando o aluno roda em seguida (normalmente `/copy-funil`, se o `copy.md` ainda não existe) — nunca deixe o aluno deduzir. A skill do formato (02) é uma DECISÃO anotada, não o próximo passo: apontá-la como próximo comando antes da fundação da copy existir contradiz o guia do aluno e gera retrabalho.
+> **O mapa sempre diz qual é o PRÓXIMO comando.** Ao entregar o mapa, feche dizendo explicitamente qual comando o aluno roda em seguida — o **primeiro item ainda faltante pela ordem N12** (normalmente `/design-md` ou, se o DESIGN.md já existe, `/copy-funil`) — nunca deixe o aluno deduzir. A skill do formato (02) é uma DECISÃO anotada, não o próximo passo: apontá-la como próximo comando antes da fundação da copy existir contradiz o guia do aluno e gera retrabalho.
+
+## Gate — ORDEM CANÔNICA do "Próximo passo:" (N12, determinística)
+
+> **O "Próximo passo:" segue UMA ordem fixa — nunca improvisada.** Pra o próximo comando nunca sair não-determinístico (ex.: mandar mockup antes do e-mail), o "Próximo passo:" respeita SEMPRE esta ordem canônica, pulando o que já existe no projeto:
+>
+> **offerbook → design → metodo (esta skill) → copy → peça-do-funil → página → email → conteúdo → recuperação → back-end → cro**
+>
+> Aponte como próximo o **primeiro item da fila que ainda não existe** em `projetos/{slug}/` (leia `.claude/skills/_shared/perfil.md` e o Passo 0 pra saber o que já está pronto). Um comando só, nunca um menu.
+
+> **Ramo físico/local (Tipo = físico):** o funil é **página local + WhatsApp** — `/whatsapp-funil` **assume o slot do e-mail na fila** (o WhatsApp é o canal principal; o e-mail vira apoio). Na ordem N12, onde leria "email → `/email-funil`", leia "**`/whatsapp-funil`**". Isso resolve o beco do negócio local: não mande o físico pro `/email-funil` (que devolve "e-mail é secundário") — mande pro `/whatsapp-funil`.
+
+> **MOCKUP, BÔNUS e CRIATIVOS são OPCIONAIS e TARDIOS (bônus) — fora da fila do "próximo passo".** `/mockup-produto-funil`, `/bonus-funil` e `/criativos-funil` **nunca** são apontados como o próximo passo enquanto houver peça-núcleo (copy, página, email, conteúdo, recuperação, back-end, cro) por fazer. Eles entram só depois que o núcleo do funil está pronto, e só se o aluno pedir — são reforço de valor percebido, não etapa obrigatória da espinha. `/bonus-funil` gera os entregáveis dos bônus curados no offerbook (ebook, workbook, checklist, guia, voucher, calculadora, roteiro de áudio) e roda depois do offerbook + design; como mockup e criativo, não fura a fila da copy nem vem antes do e-mail.
+
+> **Guard de perfil (antes de apontar qualquer peça):** leia `.claude/skills/_shared/perfil.md` — se **Voz = marca** ou **Tipo ∈ {físico, saas-app, serviço, b2b}**, é proibido enquadrar o próximo passo como "curso/especialista/depoimento-de-aluno"; a peça apontada usa voz de marca e prova de uso/cliente. E siga `.claude/skills/_shared/nunca-travar.md`: pré-requisito/ferramenta sempre em linguagem de leigo, com glossário inline; nunca prometa que o HTML "abre sozinho" — dê o caminho + como abrir.
 
 > **Lacunas conhecidas** (KB §7): os "17 elementos" originais e KPIs de aquisição/CAC e recorrência/MRR não estavam na transcrição — a skill cobre a espinha (consciência→funil→oferta→página) e os elementos de página são reconstrução fiel Hormozi+Alan (marcada no KB). Sinalizar isso quando o pedido cair nessas áreas.
 
@@ -265,36 +299,8 @@ Execute nessa ordem. Cada skill usa o output da anterior.
 
 ---
 
-## Output nos 3 formatos (md + html + pdf) — igual à Aula 1
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
 > **Onde salvar:** o diagnóstico + mapa de execução desta skill saem em **`projetos/{slug}/funil.md`** (+ `.html`/`.pdf`), na pasta do projeto ativo (o mesmo de onde você leu o `projetos/{slug}/offerbook.md`).
 
-Todo entregável desta skill sai em **3 formatos**, com o mesmo nome-base:
-
-1. **`.md`** — o conteúdo (fonte de verdade).
-2. **`.html`** — versão estilizada aplicando os **tokens do `projetos/{slug}/DESIGN.md` da marca do aluno** (cores, fontes, borda/raio, tamanho, logo). NUNCA use um tema fixo/genérico (dark, champagne, "padrão do cohort", template pronto) — a identidade é sempre a do `DESIGN.md`. Legibilidade conforme o público (nichos 50+/acessibilidade → fonte grande ≥18px, alto contraste). **Contraste por fundo (regra dura):** texto sobre fundo ESCURO usa o token CLARO da marca (ex.: `on-deep`/creme), NUNCA o token `muted` (que é do fundo CLARO e some no escuro); e legenda/microcopy de apoio sai MENOR e mais leve (opacidade ~.7) que o corpo, pra não competir com headline nem com o botão. CSS inline, self-contained, sem emoji, português acentuado. Se não houver `DESIGN.md`, gere-o com `/design-md` antes.
-3. **`.pdf`** — gerado a partir do html:
-
-   ```
-   bash .claude/skills/metodo-funil/scripts/gerar_pdf.sh <arquivo>.html
-   ```
-
-Salve os 3 e confirme ao final. Nunca entregar só o `.md`.
-
----
-
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
-
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-
-## Ao terminar — SEMPRE diga o próximo passo
-
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
-
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do `projetos/{slug}/DESIGN.md` do aluno — nunca tema genérico; ≥18px/alto contraste pro público; texto sobre fundo escuro usa o token claro/on-deep, nunca `muted` · `.pdf` via `scripts/gerar_pdf.sh`). Toda entrega E todo checkpoint abrem o `.html` renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e enviam o arquivo na conversa; nunca peça aprovação sem o usuário ver renderizado. Feche SEMPRE apontando UM próximo comando (ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF; Apify é central nas skills de coleta, fallback só em cota estourada — `_shared/nunca-travar.md`).

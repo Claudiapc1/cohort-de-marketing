@@ -85,7 +85,7 @@ Diga: *"Escolha salva. Vou usar a brand do seu DESIGN.md em todos os entregávei
 
 ## Garantia importante
 
-- O `.cohort-brand-choice` é **por projeto** (vive no cwd). Cada projeto pode ter sua escolha.
+- O `.cohort-brand-choice` é **por projeto**. Assim que o projeto existe, a escolha vive em **`projetos/{slug}/.cohort-brand-choice`** — não na raiz. A raiz (cwd) só guarda o arquivo **pré-projeto** (Aula 1, antes de a pasta `projetos/{slug}/` nascer); quando o `/metodo-funil` migra o pack da Aula 1 pra `projetos/{slug}/`, ele leva o `.cohort-brand-choice` junto. Cada projeto pode ter sua escolha. Ao checar/salvar, procure primeiro em `projetos/{slug}/.cohort-brand-choice` e só caia na raiz se ainda não houver projeto.
 - Adicione `.cohort-brand-choice` ao `.gitignore` do aluno se ele perguntar (é decisão local, não precisa versionar).
 - Se aluno quiser TROCAR a escolha depois, basta apagar o arquivo: `rm .cohort-brand-choice` e rodar de novo.
 

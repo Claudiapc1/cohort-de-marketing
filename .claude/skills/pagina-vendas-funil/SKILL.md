@@ -1,5 +1,5 @@
 ---
-name: pagina-vendas
+name: pagina-vendas-funil
 description: "Monta a estrutura de uma página de vendas de alta conversão pelo método do Alan Nicolas, aplicando a identidade visual da marca DO PRÓPRIO usuário — extraída via um DESIGN.md gerado pela skill design-md (passo anterior). Entrega o mapa completo da página de cima pra baixo: headline (fórmula 'como [resultado] em [tempo] sem [objeção]'), sub-headline, vídeo/VSL, mecanismo único, oferta/stack de valor, ancoragem de preço, prova social casada ao estágio de consciência, benefícios/bullets, bônus, garantia, escassez/urgência, FAQ, CTA repetido e footer — sem nenhuma marca, cor, fonte ou logo embutidos. Use quando quiser estruturar a sua página de vendas no método do Alan. A identidade visual vem do seu DESIGN.md; a copy aplicada da página (headline, sub, bullets, oferta, FAQ) é gerada nesta skill a partir da fundação do copy.md (da skill copy-funil) — você revisa e aprova."
 user_invocable: true
 ---
@@ -23,8 +23,6 @@ Todo o trabalho de um nicho fica em **`projetos/{slug}/`** (um slug por nicho). 
 2. Senão, `ls projetos/ 2>/dev/null`: **uma** pasta → use-a; **várias** → pergunte qual; **nenhuma** → o funil ainda não começou.
 
 **Nomes dentro da pasta** (sem repetir o slug): `avatar.md`, `offerbook.md`, `copy.md`, `funil.md`, `DESIGN.md`, `recuperacao.md`, `cro.md`; subpastas `pagina/`, `emails/`, `conteudo/`, `carrossel/`, `mockups/`. Nos 3 formatos (md/html/pdf) onde a skill gera.
-
-> **Recriar NUNCA apaga o que existe (regra dura).** Se a peça que você vai gerar JÁ EXISTE no projeto (arquivo, lote de PNGs, pasta), o novo sai como **versão nova** (sufixo `-v2`, `-v3`… ou subpasta `v2/`) e o antigo fica intocado. Apagar ou sobrescrever trabalho existente SÓ com ordem explícita do dono nesta conversa ("pode apagar", "substitui"). O dono compara as versões e decide qual usar; índices, galerias e o Book mostram as duas, com a mais nova primeiro, e **cada versão antiga leva um botão ✕ "Excluir esta versão"**: o ✕ NUNCA apaga arquivo do disco — ele só tira a versão da visualização, pra não poluir o Book/galeria. Ao clicar, abre a confirmação: *"Tem certeza que quer excluir esta versão do Book do Funil? Os arquivos continuam no disco."* Confirmou, a seção some (persistido em `localStorage`) e um link discreto **"Mostrar versões ocultas (N)"** no rodapé traz de volta quando quiser. Apagar do disco de verdade continua exigindo ordem explícita do dono no chat.
 
 ## Passo 0 — Checar insumos antes de rodar
 
@@ -57,17 +55,9 @@ Não invente o que deveria vir da etapa anterior (a fundação da copy, a identi
 
 > **Sem cara de IA na copy (regra dura).** Em TODA copy voltada ao cliente final (headline, bullet, página, e-mail, mensagem, roteiro): **sem travessão (—)** — reescreva com ponto, vírgula ou dois-pontos; e **sem a construção "não é sobre X, é sobre Y"** (e variantes "não é X, é Y", "não se trata de X, e sim de Y") — esse contraste é assinatura de texto de IA. Afirme direto o que É, ou mostre o contraste com fato concreto do avatar. Vale pra copy aplicada gerada por esta skill.
 
-> **Pendências do dono em UM lugar só.** Sempre que esta skill deixar um placeholder pro dono ([DONO ...], [A PREENCHER], [PLUG ...], [SEM PROVA AINDA], [N]), registre/atualize a entrada correspondente em **`projetos/{slug}/pendencias.md`** (+ `.html` com checklist clicável; crie se não existir): O QUÊ decidir, ONDE aparece (arquivos afetados) e COMO resolver. Agrupar por DECISÃO (1 decisão resolve vários arquivos), não por arquivo. Quando o dono informar um valor, atualizar TODOS os arquivos afetados de uma vez e marcar o item. O `/status-funil` lê esse arquivo.
->
-> **Book do Funil (o hub do projeto) + fecho obrigatório:** o projeto tem um hub único em **`projetos/{slug}/index.html`, o Book do Funil**: cards clicáveis de TODAS as peças já geradas, agrupados por fase (Pesquisa · Oferta e Fundação · Peças do funil · Próximas peças), cada card com badge de status (feito / em revisão / ação do dono / fila), e cada card linka SEMPRE o `.html` da peça (o `.md` e o `.docx` são fonte interna; o que o dono abre pelo Book é o `.html`) — NUNCA linke `.md` no Book, e a seção de **pendências + mapa NO FINAL** do Book. **Todo DOCUMENTO interno gerado** (mapas, docs de copy, índices, checklists, roteiros: tudo que é do dono, nunca as páginas do lead) leva no topo o par de navegação: **"← Voltar"** (volta pra página de onde o leitor veio: `<a href="../index.html" onclick="if(history.length>1){history.back();return false}">` — usa o histórico do navegador, com o Book como fallback quando o arquivo foi aberto direto) e **"← Book do Funil"** (link fixo pro hub). Quem clica numa VSL a partir de uma página e volta, volta PRA PÁGINA, não pro Book. **Página de roteiro/VSL leva DOIS botões explícitos no topo (regra dura):** um **"← Voltar pra [a página a que ela pertence]"** (link DIRETO pro arquivo da página, ex.: `index.html` da própria pasta) E o **"← Book do Funil"** — nunca só o do Book, senão quem lê o roteiro e clica em voltar cai no hub em vez da página de onde veio. **O fallback do "← Voltar" resolve pro caminho relativo REAL do Book conforme a profundidade da pasta** (`../index.html`, `../../index.html`…), NUNCA um `index.html` fixo que não existe naquele nível: `href` errado faz o "Voltar" cair em nada. Ao terminar a skill: (1) **atualize o card da sua peça no Book** E o status da peça no mapa (`funil.md` + `funil.html`): o "VOCÊ ESTÁ AQUI" tem que apontar SEMPRE pro ponto real do dono, nunca pra etapa já vencida (crie o Book se ainda não existir, na identidade do DESIGN.md); (2) encerre com *"Preencha as pendências"* e **abra o Book no navegador** — dele o dono chega a qualquer peça e ao `pendencias.html` (checklist com CAMPO DE RESPOSTA em cada item e o botão "Copiar respostas pro Claude"). Instrua o dono: preencher os campos, clicar em Copiar respostas e COLAR de volta no chat. **Ao receber as respostas coladas, atualize todos os arquivos afetados, marque os itens no `pendencias.md`, REGENERE o `pendencias.html` refletindo o estado novo (placar aplicadas/parciais/abertas; itens aplicados em verde com o valor; parciais em laranja com o que falta; abertos com campo de resposta) e ABRA o html atualizado — o dono precisa VER o que continua pendente, não só ler no chat.**
+> **Versões, pendências e Book do Funil (regra dura — texto completo em `.claude/skills/_shared/book-do-funil.md`; LEIA-o ao fechar a peça).** Recriar nunca apaga: peça existente ganha versão nova (`-v2`), e o ✕ das versões antigas só esconde do Book (nunca apaga do disco). Pendências do dono vão pra `projetos/{slug}/pendencias.md` com CHAVE por decisão (re-run reconcilia, nunca soma). Ao terminar: atualize o card da peça no Book (`projetos/{slug}/index.html` — cards linkam sempre o `.html`, nunca `.md`) e o "VOCÊ ESTÁ AQUI" do mapa; documentos internos levam "← Voltar" + "← Book do Funil" (roteiro/VSL leva os DOIS botões, com caminho relativo real); amostra/checkpoint entra no Book ANTES de ir pro chat; feche com "Preencha as pendências" e abra o Book. Se o Perfil disser agência, ofereça a "versão cliente" do Book.
 
-> **Rastreamento: a página nasce PIXEL-READY; os IDs entram na Aula 3 (Tráfego).** Nenhuma página do funil nasce cega, mas esta etapa também não cria fricção: **NÃO mande o aluno pro Gerenciador de Eventos agora.** Toda página gerada já sai com os snippets de **Meta Pixel** (recomendado: é o que constrói a audiência de remarketing) e **GTM** (opcional: gerencia tags sem mexer em código; junto com o Pixel dá o melhor rastreamento) **prontos porém COMENTADOS** no `<head>` (+ `<noscript>` após `<body>`), com placeholders `[PLUG: SEU_PIXEL_ID]` / `[PLUG: GTM-XXXXXXX]` e os eventos-padrão da peça já ligados no código. Diga ao aluno em 1 linha: *"a página já nasce pronta pra rastreamento; os IDs a gente cria e pluga na Aula 3 (Tráfego): é colar 2 códigos e descomentar"*. Exceção: se o aluno JÁ tiver Pixel/GTM, pergunte os IDs e entregue plugado. Lembrete de LGPD: aviso de cookies/consentimento é responsabilidade do aluno. Os eventos alimentam a planilha de KPIs do `/cro-funil`. Eventos desta peça: PageView · ViewContent · clique no CTA principal · Lead (envio do formulário) · **chegou_na_oferta** (IntersectionObserver no bloco de oferta/preço: é o 'pixel na oferta' do método, a audiência de remarketing mais quente).
-
-> **SEM barra de revisão dentro da página (a navegação mora no Book).** A página do lead NÃO leva barra de revisão, atalhos internos nem elemento de bastidor: a navegação entre as peças (copy, mapa, quiz, e-mails, pendências) fica no **Book do Funil** (`projetos/{slug}/index.html`), fora da página. Página de venda só carrega o que o LEAD deve ver.
-
-> **O slot de vídeo nasce com roteiro (copy aplicada do vídeo).** O elemento 3 (vídeo/VSL) NUNCA fica só com placeholder: esta skill gera também o **roteiro do vídeo** (2-3 min: gancho, espelho, mecanismo do problema, inversão, convite, fecho; com fala pronta, texto na tela e notas de gravação) a partir do `copy.md`, salvo em `pagina/video-roteiro.html`. E o slot de vídeo na página inclui um botão **"Ver roteiro do vídeo"** DENTRO do próprio slot, apontando pro roteiro. O dono grava a partir dele e troca o slot pelo player.
-
-> **Layout da página do lead (regra dura).** Vale pra TODA página voltada ao lead gerada por esta skill: **(1) quando a página tem vídeo, o botão de CTA fica SEMPRE ABAIXO do vídeo, nunca acima** — a ordem do topo é headline → sub-headline → vídeo → CTA (badges, selos e números de credibilidade vêm DEPOIS do CTA, nunca entre a headline e o vídeo); **(2) o botão de CTA é sempre centralizado** na página, em toda dobra em que aparecer; **(3) no mobile, o vídeo aparece assim que a página abre** — visível na primeira dobra, sem rolar; se não couber, enxugue o que vem antes dele (headline mais curta, sub de 1 linha), nunca empurre o vídeo pra baixo; **(4) jargão interno do método NUNCA vira texto visível na página do lead** — nada de "Big Idea", "mecanismo único", "ancoragem", "stack de valor", "prova social", "escassez" como eyebrow/rótulo/título de seção em NENHUMA página. Esses nomes vivem nos documentos internos do dono; na página, cada seção mostra só a copy real que o lead deve ler.
+> **Pixel-ready + layout de página do lead (texto completo em `.claude/skills/_shared/rastreamento.md` — LEIA-o ao gerar página).** Snippets Meta Pixel/GTM prontos porém COMENTADOS no `<head>` com `[PLUG: IDs]` (entram na Aula 3; se o aluno já tiver, plugue). Eventos desta peça: PageView · ViewContent · clique no CTA principal · Lead (envio do formulário) · **chegou_na_oferta** (IntersectionObserver no bloco de oferta/preço: é o 'pixel na oferta' do método, a audiência de remarketing mais quente). **Tipo = físico:** troque os eventos de checkout por **eventos locais** (clique-WhatsApp, rota/Maps, ligar) conforme `_shared/rastreamento.md`. Layout: CTA sempre ABAIXO do vídeo e centralizado; vídeo na 1ª dobra no mobile; jargão interno do método NUNCA visível pro lead; slot de vídeo nasce com roteiro (botão "Ver roteiro"); sem barra de revisão na página.
 
 > **Seção "Quem será seu mentor" (obrigatória quando a oferta é pessoa: mentoria, consultoria, serviço 1-a-1).** Nessas ofertas, quem conduz é metade da decisão de compra e a página NÃO pode pular isso. Gerar a seção (posição: depois da jornada/benefícios, antes do investimento) com: foto real (placeholder `[DONO: FOTO]` com a direção "ambiente de trabalho, sem palco"), nome e credencial em 1 linha (`[DONO PREENCHE, sem inflar]`), bio curta na voz da marca gerada do `copy.md` (por que o método existe, o que faz diferente) e o bloco "o que você pode verificar sobre mim" (só fatos verificáveis). **Nunca inventar credencial, número ou história do mentor**: a estrutura e o ângulo saem da skill; os fatos, só do dono (regra de honestidade de prova).
 
@@ -78,12 +68,22 @@ A copy do funil tem 2 camadas: a **fundação** (Big Idea, mecanismos, voz/léxi
 - **A copy aplicada obedece:** a Big Idea e os mecanismos do `copy.md` · a voz/léxico do avatar (palavras reais, não as suas) · a honestidade de prova (sem prova real → `[SEM PROVA AINDA]`) · o gate de compliance de nicho regulado.
 - **Depois de aplicada**, a página pode ser auditada na fase de validação do `/copy-funil` (nota Hopkins + checklist Sugarman). O aluno revisa e aprova antes de qualquer protótipo/publicação.
 
+## Gate — Perfil do Projeto (ler ANTES de montar a página)
+
+Leia o **Perfil do Projeto** no topo do `offerbook.md` (regra completa em `.claude/skills/_shared/perfil.md`) e adapte a página. **Guard (regra dura):** se **Voz = marca** ou **Tipo ∈ {físico, saas-app, serviço, b2b}**, NÃO force enquadramento de especialista/curso nem depoimento de aluno; use voz do cliente / prova de uso / case.
+
+- **B2B / serviço** → página de **autoridade + case + agendar reunião** (link de agendamento no CTA), com menos stack/escassez e mais confiança/ROI. Fechamento na call, não checkout.
+- **Físico / varejo local** → página de **negócio local**: endereço, horário, mapa, WhatsApp, oferta/promoção local. Não é funil de checkout online.
+- **SaaS/app** → página de **trial/demo** com prova de resultado e voz do cliente.
+- **Afiliado** → **esta skill NÃO se aplica a afiliado.** A página-ponte/pré-venda do afiliado É o **`/advertorial-funil` (Modo Afiliado)** — aponte-o pra lá (é ele que leva pro checkout DO PRODUTOR, sem stack/oferta própria).
+
 ## Gate de compliance — nicho sensível
 
-Antes de fechar a headline, a oferta ou a prova social da página, verifique se o nicho é **regulado**: saúde/bem-estar/emagrecimento/estética, finanças/investimento/renda, jurídico, ou autoestima/relacionamento com promessa de resultado.
+Antes de fechar a headline, a oferta ou a prova social da página, verifique se o nicho é **regulado**: saúde/bem-estar/emagrecimento/estética, finanças/investimento/renda, jurídico, **médico (CFM)**, **advocacia (OAB)**, **psicologia**, ou autoestima/relacionamento com promessa de resultado.
 
 - **Se for**, evite alegação que vira problema legal: "cura", "garantido", "resultado em X dias", "renda garantida", "sem esforço".
 - Use **linguagem de possibilidade**: "pode ajudar", "muitas pessoas relatam", "com dedicação". Todo depoimento na prova social entra com ressalva: *"resultados variam de pessoa pra pessoa"*.
+- **Exceção dura — médico (CFM) / psicologia (CRP) / jurídico (OAB):** depoimento de paciente/cliente **NÃO entra** na prova social (nem com ressalva — é vedação do conselho). A prova vira **credencial** (nome + registro no conselho), **método** e **conteúdo educativo**.
 - Recomende ao aluno **conferir as regras e os órgãos reguladores do mercado dele** — este gate só **alerta**, não é aconselhamento jurídico, e validar é responsabilidade do aluno.
 - Isto é um **aviso, não um bloqueio**: a skill segue montando a página, só com a headline/oferta calibradas pra não prometer o proibido.
 
@@ -97,13 +97,9 @@ Antes de fechar a headline, a oferta ou a prova social da página, verifique se 
 
 ### Passo 0 (pré-requisito) — Ter o DESIGN.md da SUA marca
 
-Antes de montar a página, você precisa do manual visual da **sua própria marca** em um `DESIGN.md`. Gere ele com a skill **`/design-md`** apontando pra uma URL da sua marca (seu site, sua landing atual, sua referência visual):
+Antes de montar a página, você precisa do manual visual da **sua própria marca** em um `DESIGN.md`. Gere ele com a skill **`/design-md`** (ela cuida da extração/autoria e salva em `projetos/{slug}/DESIGN.md`). **Não chame `run.cjs` direto — a `/design-md` proíbe isso**; rode a skill e deixe ela conduzir.
 
-```bash
-node .claude/skills/design-md/run.cjs --url https://SUA-MARCA.com/
-```
-
-Isso produz `DESIGN.md` + `tokens.json` (cores, fontes, espaçamento, raio de borda) extraídos da SUA marca. **É esse arquivo que dá identidade à página.** Se você ainda não tem, rode a `/design-md` primeiro.
+Isso produz `DESIGN.md` + `tokens.json` (cores, fontes, espaçamento, raio de borda) da SUA marca. **É esse arquivo que dá identidade à página.** Se você ainda não tem, rode a `/design-md` primeiro.
 
 > **Sem DESIGN.md → a skill monta a estrutura mesmo assim, mas deixa a parte visual como placeholder (`{{cor-primaria}}`, `{{fonte-titulo}}`, `{{logo}}`)** pra você preencher depois com o seu manual. Nenhuma cor/fonte é inventada.
 
@@ -135,6 +131,8 @@ O **estágio de consciência do seu público (1-5)** muda principalmente **qual 
 
 **Regra de ouro:** *"Anúncio de depoimento tem que ser pra quem está consciente do produto."* Depoimento puro converte no **nível 2**; estudo de caso no **3+**. Mandar nível 1 pra página completa **gera objeção** — simplifica.
 
+> **Nicho regulado (médico/psico/jurídico):** o "corredor polonês" de depoimentos de paciente/cliente **não se aplica** (vedação do conselho). Troque os depoimentos por **credencial (nome + registro no conselho), método e conteúdo educativo** no bloco de prova.
+
 ---
 
 ## Elementos da página (topo → fundo)
@@ -157,7 +155,7 @@ Monte nesta ordem. Cada elemento recebe a identidade visual do **seu DESIGN.md**
 | 12 | **Escassez / urgência** | escassez = nº de vagas; urgência = tempo. Reais e com "porquê" | contador/alerta na cor de destaque |
 | 13 | **FAQ** | quebra de objeções (preço, "serve pra mim?", tempo, garantia) | acordeão no seu estilo |
 | 14 | **CTA repetido + checkout** | botão repetido após cada bloco; formulário mínimo (nome, e-mail, telefone) | cor de botão do DESIGN.md |
-| 15 | **Footer** | termos, contato, política, logo | logo + cores neutras do DESIGN.md |
+| 15 | **Footer** | termos, contato, política, logo; **saúde/regulado → nome + registro no conselho (CRM/OAB/CRP) SEMPRE visível no footer** | logo + cores neutras do DESIGN.md |
 
 > O footer **não move conversão** — Alan usa ele como exemplo de "elemento secundário". Importa por credibilidade/compliance, não por alavancagem.
 
@@ -182,6 +180,8 @@ Antes de fechar a headline, ela tem que passar nos 3 testes (KB §3 testes da he
 3. **Teste da objeção** — derruba a **maior objeção** do público ("sem [o que ele mais teme/rejeita]")?
 
 A fórmula *"Como [resultado] em [tempo] sem [objeção]"* só está completa quando os 3 estão preenchidos.
+
+> **Nicho regulado (saúde/médico/psico/jurídico):** os testes **do tempo** e **do resultado específico** são DISPENSADOS — prometa **processo / cuidado / método**, nunca desfecho clínico ou prazo ("em X dias"). A headline foca no cuidado e no método, não no resultado garantido; só o teste da objeção permanece.
 
 ---
 
@@ -223,18 +223,6 @@ Pra cada pedido, entregar o **mapa estruturado da página**:
 
 ---
 
-## Ferramentas desta skill — check antes de rodar (o aluno nunca trava)
+## Entrega padrão (texto completo em `.claude/skills/_shared/entrega-padrao.md` — LEIA-o ao fechar a entrega)
 
-Antes de usar qualquer ferramenta, VERIFIQUE se ela existe na máquina. Se faltar: ofereça a instalação em 1 linha (e PERGUNTE antes de instalar) e SEMPRE dê um fallback sem instalação. Skill nunca trava nem falha em silêncio por ferramenta ausente — ela avisa o que falta e segue pelo fallback.
-
-- **Chrome (headless)** via `scripts/gerar_pdf.sh` — gera os PDF dos entregáveis. Check — macOS: `ls "/Applications/Google Chrome.app"` · Windows (Git Bash): `ls "/c/Program Files/Google/Chrome/Application/chrome.exe"`; no Windows o script também usa o Edge como fallback (já vem instalado). **Fallback sem Chrome:** entregue md+html, abra o `.html` no navegador e oriente imprimir em PDF (Cmd+P no Mac, Ctrl+P no Windows > Salvar como PDF).
-
-## Ao terminar — SEMPRE diga o próximo passo
-
-Toda execução desta skill **termina apontando o próximo passo** — pra o aluno nunca ficar sem saber o que fazer depois. Consulte o **Mapa de Execução do `/metodo-funil`** (ou a sequência da aula) pra saber qual skill vem a seguir, e aponte-a explicitamente:
-
-> Pronto. **Próximo passo:** rode `/{proxima-skill}` — [o que ela entrega].
-
-Nunca encerre sem o próximo passo. E aponte **UM comando só**: NADA de "alternativas paralelas", menu de opções ou lista de skills pra escolher — isso enche o aluno de dúvida e quebra o fluxo. Se existir mais de um caminho possível, escolha você (pela ordem do mapa) e aponte só ele; as outras peças continuam no mapa/Book e chegam na vez delas.
-
-> **Abra o HTML ao terminar E em todo checkpoint (obrigatório):** toda entrega ao usuário — o resultado final OU um checkpoint de revisão/aprovação no meio da skill — gera um `.html` da peça e termina SEMPRE mostrando: envie o HTML renderizado na conversa (ferramenta de envio de arquivo) E abra no navegador com o comando do sistema do aluno — macOS: `open <arquivo>.html` · Windows: `start "" <arquivo>.html` · Linux: `xdg-open <arquivo>.html` (detecte o SO antes; NUNCA assuma macOS). NUNCA peça aprovação de algo que o usuário não consegue ver renderizado. Nunca encerre entregando só o caminho do arquivo. **Isso vale INCLUSIVE pra amostra/checkpoint de aprovação (regra dura):** toda peça que você mostra pro dono — mesmo 1 amostra antes do lote — PRIMEIRO entra no Book do Funil (card na fase certa, badge "em revisão", apontando pra galeria/HTML da peça, NUNCA pro arquivo solto) e SÓ ENTÃO é aberta e enviada renderizada. NUNCA mande PNG/arquivo solto no chat sem a peça estar registrada no Book: o dono chega a tudo PELO Book. Ao aprovar e escalar o lote, o card vira "feito" e a galeria passa a mostrar todas as peças.
+Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do `projetos/{slug}/DESIGN.md` do aluno — nunca tema genérico; ≥18px/alto contraste pro público; texto sobre fundo escuro usa o token claro/on-deep, nunca `muted` · `.pdf` via `scripts/gerar_pdf.sh`). Toda entrega E todo checkpoint abrem o `.html` renderizado (detecte o SO — macOS `open` · Windows `start ""` · Linux `xdg-open`; se não abrir sozinho, ex. Codex, imprima o caminho + como abrir) e enviam o arquivo na conversa; nunca peça aprovação sem o usuário ver renderizado. Feche SEMPRE apontando UM próximo comando (ordem canônica do mapa). Ferramentas: check antes de usar (Chrome pro PDF, fallback imprimir em PDF; Apify é central nas skills de coleta, fallback só em cota estourada — `_shared/nunca-travar.md`).

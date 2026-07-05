@@ -276,6 +276,7 @@ function tryLint(filePath, cwd) {
     stdio: ["ignore", "pipe", "pipe"],
     timeout: 90000,
     encoding: "utf8",
+    shell: process.platform === "win32", // no Windows o npx e npx.cmd; sem shell o spawnSync nao acha
   });
   const stdout = result.stdout || "";
   const stderr = result.stderr || "";
