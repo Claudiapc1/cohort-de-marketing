@@ -101,4 +101,6 @@ touched_paths:
 - A primeira revisão Codex encontrou dois P2: duplicação de declaração na
   retomada e validação aninhada incompleta. Ambos foram fechados com reuso de ID,
   validação pelo schema canônico e testes de regressão.
+- A segunda revisão encontrou `schemaVersion` ausente como P2; a validação agora
+  aplica também os campos obrigatórios do schema raiz antes da migração.
 - Não houve alteração fora dos `touched_paths`, nem uso de `OPENAI_API_KEY`/`CODEX_API_KEY`.

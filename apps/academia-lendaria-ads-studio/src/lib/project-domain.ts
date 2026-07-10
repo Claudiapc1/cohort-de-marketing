@@ -341,11 +341,16 @@ export function validateLegacyBrief(input: unknown): BriefValidationIssue[] {
   for (const key of Object.keys(document)) {
     if (!LEGACY_BRIEF_ROOT_FIELDS.has(key)) issues.push({ path: key, message: 'campo não permitido.' });
   }
+  const canonicalRoot = projectBriefSchema as unknown as ValidationSchema;
+  for (const required of canonicalRoot.required ?? []) {
+    if (!Object.prototype.hasOwnProperty.call(document, required)) {
+      issues.push({ path: required, message: 'é obrigatório.' });
+    }
+  }
   const canonicalProperties = projectBriefSchema.properties as unknown as Record<string, ValidationSchema>;
   for (const [key, schema] of Object.entries(canonicalProperties)) {
     if (document[key] !== undefined) validateSchemaValue(document[key], schema, key, issues);
   }
-  if (document.project === undefined) issues.push({ path: 'project', message: 'é obrigatório.' });
   if (document.artifacts !== undefined) {
     if (!document.artifacts || typeof document.artifacts !== 'object' || Array.isArray(document.artifacts)) {
       issues.push({ path: 'artifacts', message: 'deve ser um objeto de flags booleanas.' });

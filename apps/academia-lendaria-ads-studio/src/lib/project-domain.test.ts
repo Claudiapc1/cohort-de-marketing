@@ -76,4 +76,11 @@ describe('project domain', () => {
       { path: 'fieldMeta.project.slug.extra', message: 'campo não permitido.' },
     ]));
   });
+
+  it('rejects a document without the required legacy schemaVersion', () => {
+    expect(validateLegacyBrief({ project: { slug: 'sem-versao' } })).toContainEqual({
+      path: 'schemaVersion',
+      message: 'é obrigatório.',
+    });
+  });
 });
