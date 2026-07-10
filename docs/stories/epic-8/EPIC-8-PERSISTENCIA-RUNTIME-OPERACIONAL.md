@@ -2,7 +2,7 @@
 epic_id: 8
 title: "Persistência e Runtime Operacional do Marketing Studio"
 state_file: "docs/stories/epic-8/epic-8-state.json"
-status: InProgress
+status: Done
 owner: cohort-marketing
 accountable: "Rafael Costa"
 created: 2026-07-09
@@ -66,8 +66,10 @@ incorreto).
 
 ### W3 - Piloto e entrega
 
-**Status:** InProgress em 2026-07-10. 8.W3.1 e 8.W3.2 concluídas com gate
-independente `SHIP`; 8.W3.3 está Ready e é o último batch do epic.
+**Status:** Done em 2026-07-10. Fan-in local `82e5ad2`; as três stories
+concluídas com gate independente `SHIP`. A entrega final passou por 263 testes,
+lint, typecheck, builds client/server, pgTAP 43/43 e E2E de instalação limpa,
+ownership, shutdown, restart e readiness desktop/mobile.
 
 - 8.W3.1 - E2E real do Squad de Tráfego
 - 8.W3.2 - Cutover legado e alertas do monitor
@@ -96,5 +98,5 @@ independente `SHIP`; 8.W3.3 está Ready e é o último batch do epic.
 
 Orquestração por `/sinkra-wave-execute epic-8`, com preflight determinístico,
 DAG por ownership, worktree por story, `/sinkra-full-cycle` por child e fan-in
-exclusivo de `@devops`. W1, W2 e o primeiro batch de W3 estão concluídos;
-resume point atual: `8.W3.3` (launcher e readiness para não devs).
+exclusivo de `@devops`. W1, W2 e W3 estão concluídas; não há resume point
+pendente neste epic.
