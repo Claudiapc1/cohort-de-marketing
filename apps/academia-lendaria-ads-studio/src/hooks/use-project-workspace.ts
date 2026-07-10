@@ -60,6 +60,8 @@ export function toCacheRunPatch(patch: UpdateSkillRunInput): Partial<SkillRun> {
   if (patch.status !== undefined) next.status = patch.status;
   if (patch.skillHash !== undefined) next.skillHash = patch.skillHash;
   if (patch.proposal !== undefined) next.proposal = patch.proposal;
+  if (patch.proposalHash !== undefined) next.proposalHash = patch.proposalHash;
+  if (patch.proposalRevision !== undefined) next.proposalRevision = patch.proposalRevision;
   if (patch.error !== undefined) next.error = patch.error ?? undefined;
   return next;
 }

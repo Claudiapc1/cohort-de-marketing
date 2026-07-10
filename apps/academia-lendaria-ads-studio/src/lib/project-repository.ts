@@ -87,12 +87,15 @@ interface PostgrestLikeError {
 const UNIQUE_VIOLATION = '23505';
 const INSUFFICIENT_PRIVILEGE = '42501';
 const CHECK_VIOLATION = '23514';
+const SERIALIZATION_FAILURE = '40001';
 const NO_ROWS_SINGLE = 'PGRST116';
 
 /** Traduz um erro do supabase-js para a hierarquia tipada do repository. */
 export function toRepositoryError(error: PostgrestLikeError, entity: string): RepositoryError {
   switch (error.code) {
     case UNIQUE_VIOLATION:
+      return new RevisionConflictError(entity, error);
+    case SERIALIZATION_FAILURE:
       return new RevisionConflictError(entity, error);
     case INSUFFICIENT_PRIVILEGE:
       return new RepositoryForbiddenError(entity, error);
@@ -160,6 +163,8 @@ interface SkillRunRow {
   status: SkillRun['status'];
   input_snapshot: Record<string, unknown>;
   proposal: Record<string, unknown> | null;
+  proposal_hash: string | null;
+  proposal_revision: number | null;
   error: string | null;
   created_at: string;
   updated_at: string;
@@ -255,6 +260,8 @@ export function rowToSkillRun(row: SkillRunRow): SkillRun {
     skillHash: row.skill_hash,
     inputSnapshot: row.input_snapshot ?? {},
     ...(row.proposal != null ? { proposal: row.proposal } : {}),
+    ...(row.proposal_hash != null ? { proposalHash: row.proposal_hash } : {}),
+    ...(row.proposal_revision != null ? { proposalRevision: row.proposal_revision } : {}),
     ...(row.error != null ? { error: row.error } : {}),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -347,6 +354,15 @@ export interface UpdateSkillRunInput {
    * `needs_review` grava o hash autoritativo devolvido pelo journal durável.
    */
   skillHash?: string;
+  /**
+   * Hash e revisão canônicos da proposta em revisão (STORY-8.W2.3). Persistidos
+   * na transição `needs_review` e bumpados a cada edição da proposta, para o
+   * endpoint de aprovação rejeitar um hash/revisão obsoletos.
+   */
+  proposalHash?: string;
+  proposalRevision?: number;
+  /** Current revision expected by the atomic proposal-review RPC. */
+  expectedProposalRevision?: number;
 }
 
 export interface CreateCampaignPlanInput {
@@ -430,6 +446,8 @@ export function skillRunUpdate(input: UpdateSkillRunInput): Record<string, unkno
   if (input.proposal !== undefined) patch.proposal = input.proposal;
   if (input.error !== undefined) patch.error = input.error;
   if (input.skillHash !== undefined) patch.skill_hash = input.skillHash;
+  if (input.proposalHash !== undefined) patch.proposal_hash = input.proposalHash;
+  if (input.proposalRevision !== undefined) patch.proposal_revision = input.proposalRevision;
   return patch;
 }
 
@@ -512,7 +530,7 @@ const BRIEF_COLS =
 const ARTIFACT_COLS =
   'id, workspace_id, project_id, artifact_type, title, path, format, state, verification, source, content, content_hash, skill_run_id, created_at, updated_at';
 const SKILL_RUN_COLS =
-  'id, workspace_id, project_id, skill_id, skill_hash, status, input_snapshot, proposal, error, created_at, updated_at';
+  'id, workspace_id, project_id, skill_id, skill_hash, status, input_snapshot, proposal, proposal_hash, proposal_revision, error, created_at, updated_at';
 const CAMPAIGN_PLAN_COLS =
   'id, workspace_id, project_id, campaign_id, revision, schema_version, data, created_at, updated_at';
 const WEEKLY_PANEL_COLS =
@@ -658,6 +676,25 @@ export function createSupabaseProjectRepository(client: SupabaseClient = supabas
     },
 
     async updateSkillRun(workspaceId, id, patch) {
+      if (patch.proposalHash !== undefined || patch.proposalRevision !== undefined) {
+        if (patch.proposalHash === undefined || patch.proposalRevision === undefined || patch.proposal === undefined) {
+          throw new RepositoryError(
+            'unknown',
+            'skill_runs',
+            'A edição de proposta exige proposal, proposalHash e proposalRevision juntos.',
+          );
+        }
+        const expectedRevision = patch.expectedProposalRevision ?? patch.proposalRevision - 1;
+        const { data, error } = await client.rpc('review_skill_run_proposal', {
+          p_workspace_id: workspaceId,
+          p_skill_run_id: id,
+          p_expected_revision: expectedRevision,
+          p_proposal: patch.proposal,
+          p_proposal_hash: patch.proposalHash,
+        }).single();
+        if (error) throw toRepositoryError(error, 'skill_runs');
+        return rowToSkillRun(data as SkillRunRow);
+      }
       const { data, error } = await client
         .from('skill_runs')
         .update(skillRunUpdate(patch))

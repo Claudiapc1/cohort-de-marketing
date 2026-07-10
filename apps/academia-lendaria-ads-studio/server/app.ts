@@ -38,6 +38,15 @@ import { createSupabaseSkillRunJobStore } from './jobs/supabase-skill-job-store.
 import { createSkillRunEventBus, type SkillRunEventBus } from './jobs/events.js'
 import { createSkillRunWorker, type SkillRunWorker } from './jobs/skill-run-worker.js'
 import {
+  ArtifactApprovalError,
+  createArtifactApprovalService,
+  createSupabaseApprovalRunGateway,
+  createSupabaseArtifactApprovalStore,
+  type ApprovalErrorCode,
+  type ArtifactApprovalService,
+} from './artifact-approval.js'
+import { resolve as resolvePath } from 'node:path'
+import {
   createBackendSupabaseClient,
   createSupabaseCampaignRepo,
   type CampaignEconomicsRepo,
@@ -99,6 +108,14 @@ export interface BuildAppOptions {
    * (ou `null` quando não há credenciais — fallback de dev sem writer service-role).
    */
   deriveProjectWorkspaceId?: (projectId: string) => Promise<string | null>
+  /**
+   * Serviço de aprovação de artefatos em duas fases (STORY-8.W2.3). Injetável
+   * para testes; por padrão usa Supabase service-role + o materializador W1.3
+   * quando há credenciais, senão fica `null` (capacidade desligada — NFR9).
+   */
+  artifactApprovalService?: ArtifactApprovalService | null
+  /** Raiz do monorepo (para resolver `projetos/`). Default: env/`../..`. */
+  cohortRepoRoot?: string
 }
 
 export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyInstance> {
@@ -122,21 +139,40 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   const skillRunBus: SkillRunEventBus = options.skillRunEventBus ?? createSkillRunEventBus()
   const workerOwnerId = options.workerOwnerId ?? `bff-${randomUUID()}`
 
-  // Boundary de segurança do runner local (STORY-8.W1.2). Token e limiter só são
-  // materializados quando o runner está ligado — capacidade desligada = sem custo.
+  // Aprovação de artefatos em duas fases (STORY-8.W2.3). A materialização é
+  // backend-only (filesystem), então o BFF é a ÚNICA autoridade que mantém o
+  // filesystem e o banco coerentes via a saga/outbox. Requer o backend Supabase
+  // (service-role) para persistir o outbox/artefato/skill_run; sem credenciais a
+  // capacidade fica desligada (o BFF ainda sobe — NFR9).
+  const cohortRepoRoot = options.cohortRepoRoot ?? process.env.COHORT_REPO_ROOT ?? resolvePath(process.cwd(), '../..')
+  const projectsRoot = resolvePath(cohortRepoRoot, 'projetos')
+  const artifactApprovalService: ArtifactApprovalService | null =
+    options.artifactApprovalService !== undefined
+      ? options.artifactApprovalService
+      : backendSupabase
+        ? createArtifactApprovalService({
+            store: createSupabaseArtifactApprovalStore(backendSupabase),
+            runs: createSupabaseApprovalRunGateway(backendSupabase),
+            projectsRoot,
+          })
+        : null
+
+  // Boundary de segurança do runner local (STORY-8.W1.2). O TOKEN é o segredo do
+  // boundary `/api/local/*` inteiro (runner + aprovação de artefatos), então é
+  // resolvido sempre — o limiter/worker do Codex só quando o runner está ligado.
   const runnerLimits: LocalRunnerLimits = { ...resolveLocalRunnerLimits(), ...options.localRunnerLimits }
   let runnerToken: string | null = null
   let runnerLimiter: ReturnType<typeof createConcurrencyLimiter> | null = null
   let runnerTokenEphemeral = false
   let skillWorker: SkillRunWorker | null = null
+  if (options.localRunnerToken && options.localRunnerToken.length > 0) {
+    runnerToken = options.localRunnerToken
+  } else {
+    const resolved = resolveLocalRunnerToken()
+    runnerToken = resolved.token
+    runnerTokenEphemeral = resolved.ephemeral
+  }
   if (skillRunner) {
-    if (options.localRunnerToken && options.localRunnerToken.length > 0) {
-      runnerToken = options.localRunnerToken
-    } else {
-      const resolved = resolveLocalRunnerToken()
-      runnerToken = resolved.token
-      runnerTokenEphemeral = resolved.ephemeral
-    }
     runnerLimiter = createConcurrencyLimiter(runnerLimits.maxConcurrency)
     // Lease > timeout + kill grace: uma execução viva nunca é reivindicada por
     // recovery; só um lease genuinamente expirado (processo morto) é reclamado.
@@ -188,9 +224,10 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
     },
   })
 
-  if (runnerTokenEphemeral) {
-    // Fail-closed: sem segredo compartilhado configurado o runner fica efetivamente
-    // trancado (o proxy Vite não conhece o token efêmero). NÃO logamos o valor (AC3).
+  if (runnerTokenEphemeral && (skillRunner || artifactApprovalService)) {
+    // Fail-closed: sem segredo compartilhado configurado o boundary local fica
+    // efetivamente trancado (o proxy Vite não conhece o token efêmero). NÃO
+    // logamos o valor (AC3).
     app.log.warn(
       'Runner local sem LOCAL_SKILL_RUNNER_TOKEN configurado — token efêmero gerado; ' +
         'configure o segredo local compartilhado com o proxy Vite para habilitar chamadas autorizadas.',
@@ -290,6 +327,135 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
     }
     return true
   }
+
+  /**
+   * Boundary guard for the artifact-approval surface (STORY-8.W2.3). Same local
+   * token (injected by the Vite proxy, never held by the browser) but does NOT
+   * require the Codex runner — approval only needs the materializer + DB. 503
+   * when the capability is off (no Supabase backend), 401/403 on the token.
+   */
+  function guardApprovalRequest(req: FastifyRequest, reply: FastifyReply): boolean {
+    if (!artifactApprovalService || !runnerToken) {
+      reply.status(503).send({
+        code: 'ARTIFACT_APPROVAL_DISABLED',
+        message: 'Aprovação de artefatos desabilitada (sem backend de persistência configurado).',
+      })
+      return false
+    }
+    const providedToken = req.headers[LOCAL_RUNNER_TOKEN_HEADER]
+    const auth = authorizeLocalRunnerRequest(
+      Array.isArray(providedToken) ? providedToken[0] : providedToken,
+      runnerToken,
+    )
+    if (!auth.ok) {
+      reply.status(auth.status).send({ code: auth.code, message: auth.message })
+      return false
+    }
+    return true
+  }
+
+  const approvalArtifactSchema = z.object({
+    artifactType: z.string().min(1),
+    title: z.string().min(1),
+    path: z.string().min(1),
+    format: z.enum(['markdown', 'json', 'yaml', 'html']),
+    content: z.string(),
+  })
+  const approvalPlanSchema = z.object({
+    skillRunId: z.string().min(1),
+    artifacts: z.array(approvalArtifactSchema).min(1),
+  })
+  const approvalDecideSchema = z.object({
+    skillRunId: z.string().min(1),
+    decision: z.enum(['approve', 'reject']),
+    expectedProposalHash: z.string().min(1),
+    expectedProposalRevision: z.number().int().positive(),
+    idempotencyKey: z.string().min(1).max(200),
+    artifacts: z.array(approvalArtifactSchema).optional(),
+  })
+
+  // Treatable approval errors → HTTP: stale/conflict decisions are 409, a missing
+  // run is 404, everything else surfaces as 500 (repairable outbox row persists).
+  function approvalErrorStatus(code: ApprovalErrorCode): number {
+    switch (code) {
+      case 'run-not-found':
+        return 404
+      case 'not-reviewable':
+      case 'stale':
+      case 'hash-mismatch':
+      case 'duplicate-path':
+      case 'idempotency-conflict':
+      case 'superseded':
+        return 409
+      case 'invalid-path':
+        return 400
+      default:
+        return 500
+    }
+  }
+
+  // --- Phase 1: plan (read-only diff/affected/warnings — AC1) ---------------
+  app.post('/api/local/artifact-approvals/plan', { bodyLimit: runnerLimits.bodyLimitBytes }, async (req, reply) => {
+    if (!guardApprovalRequest(req, reply)) return reply
+    const parsed = approvalPlanSchema.safeParse(req.body)
+    if (!parsed.success) {
+      return reply.status(400).send({ code: 'INVALID_APPROVAL_INPUT', issues: parsed.error.issues })
+    }
+    try {
+      const plan = await artifactApprovalService!.plan(parsed.data)
+      return reply.status(200).send(plan)
+    } catch (error) {
+      if (error instanceof ArtifactApprovalError) {
+        return reply.status(approvalErrorStatus(error.code)).send({ code: error.code, message: error.message })
+      }
+      req.log.error(error, 'artifact approval plan failed')
+      return reply.status(500).send({
+        code: 'ARTIFACT_APPROVAL_PLAN_FAILED',
+        message: error instanceof Error ? error.message : 'Falha ao planejar a aprovação.',
+      })
+    }
+  })
+
+  // --- Phase 2: decide (idempotent outbox saga — AC2/AC3/AC4/AC5) -----------
+  app.post('/api/local/artifact-approvals', { bodyLimit: runnerLimits.bodyLimitBytes }, async (req, reply) => {
+    if (!guardApprovalRequest(req, reply)) return reply
+    const parsed = approvalDecideSchema.safeParse(req.body)
+    if (!parsed.success) {
+      return reply.status(400).send({ code: 'INVALID_APPROVAL_INPUT', issues: parsed.error.issues })
+    }
+    try {
+      const record = await artifactApprovalService!.decide(parsed.data)
+      return reply.status(200).send(record)
+    } catch (error) {
+      if (error instanceof ArtifactApprovalError) {
+        return reply.status(approvalErrorStatus(error.code)).send({ code: error.code, message: error.message })
+      }
+      req.log.error(error, 'artifact approval decide failed')
+      return reply.status(500).send({
+        code: 'ARTIFACT_APPROVAL_DECIDE_FAILED',
+        message: error instanceof Error ? error.message : 'Falha ao registrar a decisão de aprovação.',
+      })
+    }
+  })
+
+  // --- Deterministic repair of a stuck decision (AC3/AC6) -------------------
+  app.post('/api/local/artifact-approvals/:id/repair', async (req, reply) => {
+    if (!guardApprovalRequest(req, reply)) return reply
+    const { id } = req.params as { id: string }
+    try {
+      const record = await artifactApprovalService!.repair(id)
+      return reply.status(200).send(record)
+    } catch (error) {
+      if (error instanceof ArtifactApprovalError) {
+        return reply.status(approvalErrorStatus(error.code)).send({ code: error.code, message: error.message })
+      }
+      req.log.error(error, 'artifact approval repair failed')
+      return reply.status(500).send({
+        code: 'ARTIFACT_APPROVAL_REPAIR_FAILED',
+        message: error instanceof Error ? error.message : 'Falha ao reparar a decisão de aprovação.',
+      })
+    }
+  })
 
   // --- Start a durable async skill run (AC1) -------------------------------
   // bodyLimit por rota (AC5): restringe só este endpoint, sem afetar o global.
@@ -448,6 +614,20 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
     if (recoverable.length > 0) {
       app.log.info(`[skill-run] recuperando ${recoverable.length} run(s) não-terminais após boot`)
       for (const job of recoverable) scheduleRun(job.jobId)
+    }
+  }
+
+  // --- Approval repair on boot (STORY-8.W2.3) — retoma decisões presas -------
+  // Uma decisão que travou mid-saga (crash antes/depois do rename) é resumida
+  // deterministicamente do estado persistido, sem duplicar a materialização.
+  if (artifactApprovalService && options.recoverOnBoot !== false) {
+    try {
+      const repaired = await artifactApprovalService.repairAll()
+      if (repaired.length > 0) {
+        app.log.info(`[artifact-approval] reparando ${repaired.length} decisão(ões) presa(s) após boot`)
+      }
+    } catch (error) {
+      app.log.error(error, '[artifact-approval] falha ao reparar decisões no boot')
     }
   }
 

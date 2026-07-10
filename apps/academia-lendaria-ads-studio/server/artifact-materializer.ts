@@ -15,10 +15,14 @@
  *
  * Contrato: `data/contracts/artifact-write.v1.schema.json` (app-local).
  */
-import { createHash, randomUUID } from 'node:crypto';
-import { lstat, mkdir, readFile, realpath, rename, rm, writeFile } from 'node:fs/promises';
-import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { createHash } from 'node:crypto';
+import { isAbsolute } from 'node:path';
 import { parse as parseYaml } from 'yaml';
+import {
+  ConfinedFilesystemError,
+  materializeConfinedArtifact,
+  readConfinedArtifactFile,
+} from './artifact-fs-worker-client.js';
 
 export const ARTIFACT_WRITE_SCHEMA_VERSION = '1.0.0';
 
@@ -114,33 +118,42 @@ function assertValidSlug(slug: string): void {
   }
 }
 
-function assertValidRelativePath(relativePath: string): void {
+/**
+ * Canonical path contract shared by planning, approval and materialization.
+ * Backslashes are aliases for POSIX separators and `.` segments are removed;
+ * `..` is always rejected rather than resolved so the security boundary never
+ * depends on the caller's platform.
+ */
+export function canonicalizeRelativeArtifactPath(relativePath: string): string {
   if (typeof relativePath !== 'string' || relativePath.length === 0) {
     throw new ArtifactMaterializerError('invalid-relative-path', 'Caminho relativo vazio.');
   }
   if (relativePath.includes('\0')) {
     throw new ArtifactMaterializerError('invalid-relative-path', 'Caminho relativo contém byte nulo.');
   }
-  if (isAbsolute(relativePath)) {
+  const slashPath = relativePath.replaceAll('\\', '/');
+  if (isAbsolute(relativePath) || slashPath.startsWith('/') || /^[A-Za-z]:/.test(slashPath)) {
     throw new ArtifactMaterializerError(
       'invalid-relative-path',
       `Caminho relativo não pode ser absoluto: ${JSON.stringify(relativePath)}.`,
     );
   }
   // Rejeita '..' em qualquer segmento (tanto POSIX quanto Windows).
-  const segments = relativePath.split(/[\\/]+/);
+  const segments = slashPath.split('/');
   if (segments.some((segment) => segment === '..')) {
     throw new ArtifactMaterializerError(
       'invalid-relative-path',
       `Caminho relativo não pode conter '..': ${JSON.stringify(relativePath)}.`,
     );
   }
-  if (segments.every((segment) => segment === '' || segment === '.')) {
+  const canonicalSegments = segments.filter((segment) => segment !== '' && segment !== '.');
+  if (canonicalSegments.length === 0) {
     throw new ArtifactMaterializerError(
       'invalid-relative-path',
       `Caminho relativo não aponta para um arquivo: ${JSON.stringify(relativePath)}.`,
     );
   }
+  return canonicalSegments.join('/');
 }
 
 function validateContentFormat(format: ArtifactFormat, content: string): void {
@@ -165,86 +178,25 @@ function validateContentFormat(format: ArtifactFormat, content: string): void {
   }
 }
 
-async function pathExists(target: string): Promise<boolean> {
-  try {
-    await lstat(target);
-    return true;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return false;
-    throw error;
-  }
-}
-
 /**
- * Resolve o alvo canônico dentro de `projetos/{slug}/`, criando os diretórios
- * intermediários de forma segura e recusando qualquer escape por symlink.
- *
- * A checagem estrutural percorre cada ancestral existente sob a raiz real do
- * projeto: se algum for symlink, aborta (não segue o link). Diretórios ausentes
- * são criados um a um dentro de território já verificado.
+ * Read-only operation confined to a helper process whose cwd is fixed to the
+ * validated project directory. The helper returns the bytes itself; callers
+ * never receive a pathname that they could read after the validation window.
  */
-async function resolveSafeTarget(
+export async function readSafeArtifactFile(
   projectsRoot: string,
   slug: string,
   relativePath: string,
-): Promise<{ target: string; realProjectRoot: string }> {
-  const projectRoot = resolve(projectsRoot, slug);
-  await mkdir(projectRoot, { recursive: true });
-  // realpath resolve symlinks da própria raiz (ex.: projetos/ montado via link) — o
-  // território "seguro" passa a ser a raiz real resolvida.
-  const realProjectRoot = await realpath(projectRoot);
-
-  const target = resolve(realProjectRoot, relativePath);
-  const withinRoot = target === realProjectRoot || target.startsWith(realProjectRoot + sep);
-  if (!withinRoot) {
-    throw new ArtifactMaterializerError(
-      'path-escape',
-      `Caminho resolvido escapa da raiz do projeto: ${target} ∉ ${realProjectRoot}`,
-    );
-  }
-
-  // Percorre os diretórios ancestrais entre a raiz e o diretório-pai do alvo.
-  const parentDir = dirname(target);
-  const relParent = relative(realProjectRoot, parentDir);
-  const segments = relParent.length === 0 ? [] : relParent.split(sep).filter(Boolean);
-
-  let current = realProjectRoot;
-  for (const segment of segments) {
-    current = join(current, segment);
-    if (await pathExists(current)) {
-      const stat = await lstat(current);
-      if (stat.isSymbolicLink()) {
-        throw new ArtifactMaterializerError(
-          'symlink-escape',
-          `Ancestral é symlink (escape recusado): ${current}`,
-        );
-      }
-      if (!stat.isDirectory()) {
-        throw new ArtifactMaterializerError(
-          'not-a-directory',
-          `Ancestral não é diretório: ${current}`,
-        );
-      }
-    } else {
-      await mkdir(current);
+): Promise<string | null> {
+  const canonicalPath = canonicalizeRelativeArtifactPath(relativePath);
+  try {
+    return await readConfinedArtifactFile(projectsRoot, slug, canonicalPath);
+  } catch (error) {
+    if (error instanceof ConfinedFilesystemError) {
+      throw new ArtifactMaterializerError(error.code as ArtifactErrorCode, error.message);
     }
+    throw error;
   }
-
-  // O próprio alvo, se já existir, não pode ser symlink nem diretório.
-  if (await pathExists(target)) {
-    const stat = await lstat(target);
-    if (stat.isSymbolicLink()) {
-      throw new ArtifactMaterializerError(
-        'symlink-escape',
-        `Alvo é symlink (escape recusado): ${target}`,
-      );
-    }
-    if (!stat.isFile()) {
-      throw new ArtifactMaterializerError('not-a-file', `Alvo existente não é arquivo: ${target}`);
-    }
-  }
-
-  return { target, realProjectRoot };
 }
 
 /**
@@ -266,7 +218,7 @@ export async function materializeArtifact(
   }
 
   assertValidSlug(request.projectSlug);
-  assertValidRelativePath(request.relativePath);
+  const canonicalPath = canonicalizeRelativeArtifactPath(request.relativePath);
   validateContentFormat(request.format, request.content);
 
   const hashAfter = sha256(request.content);
@@ -285,18 +237,12 @@ export async function materializeArtifact(
     }
   }
 
-  const { target } = await resolveSafeTarget(
-    options.projectsRoot,
-    request.projectSlug,
-    request.relativePath,
-  );
-
   const nowIso = (options.now ?? (() => new Date()))().toISOString();
   const buildAudit = (outcome: ArtifactWriteOutcome, hashBefore: string | null, bytesWritten: number): ArtifactAuditEvent => ({
     event: 'artifact.materialize',
     schemaVersion: ARTIFACT_WRITE_SCHEMA_VERSION,
     projectSlug: request.projectSlug,
-    relativePath: request.relativePath,
+    relativePath: canonicalPath,
     runId: request.runId,
     format: request.format,
     outcome,
@@ -306,61 +252,26 @@ export async function materializeArtifact(
     timestamp: nowIso,
   });
 
-  // Estado canônico anterior.
-  let hashBefore: string | null = null;
-  if (await pathExists(target)) {
-    hashBefore = sha256(await readFile(target, 'utf8'));
-  }
-
-  // Idempotência: mesmo hash = no-op.
-  if (hashBefore === hashAfter) {
-    return {
-      outcome: 'unchanged',
-      hashBefore,
-      hashAfter,
-      absolutePath: target,
-      relativePath: request.relativePath,
-      bytesWritten: 0,
-      audit: buildAudit('unchanged', hashBefore, 0),
-    };
-  }
-
-  // Conflito: conteúdo divergente exige revisão explícita (onConflict: 'overwrite').
-  const onConflict = request.onConflict ?? 'reject';
-  if (hashBefore !== null && onConflict === 'reject') {
-    return {
-      outcome: 'conflict',
-      hashBefore,
-      hashAfter,
-      absolutePath: target,
-      relativePath: request.relativePath,
-      bytesWritten: 0,
-      audit: buildAudit('conflict', hashBefore, 0),
-    };
-  }
-
-  // Escrita atômica: arquivo temporário no mesmo diretório + rename.
-  const bytes = Buffer.byteLength(request.content, 'utf8');
-  const tempPath = join(dirname(target), `.${basename(target)}.${randomUUID()}.tmp`);
   try {
-    await writeFile(tempPath, request.content, { encoding: 'utf8', flag: 'wx' });
-    await rename(tempPath, target);
+    const result = await materializeConfinedArtifact({
+      projectsRoot: options.projectsRoot,
+      slug: request.projectSlug,
+      relativePath: canonicalPath,
+      content: request.content,
+      hashAfter,
+      onConflict: request.onConflict ?? 'reject',
+    });
+    return {
+      ...result,
+      audit: buildAudit(result.outcome, result.hashBefore, result.bytesWritten),
+    };
   } catch (error) {
-    // Rollback: remove o temporário; o arquivo canônico permanece intacto.
-    await rm(tempPath, { force: true });
+    if (error instanceof ConfinedFilesystemError) {
+      throw new ArtifactMaterializerError(error.code as ArtifactErrorCode, error.message);
+    }
     throw new ArtifactMaterializerError(
       'write-failed',
-      `Falha na escrita atômica de ${target}: ${(error as Error).message}`,
+      `Falha na escrita confinada: ${(error as Error).message}`,
     );
   }
-
-  return {
-    outcome: 'written',
-    hashBefore,
-    hashAfter,
-    absolutePath: target,
-    relativePath: request.relativePath,
-    bytesWritten: bytes,
-    audit: buildAudit('written', hashBefore, bytes),
-  };
 }

@@ -242,6 +242,12 @@ export interface ProjectState {
    * o cache espelhar o SOT com o `id` autoritativo do banco (não o inventado localmente).
    */
   upsertSkillRun: (run: SkillRun) => void;
+  /**
+   * Insere/substitui um artefato já persistido no repository (STORY-8.W2.3). O
+   * fluxo de aprovação chama isto SÓ após a materialização + escrita real terem
+   * sucesso, para o cache espelhar o artefato materializado com o `id` do banco.
+   */
+  upsertArtifact: (artifact: ProjectArtifact) => void;
   upsertCampaignPlan: (plan: CampaignPlanRevision) => void;
   upsertWeeklyPanel: (panel: WeeklyPanel) => void;
   resetDemo: () => void;
@@ -504,6 +510,9 @@ export function createProjectStore(
         },
         upsertSkillRun: (run) => set((state) => ({
           skillRuns: [...state.skillRuns.filter((candidate) => candidate.id !== run.id), run],
+        })),
+        upsertArtifact: (artifact) => set((state) => ({
+          artifacts: [...state.artifacts.filter((candidate) => candidate.id !== artifact.id), artifact],
         })),
         upsertCampaignPlan: (plan) => set((state) => ({
           campaignPlans: [...state.campaignPlans.filter((candidate) => candidate.id !== plan.id), plan],

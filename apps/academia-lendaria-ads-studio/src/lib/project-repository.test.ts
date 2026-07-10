@@ -13,6 +13,7 @@ import {
   rowToProject,
   rowToSkillRun,
   rowToWeeklyPanel,
+  skillRunUpdate,
   toRepositoryError,
 } from '@/lib/project-repository';
 import type { CampaignPlanRevision, WeeklyPanel } from '@/lib/project-domain';
@@ -45,8 +46,9 @@ function makeClient(result: FakeResult) {
   // O builder é awaitable diretamente (queries de lista): resolve ao resultado.
   builder.then = (onFulfilled: (r: FakeResult) => unknown) => Promise.resolve(result).then(onFulfilled);
 
-  const client = { from: vi.fn(() => builder) } as unknown as SupabaseClient;
-  return { client, eqCalls, builder };
+  const rpc = vi.fn(() => builder);
+  const client = { from: vi.fn(() => builder), rpc } as unknown as SupabaseClient;
+  return { client, eqCalls, builder, rpc };
 }
 
 // ---------------------------------------------------------------------------
@@ -144,7 +146,7 @@ describe('mappers snake_case -> camelCase (AC2)', () => {
     expect(artifact.content).toBe('# Offerbook');
   });
 
-  it('mapeia skill run omitindo proposal/error nulos', () => {
+  it('mapeia skill run omitindo proposal/hash/revisão/error nulos', () => {
     const run = rowToSkillRun({
       id: 'r1',
       workspace_id: 'ws1',
@@ -154,13 +156,37 @@ describe('mappers snake_case -> camelCase (AC2)', () => {
       status: 'running',
       input_snapshot: { a: 1 },
       proposal: null,
+      proposal_hash: null,
+      proposal_revision: null,
       error: null,
       created_at: '2026-07-09T00:00:00.000Z',
       updated_at: '2026-07-09T00:00:00.000Z',
     });
     expect(run.inputSnapshot).toEqual({ a: 1 });
     expect('proposal' in run).toBe(false);
+    expect('proposalHash' in run).toBe(false);
+    expect('proposalRevision' in run).toBe(false);
     expect('error' in run).toBe(false);
+  });
+
+  it('mapeia hash e revisão da proposta em revisão (STORY-8.W2.3)', () => {
+    const run = rowToSkillRun({
+      id: 'r2',
+      workspace_id: 'ws1',
+      project_id: 'p1',
+      skill_id: 'offerbook',
+      skill_hash: 'h1',
+      status: 'needs_review',
+      input_snapshot: {},
+      proposal: { summary: 'ok' },
+      proposal_hash: 'proposal-hash-abc',
+      proposal_revision: 2,
+      error: null,
+      created_at: '2026-07-09T00:00:00.000Z',
+      updated_at: '2026-07-09T00:00:00.000Z',
+    });
+    expect(run.proposalHash).toBe('proposal-hash-abc');
+    expect(run.proposalRevision).toBe(2);
   });
 
   it('reconcilia a identidade do plano de campanha a partir das colunas da linha', () => {
@@ -229,6 +255,21 @@ describe('mappers camelCase -> snake_case (AC2)', () => {
       status: 'draft',
       field_sources: {},
     });
+  });
+
+  it('converte a decisão de revisão do skill run (proposta/hash/revisão) para colunas', () => {
+    const patch = skillRunUpdate({
+      status: 'done',
+      proposalHash: 'proposal-hash-xyz',
+      proposalRevision: 3,
+    });
+    expect(patch).toEqual({
+      status: 'done',
+      proposal_hash: 'proposal-hash-xyz',
+      proposal_revision: 3,
+    });
+    // Campos ausentes não entram no patch (update parcial).
+    expect(skillRunUpdate({ status: 'cancelled' })).toEqual({ status: 'cancelled' });
   });
 
   it('converte hash do artefato para a coluna content_hash', () => {
@@ -312,6 +353,44 @@ describe('adapter Supabase', () => {
     await expect(repo.updateSkillRun('ws1', 'r1', { status: 'done' })).rejects.toBeInstanceOf(
       RepositoryForbiddenError,
     );
+  });
+
+  it('edita proposta via RPC CAS, sem UPDATE direto dos campos sensíveis', async () => {
+    const runRow = {
+      id: 'r1',
+      workspace_id: 'ws1',
+      project_id: 'p1',
+      skill_id: 'offerbook',
+      skill_hash: 'skill-hash',
+      status: 'needs_review' as const,
+      input_snapshot: {},
+      proposal: { artifacts: [] },
+      proposal_hash: 'a'.repeat(64),
+      proposal_revision: 2,
+      error: null,
+      created_at: '2026-07-09T00:00:00.000Z',
+      updated_at: '2026-07-09T01:00:00.000Z',
+    };
+    const { client, builder, rpc } = makeClient({ data: runRow, error: null });
+    const repo = createSupabaseProjectRepository(client);
+    const proposal = { artifacts: [{ path: 'offerbook.md', content: 'editado' }] };
+
+    const run = await repo.updateSkillRun('ws1', 'r1', {
+      proposal,
+      proposalHash: 'b'.repeat(64),
+      proposalRevision: 2,
+      expectedProposalRevision: 1,
+    });
+
+    expect(run.status).toBe('needs_review');
+    expect(rpc).toHaveBeenCalledWith('review_skill_run_proposal', {
+      p_workspace_id: 'ws1',
+      p_skill_run_id: 'r1',
+      p_expected_revision: 1,
+      p_proposal: proposal,
+      p_proposal_hash: 'b'.repeat(64),
+    });
+    expect(builder.update).not.toHaveBeenCalled();
   });
 
   it('listCampaignPlanRevisionsForProject filtra por workspace_id + project_id, sem exigir campaignId (AC5)', async () => {

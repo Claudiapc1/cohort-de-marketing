@@ -84,6 +84,14 @@ export interface SkillRun {
   skillHash: string;
   inputSnapshot: Record<string, unknown>;
   proposal?: Record<string, unknown>;
+  /**
+   * Canonical hash of the reviewable proposal (STORY-8.W2.3). Set on `needs_review`
+   * and bumped alongside `proposalRevision` when the reviewer edits the proposal;
+   * a stale expected hash is rejected by the approval endpoint.
+   */
+  proposalHash?: string;
+  /** Bumped on each proposal edit — invalidates a stale in-flight approval. */
+  proposalRevision?: number;
   error?: string;
   createdAt: string;
   updatedAt: string;

@@ -15,6 +15,7 @@ import {
   ARTIFACT_WRITE_SCHEMA_VERSION,
   ArtifactMaterializerError,
   materializeArtifact,
+  readSafeArtifactFile,
   type ArtifactWriteRequest,
 } from '../artifact-materializer.js';
 
@@ -259,6 +260,279 @@ describe('materializeArtifact — defesas de caminho (AC2)', () => {
     // O arquivo apontado pelo symlink não foi alterado.
     expect(await readFile(outsideTarget, 'utf8')).toBe('intocável');
   });
+
+  it('W23-RG2-P1-01 rejeita o diretório do slug como symlink sem escrever fora da raiz', async () => {
+    const outside = await mkdtemp(join(tmpdir(), 'artifact-materializer-outside-'));
+    try {
+      const outsideTarget = join(outside, 'escaped.md');
+      await writeFile(outsideTarget, 'intocável', 'utf8');
+      await symlink(outside, join(projectsRoot, 'cliente-x'));
+
+      await expect(
+        materializeArtifact(
+          request({ relativePath: 'escaped.md', content: 'não pode escrever fora' }),
+          { projectsRoot, now: FIXED_NOW },
+        ),
+      ).rejects.toMatchObject({ code: 'symlink-escape' });
+
+      expect(await readFile(outsideTarget, 'utf8')).toBe('intocável');
+    } finally {
+      await rm(outside, { recursive: true, force: true });
+    }
+  });
+
+  it('mantém permitido um projectsRoot que seja mount/symlink', async () => {
+    const mountedRoot = await mkdtemp(join(tmpdir(), 'artifact-materializer-mounted-'));
+    const projectsRootLink = join(projectsRoot, 'projects-mount');
+    await symlink(mountedRoot, projectsRootLink);
+    try {
+      const result = await materializeArtifact(request(), { projectsRoot: projectsRootLink, now: FIXED_NOW });
+
+      expect(result.outcome).toBe('written');
+      expect(await readFile(join(mountedRoot, 'cliente-x', 'briefing.md'), 'utf8')).toBe(request().content);
+    } finally {
+      await rm(mountedRoot, { recursive: true, force: true });
+    }
+  });
+
+  it('W23-RG4 reancora writes sequenciais em diretórios irmãos na mesma sessão', async () => {
+    const first = request({ projectSlug: 'victim', relativePath: 'a/x.md', content: 'A' });
+    const second = request({ projectSlug: 'victim', relativePath: 'b/y.md', content: 'B' });
+
+    await expect(materializeArtifact(first, { projectsRoot, now: FIXED_NOW })).resolves.toMatchObject({ outcome: 'written' });
+    await expect(materializeArtifact(second, { projectsRoot, now: FIXED_NOW })).resolves.toMatchObject({ outcome: 'written' });
+
+    expect(await readFile(join(projectsRoot, 'victim', 'a', 'x.md'), 'utf8')).toBe('A');
+    expect(await readFile(join(projectsRoot, 'victim', 'b', 'y.md'), 'utf8')).toBe('B');
+    await expect(stat(join(projectsRoot, 'victim', 'a', 'b', 'y.md'))).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+
+  it('W23-RG4 reancora reads sequenciais em diretórios irmãos na mesma sessão', async () => {
+    const projectRoot = join(projectsRoot, 'victim');
+    await mkdir(join(projectRoot, 'a'), { recursive: true });
+    await mkdir(join(projectRoot, 'b'), { recursive: true });
+    await writeFile(join(projectRoot, 'a', 'x.md'), 'A', 'utf8');
+    await writeFile(join(projectRoot, 'b', 'y.md'), 'B', 'utf8');
+
+    await expect(readSafeArtifactFile(projectsRoot, 'victim', 'a/x.md')).resolves.toBe('A');
+    await expect(readSafeArtifactFile(projectsRoot, 'victim', 'b/y.md')).resolves.toBe('B');
+  });
+
+  it('W23-RG4 read de parent inexistente retorna null e não cria diretórios', async () => {
+    await mkdir(join(projectsRoot, 'victim'), { recursive: true });
+
+    await expect(readSafeArtifactFile(projectsRoot, 'victim', 'missing/child.md')).resolves.toBeNull();
+    await expect(stat(join(projectsRoot, 'victim', 'missing'))).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+
+  it('W23-RG4 invalida a sessão após falha e permite operação válida seguinte', async () => {
+    const outside = await mkdtemp(join(tmpdir(), 'artifact-materializer-session-outside-'));
+    const projectRoot = join(projectsRoot, 'victim');
+    await mkdir(projectRoot, { recursive: true });
+    await symlink(outside, join(projectRoot, 'blocked'));
+
+    await expect(
+      materializeArtifact(
+        request({ projectSlug: 'victim', relativePath: 'blocked/fail.md', content: 'não escrever' }),
+        { projectsRoot, now: FIXED_NOW },
+      ),
+    ).rejects.toMatchObject({ code: 'symlink-escape' });
+
+    await rm(join(projectRoot, 'blocked'), { force: true });
+    await expect(
+      materializeArtifact(
+        request({ projectSlug: 'victim', relativePath: 'valid/after-failure.md', content: 'válido' }),
+        { projectsRoot, now: FIXED_NOW },
+      ),
+    ).resolves.toMatchObject({ outcome: 'written' });
+    expect(await readFile(join(projectRoot, 'valid', 'after-failure.md'), 'utf8')).toBe('válido');
+    await rm(outside, { recursive: true, force: true });
+  });
+
+  it('W23-RG4 timer/reuse preserva o worker em uso e reusa a sessão limpa', async () => {
+    const operations = await Promise.all(
+      Array.from({ length: 200 }, (_, index) =>
+        materializeArtifact(
+          request({ projectSlug: 'victim', relativePath: `batch/${index}.txt`, content: `batch-${index}` }),
+          { projectsRoot, now: FIXED_NOW },
+        ),
+      ),
+    );
+    expect(operations.every(({ outcome }) => outcome === 'written')).toBe(true);
+
+    await expect(
+      materializeArtifact(
+        request({ projectSlug: 'victim', relativePath: 'after/batch.txt', content: 'after' }),
+        { projectsRoot, now: FIXED_NOW },
+      ),
+    ).resolves.toMatchObject({ outcome: 'written' });
+  }, 20_000);
+
+  it('W23-RG4 não atravessa intermediário trocado por symlink externo ou interno', async () => {
+    const outside = await mkdtemp(join(tmpdir(), 'artifact-materializer-intermediate-outside-'));
+    const projectRoot = join(projectsRoot, 'victim');
+    const outsideTarget = join(outside, 'target.md');
+    const internalTarget = join(projectRoot, 'other', 'target.md');
+    const swapped = join(projectRoot, 'swapped');
+    await mkdir(join(projectRoot, 'other'), { recursive: true });
+    await writeFile(outsideTarget, 'SAFE-OUTSIDE', 'utf8');
+    await writeFile(internalTarget, 'SAFE-INTERNAL', 'utf8');
+    await mkdir(swapped, { recursive: true });
+    await materializeArtifact(
+      request({ projectSlug: 'victim', relativePath: 'swapped/warm.md', content: 'warm', onConflict: 'overwrite' }),
+      { projectsRoot, now: FIXED_NOW },
+    );
+
+    let stop = false;
+    const swapper = (async () => {
+      while (!stop) {
+        await rm(swapped, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await mkdir(swapped, { recursive: true }).catch(() => undefined);
+        await rm(swapped, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await symlink(outside, swapped).catch(() => undefined);
+        await rm(swapped, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await symlink(join(projectRoot, 'other'), swapped).catch(() => undefined);
+      }
+    })();
+
+    try {
+      await Promise.all(
+        Array.from({ length: 400 }, (_, index) =>
+          materializeArtifact(
+            request({ projectSlug: 'victim', relativePath: 'swapped/target.md', content: `ATTACK-${index}`, onConflict: 'overwrite' }),
+            { projectsRoot, now: FIXED_NOW },
+          ).catch(() => undefined),
+        ),
+      );
+    } finally {
+      stop = true;
+      await swapper;
+    }
+
+    expect(await readFile(outsideTarget, 'utf8')).toBe('SAFE-OUTSIDE');
+    expect(await readFile(internalTarget, 'utf8')).toBe('SAFE-INTERNAL');
+    await rm(outside, { recursive: true, force: true });
+  }, 20_000);
+
+  it('W23-RG4 read não vaza quando intermediário vira symlink externo ou interno', async () => {
+    const outside = await mkdtemp(join(tmpdir(), 'artifact-materializer-read-intermediate-outside-'));
+    const projectRoot = join(projectsRoot, 'victim');
+    const swapped = join(projectRoot, 'swapped');
+    await mkdir(join(projectRoot, 'other'), { recursive: true });
+    await writeFile(join(outside, 'secret.md'), 'SECRET-OUTSIDE', 'utf8');
+    await writeFile(join(projectRoot, 'other', 'secret.md'), 'SECRET-INTERNAL', 'utf8');
+    await mkdir(swapped, { recursive: true });
+    await writeFile(join(swapped, 'secret.md'), 'SECRET-INSIDE', 'utf8');
+    await expect(readSafeArtifactFile(projectsRoot, 'victim', 'swapped/secret.md')).resolves.toBe('SECRET-INSIDE');
+
+    let stop = false;
+    const swapper = (async () => {
+      while (!stop) {
+        await rm(swapped, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await mkdir(swapped, { recursive: true }).catch(() => undefined);
+        await writeFile(join(swapped, 'secret.md'), 'SECRET-INSIDE', 'utf8').catch(() => undefined);
+        await rm(swapped, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await symlink(outside, swapped).catch(() => undefined);
+        await rm(swapped, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await symlink(join(projectRoot, 'other'), swapped).catch(() => undefined);
+      }
+    })();
+
+    let reads: Array<string | null> = [];
+    try {
+      reads = await Promise.all(
+        Array.from({ length: 400 }, () => readSafeArtifactFile(projectsRoot, 'victim', 'swapped/secret.md').catch(() => null)),
+      );
+    } finally {
+      stop = true;
+      await swapper;
+      await rm(outside, { recursive: true, force: true });
+    }
+
+    expect(reads).not.toContain('SECRET-OUTSIDE');
+    expect(reads).not.toContain('SECRET-INTERNAL');
+  }, 20_000);
+
+  it('W23-RG3-P1-01 concorrência: fixa a identidade e nunca escreve no alvo externo', async () => {
+    const outside = await mkdtemp(join(tmpdir(), 'artifact-materializer-race-outside-'));
+    const slugRoot = join(projectsRoot, 'victim');
+    const outsideTarget = join(outside, 'attack.md');
+    await writeFile(outsideTarget, 'SAFE-OUTSIDE', 'utf8');
+    await mkdir(slugRoot, { recursive: true });
+    await materializeArtifact(
+      request({ projectSlug: 'victim', relativePath: 'attack.md', content: 'INSIDE', onConflict: 'overwrite' }),
+      { projectsRoot, now: FIXED_NOW },
+    );
+    let stop = false;
+    const swapper = (async () => {
+      while (!stop) {
+        await rm(slugRoot, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await mkdir(slugRoot, { recursive: true }).catch(() => undefined);
+        await rm(slugRoot, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await symlink(outside, slugRoot).catch(() => undefined);
+      }
+    })();
+    let external = false;
+    try {
+      await Promise.all(
+        Array.from({ length: 400 }, () =>
+          materializeArtifact(
+            request({ projectSlug: 'victim', relativePath: 'attack.md', content: 'ATTACK-19', onConflict: 'overwrite' }),
+            { projectsRoot, now: FIXED_NOW },
+          ).catch(() => undefined),
+        ),
+      );
+      external = (await readFile(outsideTarget, 'utf8')) !== 'SAFE-OUTSIDE';
+    } finally {
+      stop = true;
+      await swapper;
+      await rm(outside, { recursive: true, force: true });
+    }
+    expect(external).toBe(false);
+  }, 20_000);
+
+  it('W23-RG3-P1-01 concorrência: plan/read não vaza conteúdo do symlink externo', async () => {
+    const outside = await mkdtemp(join(tmpdir(), 'artifact-materializer-read-race-outside-'));
+    const slugRoot = join(projectsRoot, 'victim');
+    const outsideTarget = join(outside, 'secret.md');
+    await writeFile(outsideTarget, 'SECRET-OUTSIDE', 'utf8');
+    await mkdir(slugRoot, { recursive: true });
+    await writeFile(join(slugRoot, 'secret.md'), 'INSIDE', 'utf8');
+    expect(await readSafeArtifactFile(projectsRoot, 'victim', 'secret.md')).toBe('INSIDE');
+    let stop = false;
+    const swapper = (async () => {
+      while (!stop) {
+        await rm(slugRoot, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await mkdir(slugRoot, { recursive: true }).catch(() => undefined);
+        await writeFile(join(slugRoot, 'secret.md'), 'INSIDE', 'utf8').catch(() => undefined);
+        await rm(slugRoot, { recursive: true, force: true }).catch(() => undefined);
+        if (stop) break;
+        await symlink(outside, slugRoot).catch(() => undefined);
+      }
+    })();
+    const reads: Array<string | null> = [];
+    try {
+      reads.push(
+        ...(await Promise.all(
+          Array.from({ length: 400 }, () => readSafeArtifactFile(projectsRoot, 'victim', 'secret.md').catch(() => null)),
+        )),
+      );
+    } finally {
+      stop = true;
+      await swapper;
+      await rm(outside, { recursive: true, force: true });
+    }
+    expect(reads.includes('SECRET-OUTSIDE')).toBe(false);
+  }, 20_000);
 });
 
 describe('materializeArtifact — rollback sem corromper o canônico (AC3)', () => {

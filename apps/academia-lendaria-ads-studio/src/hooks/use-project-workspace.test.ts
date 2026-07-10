@@ -444,6 +444,55 @@ describe('use-project-workspace — round-trip entre sessões', () => {
     controllerB.destroy();
   });
 
+  // STORY-8.W2.3 — closes the explicit W2.2 residual: a persisted decision
+  // (approve → done / reject → cancelled) survives a reload and NEVER reverts to
+  // needs_review. The two-phase approval saga persists the terminal decision to
+  // `skill_runs` (backend), so a fresh session hydrates it as terminal.
+  it.each([
+    ['done', 'proposal-hash-approved', 2] as const,
+    ['cancelled', undefined, undefined] as const,
+  ])('reidrata a decisão %s da revisão humana sem voltar para needs_review (W2.2 residual)', async (
+    terminalStatus,
+    proposalHash,
+    proposalRevision,
+  ) => {
+    const repository = createFakeRepository();
+    const storeA = createProjectStore({ demoEnabled: false });
+    const controllerA = createProjectWorkspaceController({ workspaceId: WORKSPACE_ID, repository, store: storeA, demoEnabled: false });
+    const projectId = await controllerA.createProject('Projeto Decisão Humana');
+
+    const started = await controllerA.persistSkillRunStart({
+      projectId,
+      skillId: 'offerbook',
+      inputSnapshot: { jobId: 'job-99' },
+    });
+    await controllerA.persistSkillRunUpdate(started.id, {
+      status: 'needs_review',
+      skillHash: 'sha-real',
+      proposal: { summary: 'ok', resultMarkdown: '# r', artifacts: [], fields: [], questions: [], warnings: [] },
+    });
+
+    // The approval saga persists the terminal decision to skill_runs (backend
+    // service-role). Represented here by the repository write to the same row.
+    await repository.updateSkillRun(WORKSPACE_ID, started.id, {
+      status: terminalStatus,
+      ...(proposalHash ? { proposalHash } : {}),
+      ...(proposalRevision ? { proposalRevision } : {}),
+    });
+    controllerA.destroy();
+
+    // New session: fresh store + controller over the same durable repository.
+    const storeB = createProjectStore({ demoEnabled: false });
+    const controllerB = createProjectWorkspaceController({ workspaceId: WORKSPACE_ID, repository, store: storeB, demoEnabled: false });
+    await controllerB.hydrate();
+
+    const run = storeB.getState().skillRuns.find((r) => r.id === started.id);
+    expect(run?.status).toBe(terminalStatus);
+    expect(run?.status).not.toBe('needs_review');
+    if (proposalHash) expect(run?.proposalHash).toBe(proposalHash);
+    controllerB.destroy();
+  });
+
   it('um novo controller/store sobre o mesmo repository recupera campaign plans e weekly panels do projeto (AC5)', async () => {
     const repository = createFakeRepository();
 

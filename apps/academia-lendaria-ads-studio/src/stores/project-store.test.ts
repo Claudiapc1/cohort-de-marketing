@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createProjectStore, DEMO_PROJECT_ID } from '@/stores/project-store';
 import { getPath } from '@/lib/project-domain';
-import type { MarketingProject, ProjectBriefRevision } from '@/lib/project-domain';
+import type { MarketingProject, ProjectArtifact, ProjectBriefRevision } from '@/lib/project-domain';
 
 describe('project store — modo demo (fixtures locais)', () => {
   // Storage local isolado por teste: o store demo persiste em `localStorage`
@@ -269,5 +269,31 @@ describe('project store — modo real (cache de hidratação)', () => {
     store.getState().bindPersistence(null);
     store.getState().updateBriefField('p1', 'offer.exactPrice', 10);
     expect(onBriefFieldChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('upsertArtifact insere e depois substitui pelo id do banco (STORY-8.W2.3)', () => {
+    const store = realStore();
+    const base: ProjectArtifact = {
+      id: 'art-db-1',
+      workspaceId: 'ws1',
+      projectId: 'p1',
+      artifactType: 'offerbook',
+      title: 'Offerbook',
+      path: 'offerbook.md',
+      format: 'markdown',
+      state: 'confirmed',
+      verification: 'confirmed',
+      source: 'skill_run',
+      hash: 'sha-1',
+      createdAt: '2026-07-10T00:00:00.000Z',
+      updatedAt: '2026-07-10T00:00:00.000Z',
+    };
+    store.getState().upsertArtifact(base);
+    expect(store.getState().artifacts).toHaveLength(1);
+    // Reaplicar o mesmo id (ex.: repair idempotente) substitui, não duplica.
+    store.getState().upsertArtifact({ ...base, title: 'Offerbook revisado', hash: 'sha-2' });
+    expect(store.getState().artifacts).toHaveLength(1);
+    expect(store.getState().artifacts[0]?.title).toBe('Offerbook revisado');
+    expect(store.getState().artifacts[0]?.hash).toBe('sha-2');
   });
 });

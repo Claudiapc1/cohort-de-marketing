@@ -1492,8 +1492,28 @@
 .cms-proposal-review > strong { color: var(--foreground); font-size: 10px; }
 .cms-proposal-review > p { margin: 5px 0; color: var(--muted-foreground); font-size: 9px; line-height: 1.45; }
 .cms-proposal-review > span { color: var(--warning); font-size: 8px; }
-.cms-proposal-review > div { display: flex; gap: 6px; margin-top: 9px; }
+.cms-proposal-review > div { display: flex; gap: 6px; margin-top: 9px; flex-wrap: wrap; }
 .cms-proposal-review .al-btn { width: auto; }
+
+/* Two-phase approval review (STORY-8.W2.3) — compact, reuses the review box. */
+.cms-approval-section { margin-top: 9px; padding-top: 8px; border-top: 1px solid var(--hairline); }
+.cms-approval-label { display: block; margin-bottom: 5px; color: var(--muted-foreground); font-size: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+.cms-approval-files,
+.cms-approval-warnings,
+.cms-approval-invalidations { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.cms-approval-file { display: flex; align-items: center; gap: 6px; font-size: 9px; color: var(--foreground); }
+.cms-approval-file code { font-size: 9px; color: var(--foreground); }
+.cms-approval-change { padding: 1px 5px; border-radius: var(--radius-sm); font-size: 8px; text-transform: uppercase; background: hsl(var(--muted-hsl) / 0.5); color: var(--muted-foreground); }
+.cms-approval-change.is-create { background: hsl(var(--success-hsl) / 0.14); color: var(--success); }
+.cms-approval-change.is-modify { background: hsl(var(--warning-hsl) / 0.16); color: var(--warning); }
+.cms-approval-delta { font-size: 8px; color: var(--muted-foreground); font-style: normal; }
+.cms-approval-diff { margin: 6px 0 0; max-height: 132px; overflow: auto; padding: 7px 8px; border: 1px solid var(--hairline); border-radius: var(--radius-sm); background: var(--background); color: var(--muted-foreground); font-size: 9px; line-height: 1.4; white-space: pre-wrap; }
+.cms-approval-warnings li { display: flex; align-items: flex-start; gap: 6px; font-size: 9px; line-height: 1.4; color: var(--warning); }
+.cms-approval-invalidations li { display: flex; align-items: center; gap: 6px; font-size: 9px; color: var(--foreground); }
+.cms-approval-invalidations li small { color: var(--muted-foreground); font-size: 8px; }
+.cms-approval-edit { margin-top: 9px; }
+.cms-approval-edit > div { display: flex; gap: 6px; margin-top: 7px; }
+.cms-approval-error { display: block; margin-top: 8px; color: var(--destructive, var(--warning)); font-size: 9px; line-height: 1.4; }
 
 .cms-runtime-error {
   margin: 11px 0 0;

@@ -4,16 +4,27 @@ import { Button, Icon } from '@/lib/lendaria-ds';
 import { skillCatalog } from '@/generated/skill-catalog';
 import { evaluateProjectSkills, nextProjectAction, type SkillEvaluation } from '@/lib/readiness';
 import { activeBriefFor, useProjectStore } from '@/stores/project-store';
-import type { SkillRun } from '@/lib/project-domain';
+import type { ProjectArtifact, SkillRun } from '@/lib/project-domain';
 import { useOptionalProjectWorkspaceActions } from '@/components/project-hydration-boundary';
 import { toCacheRunPatch, type PersistSkillRunStartInput } from '@/hooks/use-project-workspace';
 import type { UpdateSkillRunInput } from '@/lib/project-repository';
+import { ArtifactApprovalReview } from '@/components/artifact-approval-review';
+import {
+  buildInvalidations,
+  decideArtifactApproval,
+  makeIdempotencyKey,
+  planArtifactApproval,
+  resolveApprovalArtifacts,
+  type ApprovalArtifactInput,
+  type ApprovalPlan,
+} from '@/lib/artifact-approval';
 import {
   cancelSkillRun,
   isSkillProposal,
   observeSkillRun,
   retrySkillRun,
   startSkillRun,
+  type SkillProposal,
   type SkillRunView,
 } from '@/lib/skill-runtime';
 
@@ -83,6 +94,7 @@ export function ProjectJourney({ projectId }: { projectId: string }) {
   const startRun = useProjectStore((state) => state.startSkillRun);
   const updateRun = useProjectStore((state) => state.updateSkillRun);
   const addArtifact = useProjectStore((state) => state.addArtifact);
+  const upsertArtifact = useProjectStore((state) => state.upsertArtifact);
   // Seam opcional (QA-W2B1-02): dentro da boundary (modo real) as ações do
   // workspace persistem o skill run pelo repository; fora dela (demo/testes
   // isolados) é `null` e caímos no cache local — sem enfraquecer a persistência real.
@@ -199,6 +211,67 @@ export function ProjectJourney({ projectId }: { projectId: string }) {
     ?? next
     ?? evaluations[0];
   const selectedSkill = skillCatalog.skills.find((skill) => skill.id === selectedEvaluation?.skillId);
+
+  // Latest run of the selected skill (guarded so the hooks below stay above the
+  // early return — rules of hooks). Drives the two-phase approval review.
+  const latestRunForSelected = selectedEvaluation
+    ? [...runs]
+        .filter((run) => run.skillId === selectedEvaluation.skillId)
+        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0]
+    : undefined;
+
+  const [approvalPlan, setApprovalPlan] = useState<ApprovalPlan | null>(null);
+  const [approvalPlanLoading, setApprovalPlanLoading] = useState(false);
+  const [approvalBusy, setApprovalBusy] = useState(false);
+  const [approvalError, setApprovalError] = useState<string | null>(null);
+
+  const reviewRunId = latestRunForSelected?.status === 'needs_review' ? latestRunForSelected.id : undefined;
+  const reviewRunRevision = latestRunForSelected?.proposalRevision;
+
+  // Phase 1 (real mode): fetch the accurate filesystem plan for the proposal in
+  // review. Demo mode (no workspace actions) skips the backend and reviews locally.
+  useEffect(() => {
+    if (!workspaceActions || !reviewRunId) {
+      setApprovalPlan(null);
+      return;
+    }
+    const run = latestRunForSelected;
+    if (!run || !isSkillProposal(run.proposal)) {
+      setApprovalPlan(null);
+      return;
+    }
+    const skill = skillCatalog.skills.find((candidate) => candidate.id === run.skillId);
+    const artifacts = resolveApprovalArtifacts(run.proposal, {
+      artifactType: skill?.primaryArtifacts[0] ?? run.skillId,
+      title: skill?.title ?? run.skillId,
+      path: `generated/${run.skillId}/${run.id}.md`,
+    });
+    if (artifacts.length === 0) {
+      setApprovalPlan(null);
+      return;
+    }
+    let active = true;
+    setApprovalPlanLoading(true);
+    setApprovalError(null);
+    planArtifactApproval({ skillRunId: run.id, artifacts })
+      .then((result) => {
+        if (active) setApprovalPlan(result);
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setApprovalPlan(null);
+          setApprovalError(error instanceof Error ? error.message : 'Falha ao planejar a aprovação.');
+        }
+      })
+      .finally(() => {
+        if (active) setApprovalPlanLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the run identity + revision, not the recomputed object.
+  }, [workspaceActions, reviewRunId, reviewRunRevision]);
+
   const phases = [...new Set(skillCatalog.skills.map((skill) => skill.phase))];
   const filtered = evaluations.filter((evaluation) => {
     const skill = skillCatalog.skills.find((candidate) => candidate.id === evaluation.skillId);
@@ -221,11 +294,21 @@ export function ProjectJourney({ projectId }: { projectId: string }) {
 
   const selectedState = stateFor(selectedEvaluation);
   const sectionId = selectedEvaluation.missingFields[0]?.split('.')[0] ?? 'project';
-  const latestRun = [...runs]
-    .filter((run) => run.skillId === selectedEvaluation.skillId)
-    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
+  const latestRun = latestRunForSelected;
   const latestJobId = latestRun ? jobIdOf(latestRun) : undefined;
   const latestLiveView = latestJobId ? runViews[latestJobId] : undefined;
+
+  // Two-phase approval review data (AC1): the exact artifacts the human approves
+  // + the downstream artifacts this decision would invalidate (client graph).
+  const reviewProposal = latestRun && isSkillProposal(latestRun.proposal) ? latestRun.proposal : null;
+  const reviewArtifacts: ApprovalArtifactInput[] = reviewProposal
+    ? resolveApprovalArtifacts(reviewProposal, {
+        artifactType: activeSkill.primaryArtifacts[0] ?? activeSkill.id,
+        title: activeSkill.title,
+        path: `generated/${activeSkill.id}/${latestRun!.id}.md`,
+      })
+    : [];
+  const invalidations = latestRun ? buildInvalidations(latestRun.skillId, artifacts) : [];
 
   async function executeRun() {
     setRuntimeError(null);
@@ -311,40 +394,144 @@ export function ProjectJourney({ projectId }: { projectId: string }) {
     }
   }
 
-  function approveProposal() {
-    if (!latestRun || !isSkillProposal(latestRun.proposal)) return;
-    const proposals = latestRun.proposal.artifacts.length
-      ? latestRun.proposal.artifacts
-      : activeSkill.primaryArtifacts.length
-        ? [{
-            artifactType: activeSkill.primaryArtifacts[0]!,
-            title: activeSkill.title,
-            path: `generated/${activeSkill.id}/${latestRun.id}.md`,
-            format: 'markdown' as const,
-            content: latestRun.proposal.resultMarkdown,
-          }]
-        : [];
-    for (const proposal of proposals) {
-      addArtifact({
-        workspaceId: latestRun.workspaceId,
-        projectId,
-        artifactType: proposal.artifactType,
-        title: proposal.title,
-        path: proposal.path,
-        format: proposal.format,
-        state: 'confirmed',
-        verification: 'confirmed',
-        source: 'skill_run',
-        skillRunId: latestRun.id,
-        content: proposal.content,
-      });
+  // Phase 2 — approve. Real mode routes the whole transaction through the BFF
+  // saga (materialize + DB + audit, one proposal hash across surfaces), then
+  // mirrors the authoritative result into the cache. Demo mode materializes
+  // locally (cache-only), keeping the same UX.
+  async function approveProposal() {
+    const run = latestRun;
+    if (!run || !reviewProposal || reviewArtifacts.length === 0) return;
+    setApprovalError(null);
+    setApprovalBusy(true);
+    try {
+      if (workspaceActions) {
+        if (!approvalPlan) throw new Error('O plano de aprovação ainda está carregando.');
+        const record = await decideArtifactApproval({
+          skillRunId: run.id,
+          decision: 'approve',
+          expectedProposalHash: approvalPlan.proposalHash,
+          expectedProposalRevision: approvalPlan.proposalRevision,
+          idempotencyKey: makeIdempotencyKey(run.id, approvalPlan.proposalHash, 'approve'),
+          artifacts: reviewArtifacts,
+        });
+        // The BFF is the SOT and already persisted; mirror it into the cache.
+        const now = new Date().toISOString();
+        for (const entry of record.plan) {
+          upsertArtifact({
+            id: entry.artifactId,
+            workspaceId: run.workspaceId,
+            projectId,
+            artifactType: entry.artifactType,
+            title: entry.title,
+            path: entry.path,
+            format: entry.format as ProjectArtifact['format'],
+            state: 'confirmed',
+            verification: 'confirmed',
+            source: 'skill_run',
+            skillRunId: run.id,
+            ...(entry.contentHash ? { hash: entry.contentHash } : {}),
+            content: entry.content,
+            createdAt: now,
+            updatedAt: now,
+          });
+        }
+        updateRun(run.id, { status: 'done', proposalHash: record.proposalHash });
+      } else {
+        for (const artifact of reviewArtifacts) {
+          addArtifact({
+            workspaceId: run.workspaceId,
+            projectId,
+            artifactType: artifact.artifactType,
+            title: artifact.title,
+            path: artifact.path,
+            format: artifact.format as ProjectArtifact['format'],
+            state: 'confirmed',
+            verification: 'confirmed',
+            source: 'skill_run',
+            skillRunId: run.id,
+            content: artifact.content,
+          });
+        }
+        updateRun(run.id, { status: 'done' });
+      }
+    } catch (error) {
+      setApprovalError(error instanceof Error ? error.message : 'Falha ao aprovar a proposta.');
+    } finally {
+      setApprovalBusy(false);
     }
-    updateRun(latestRun.id, { status: 'done' });
   }
 
-  function rejectProposal() {
-    if (!latestRun) return;
-    updateRun(latestRun.id, { status: 'cancelled' });
+  // Phase 2 — reject. Persists the decision (skill_run → cancelled) WITHOUT
+  // writing any file (AC5). Real mode records it through the BFF; demo cache-only.
+  async function rejectProposal() {
+    const run = latestRun;
+    // Guard against a stale/non-`needs_review` run (P3-02): the button is
+    // already gated by the UI, but a decision must never be issued outside it.
+    if (!run || run.status !== 'needs_review') return;
+    setApprovalError(null);
+    setApprovalBusy(true);
+    try {
+      if (workspaceActions) {
+        if (!approvalPlan) throw new Error('O plano de aprovação ainda está carregando.');
+        await decideArtifactApproval({
+          skillRunId: run.id,
+          decision: 'reject',
+          expectedProposalHash: approvalPlan.proposalHash,
+          expectedProposalRevision: approvalPlan.proposalRevision,
+          idempotencyKey: makeIdempotencyKey(run.id, approvalPlan.proposalHash, 'reject'),
+        });
+      }
+      // Cache reflection only AFTER the real-mode decision is persisted (or in
+      // demo mode, where there is no backend to persist against) — the cache
+      // must never claim `cancelled` before the BFF confirms it (P3-02).
+      updateRun(run.id, { status: 'cancelled' });
+    } catch (error) {
+      setApprovalError(error instanceof Error ? error.message : 'Falha ao rejeitar a proposta.');
+    } finally {
+      setApprovalBusy(false);
+    }
+  }
+
+  // Editing creates a NEW proposal revision (AC5): bumping the revision + hash
+  // invalidates any stale in-flight approval that still carries the old ones.
+  async function editProposal(edited: ApprovalArtifactInput[]) {
+    const run = latestRun;
+    if (!run || !reviewProposal) return;
+    setApprovalError(null);
+    setApprovalBusy(true);
+    try {
+      const editedProposal: SkillProposal = {
+        ...reviewProposal,
+        artifacts: edited.map((artifact) => ({
+          artifactType: artifact.artifactType,
+          title: artifact.title,
+          path: artifact.path,
+          format: artifact.format,
+          content: artifact.content,
+        })),
+      };
+      const nextRevision = (run.proposalRevision ?? 1) + 1;
+      if (workspaceActions) {
+        const nextPlan = await planArtifactApproval({ skillRunId: run.id, artifacts: edited });
+        await workspaceActions.persistSkillRunUpdate(run.id, {
+          proposal: editedProposal as unknown as Record<string, unknown>,
+          proposalHash: nextPlan.proposalHash,
+          proposalRevision: nextRevision,
+          expectedProposalRevision: run.proposalRevision ?? 1,
+        });
+        // The persisted revision is the new authoritative one for the approval gate.
+        setApprovalPlan({ ...nextPlan, proposalRevision: nextRevision });
+      } else {
+        updateRun(run.id, {
+          proposal: editedProposal as unknown as Record<string, unknown>,
+          proposalRevision: nextRevision,
+        } as Partial<SkillRun>);
+      }
+    } catch (error) {
+      setApprovalError(error instanceof Error ? error.message : 'Falha ao editar a proposta.');
+    } finally {
+      setApprovalBusy(false);
+    }
   }
 
   return (
@@ -481,16 +668,20 @@ export function ProjectJourney({ projectId }: { projectId: string }) {
             </div>
           ) : null}
 
-          {latestRun?.status === 'needs_review' && isSkillProposal(latestRun.proposal) ? (
-            <div className="cms-proposal-review">
-              <strong>Proposta para revisão</strong>
-              <p>{latestRun.proposal.summary}</p>
-              {latestRun.proposal.warnings.map((warning) => <span key={warning}>{warning}</span>)}
-              <div>
-                <Button size="sm" onClick={approveProposal}><Icon name="check" size={12} /> Aprovar</Button>
-                <Button size="sm" variant="outline" onClick={rejectProposal}>Rejeitar</Button>
-              </div>
-            </div>
+          {latestRun?.status === 'needs_review' && reviewProposal && reviewArtifacts.length ? (
+            <ArtifactApprovalReview
+              proposalSummary={reviewProposal.summary}
+              artifacts={reviewArtifacts}
+              plan={approvalPlan}
+              planLoading={approvalPlanLoading}
+              proposalWarnings={reviewProposal.warnings}
+              invalidations={invalidations}
+              onApprove={() => void approveProposal()}
+              onReject={() => void rejectProposal()}
+              onEdit={(edited) => void editProposal(edited)}
+              busy={approvalBusy || (!!workspaceActions && !approvalPlan)}
+              error={approvalError}
+            />
           ) : null}
 
           {runtimeError ? <div className="cms-inline-error cms-runtime-error">{runtimeError}</div> : null}
