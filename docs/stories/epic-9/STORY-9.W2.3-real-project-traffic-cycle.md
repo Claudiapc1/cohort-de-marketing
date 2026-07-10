@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: Ready
 story_id: "9.W2.3"
 title: "Ciclo operacional da Aula 3 em projeto real"
 epic: 9
@@ -7,8 +7,8 @@ wave: "W2"
 parent_epic: "docs/stories/epic-9/EPIC-9-GO-LIVE-AULA-3.md"
 deploy_type: local
 appetite: 2d
-hill_phase: figuring_out
-confidence_level: medium
+hill_phase: downhill
+confidence_level: high
 involves_ui: true
 executor: "@qa"
 quality_gate: "@po"

@@ -22,9 +22,9 @@
       "build_dependencies": ["W1"],
       "parallel_groups": [["9.W2.1", "9.W2.2"], ["9.W2.3"]],
       "stories": [
-        { "story_id": "9.W2.1", "status": "Ready", "depends_on": ["9.W1.2", "9.W1.3"], "ids_verdict": "CREATE" },
+        { "story_id": "9.W2.1", "status": "Done", "depends_on": ["9.W1.2", "9.W1.3"], "ids_verdict": "CREATE" },
         { "story_id": "9.W2.2", "status": "Done", "depends_on": ["9.W1.2", "9.W1.3"], "ids_verdict": "CREATE" },
-        { "story_id": "9.W2.3", "status": "Draft", "depends_on": ["9.W2.1", "9.W2.2"], "ids_verdict": "CREATE" }
+        { "story_id": "9.W2.3", "status": "Ready", "depends_on": ["9.W2.1", "9.W2.2"], "ids_verdict": "CREATE" }
       ]
     },
     {
