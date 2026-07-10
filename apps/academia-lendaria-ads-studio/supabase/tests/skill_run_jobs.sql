@@ -1,7 +1,15 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(5);
+select plan(6);
+
+select ok(
+  has_table_privilege('service_role', 'public.skill_run_jobs', 'SELECT')
+  and has_table_privilege('service_role', 'public.skill_run_jobs', 'INSERT')
+  and has_table_privilege('service_role', 'public.skill_run_jobs', 'UPDATE')
+  and has_table_privilege('service_role', 'public.skill_run_jobs', 'DELETE'),
+  'service_role can use the durable skill-run journal'
+);
 
 insert into auth.users (id)
 values

@@ -37,3 +37,9 @@ Script: [`traffic-real-readonly-handoff.mts`](../../apps/academia-lendaria-ads-s
 **PASS — Meta → Leitor → Diagnosticador.** A leitura real usou o período `03/07/2026` a `09/07/2026` e preservou `spend`, `impressions`, `ctr`, `cpc`, `reach`, `clicks`, `frequency` e `cpm`. `conversões`, `CPA` e `ROAS` permaneceram `nao_fornecido`; o diagnóstico produziu `trafficDiagnosis`, uma única alavanca e zero derivação dessas métricas.
 
 O contrato também normaliza os aliases da Meta (`reach`/`alcance` e `frequency`/`frequência`) e o adapter falha fechado após `META_ADS_TIMEOUT_MS` (padrão de 30 segundos). O comando de campanha não foi usado para mutação; quando testado, o timeout foi tratado como erro controlado.
+
+## E2E do launcher
+
+Comando: `npm run test:e2e:launcher`
+
+**PASS — Story 8.W3.3.** O launcher foi validado com migration local alinhada, fixture Supabase isolada, autenticação real, BFF, interface, shutdown e restart. A infraestrutura backend recebeu grants explícitos para `service_role` nas tabelas usadas pelo worker e pelo harness; a fixture também reaplica o grant da tabela legada `ads_campaigns` quando ela já existe.

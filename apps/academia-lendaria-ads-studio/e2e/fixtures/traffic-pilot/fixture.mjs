@@ -74,7 +74,14 @@ async function removeExistingUser(admin) {
 
 async function ensureCampaignTable(admin) {
   const probe = await admin.from('ads_campaigns').select('id').limit(1);
-  if (!probe.error) return false;
+  if (!probe.error) {
+    dbQuery('grant select, insert, update, delete on public.ads_campaigns to service_role');
+    return false;
+  }
+  if (probe.error.code === '42501' || /permission denied for table ads_campaigns/i.test(probe.error.message)) {
+    dbQuery('grant select, insert, update, delete on public.ads_campaigns to service_role');
+    return false;
+  }
   if (probe.error.code !== 'PGRST205') throw new Error(`Tabela ads_campaigns indisponível: ${probe.error.message}`);
   for (const statement of [
     `create table if not exists public.ads_campaigns (id uuid primary key, workspace_id uuid not null references public.workspaces(id) on delete cascade, project_id uuid references public.marketing_projects(id) on delete set null, name text not null, status text not null check (status in ('draft', 'in_review', 'approved', 'live', 'paused', 'archived')), step_current integer not null default 1 check (step_current > 0), created_at timestamptz not null default now())`,
@@ -82,6 +89,7 @@ async function ensureCampaignTable(admin) {
     'drop policy if exists "workspace members manage fixture campaigns" on public.ads_campaigns',
     'create policy "workspace members manage fixture campaigns" on public.ads_campaigns for all to authenticated using ((select private.is_workspace_member(workspace_id))) with check ((select private.is_workspace_member(workspace_id)))',
     'grant select, insert, update, delete on public.ads_campaigns to authenticated',
+    'grant select, insert, update, delete on public.ads_campaigns to service_role',
     "notify pgrst, 'reload schema'",
   ]) dbQuery(statement);
   return true;

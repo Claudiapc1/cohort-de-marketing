@@ -7,7 +7,20 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(6);
+select plan(7);
+
+select ok(
+  has_table_privilege('service_role', 'public.workspaces', 'SELECT')
+  and has_table_privilege('service_role', 'public.workspace_members', 'INSERT')
+  and has_table_privilege('service_role', 'public.marketing_projects', 'UPDATE')
+  and has_table_privilege('service_role', 'public.project_brief_revisions', 'SELECT')
+  and has_table_privilege('service_role', 'public.project_artifacts', 'INSERT')
+  and has_table_privilege('service_role', 'public.campaign_plan_revisions', 'DELETE')
+  and has_table_privilege('service_role', 'public.ads_weekly_panels', 'UPDATE')
+  and has_table_privilege('service_role', 'public.ads_weekly_panel_events', 'SELECT')
+  and has_table_privilege('service_role', 'public.human_decisions', 'DELETE'),
+  'service_role can use the backend project domain tables'
+);
 
 -- Seed como superuser (antes de assumir o papel authenticated) — a RLS ainda
 -- não se aplica aqui. `created_at`/`updated_at` propositalmente no passado para
