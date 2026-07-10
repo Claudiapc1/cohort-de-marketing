@@ -251,6 +251,61 @@ describe('use-project-workspace — hidratação e criação', () => {
     expect(await repository.getProject(WORKSPACE_ID, projectId)).toMatchObject({ slug: 'novo-projeto' });
     controller.destroy();
   });
+
+  it('importProjectBrief persiste projeto, revisão e artefatos antes de atualizar o cache', async () => {
+    const repository = createFakeRepository();
+    const store = createProjectStore({ demoEnabled: false });
+    const controller = createProjectWorkspaceController({ workspaceId: WORKSPACE_ID, repository, store, demoEnabled: false });
+    const input = {
+      schemaVersion: '0.1.0' as const,
+      project: { slug: 'importado', name: 'Projeto Importado' },
+      data: { count: 0, enabled: false, state: 'unknown' },
+      fieldMeta: { 'data.enabled': { source: 'user' } },
+      artifacts: { offerbook: true },
+    };
+    const projectId = await controller.importProjectBrief(input);
+    expect(projectId).toBeTruthy();
+    expect(store.getState().projects).toHaveLength(1);
+    expect(store.getState().briefRevisions[0]?.data.data).toEqual(input.data);
+    expect(store.getState().artifacts[0]?.artifactType).toBe('offerbook');
+    const persisted = await repository.getProject(WORKSPACE_ID, projectId);
+    expect(persisted?.activeBriefRevisionId).toBe(store.getState().briefRevisions[0]?.id);
+    controller.destroy();
+
+    const nextStore = createProjectStore({ demoEnabled: false });
+    const nextController = createProjectWorkspaceController({ workspaceId: WORKSPACE_ID, repository, store: nextStore, demoEnabled: false });
+    await nextController.hydrate();
+    expect(nextStore.getState().projects).toHaveLength(1);
+    expect(nextStore.getState().projects[0]?.id).toBe(projectId);
+    expect(nextStore.getState().briefRevisions[0]?.data.data).toEqual(input.data);
+    nextController.destroy();
+  });
+
+  it('não atualiza cache quando a persistência da primeira revisão falha', async () => {
+    const base = createFakeRepository();
+    const repository: ProjectRepository = {
+      ...base,
+      createBriefRevision: vi.fn().mockRejectedValue(new Error('falha parcial')),
+    };
+    const store = createProjectStore({ demoEnabled: false });
+    const controller = createProjectWorkspaceController({ workspaceId: WORKSPACE_ID, repository, store, demoEnabled: false });
+    await expect(controller.importProjectBrief({ schemaVersion: '0.1.0', project: { slug: 'falha' } })).rejects.toThrow('falha parcial');
+    expect(store.getState().projects).toHaveLength(0);
+    expect(store.getState().briefRevisions).toHaveLength(0);
+    controller.destroy();
+  });
+
+  it('recusa slug duplicado sem sobrescrever o projeto existente', async () => {
+    const repository = createFakeRepository();
+    const first = createProjectWorkspaceController({ workspaceId: WORKSPACE_ID, repository, store: createProjectStore({ demoEnabled: false }), demoEnabled: false });
+    await first.importProjectBrief({ schemaVersion: '0.1.0', project: { slug: 'duplicado' } });
+    const store = createProjectStore({ demoEnabled: false });
+    const second = createProjectWorkspaceController({ workspaceId: WORKSPACE_ID, repository, store, demoEnabled: false });
+    await expect(second.importProjectBrief({ schemaVersion: '0.1.0', project: { slug: 'duplicado', name: 'Sobrescrita' } })).rejects.toThrow('marketing_projects');
+    expect(store.getState().projects).toHaveLength(0);
+    first.destroy();
+    second.destroy();
+  });
 });
 
 describe('use-project-workspace — autosave e conflito', () => {

@@ -221,14 +221,75 @@ export function slugifyProjectName(value: string): string {
     .slice(0, 64) || 'novo-projeto';
 }
 
+export interface BriefValidationIssue {
+  path: string;
+  message: string;
+}
+
+const LEGACY_BRIEF_ROOT_FIELDS = new Set([
+  'schemaVersion',
+  'meta',
+  'project',
+  'market',
+  'offer',
+  'brand',
+  'funnel',
+  'channels',
+  'data',
+  'integrations',
+  'fieldMeta',
+  'artifacts',
+]);
+
+/** Valida o envelope importável sem normalizar nem descartar o documento original. */
+export function validateLegacyBrief(input: unknown): BriefValidationIssue[] {
+  const issues: BriefValidationIssue[] = [];
+  if (!input || typeof input !== 'object' || Array.isArray(input)) {
+    return [{ path: '$', message: 'deve ser um objeto JSON.' }];
+  }
+  const document = input as Record<string, unknown>;
+  for (const key of Object.keys(document)) {
+    if (!LEGACY_BRIEF_ROOT_FIELDS.has(key)) issues.push({ path: key, message: 'campo não permitido.' });
+  }
+  if (document.schemaVersion !== LEGACY_BRIEF_SCHEMA_VERSION) {
+    issues.push({ path: 'schemaVersion', message: `esperado ${LEGACY_BRIEF_SCHEMA_VERSION}.` });
+  }
+  if (!document.project || typeof document.project !== 'object' || Array.isArray(document.project)) {
+    issues.push({ path: 'project', message: 'é obrigatório e deve ser um objeto.' });
+  } else {
+    const project = document.project as Record<string, unknown>;
+    if (typeof project.slug !== 'string' || !/^[a-z0-9][a-z0-9-]*$/.test(project.slug)) {
+      issues.push({ path: 'project.slug', message: 'é obrigatório e deve usar slug minúsculo com hífens.' });
+    }
+  }
+  for (const key of ['meta', 'market', 'offer', 'brand', 'funnel', 'channels', 'data', 'integrations']) {
+    if (document[key] !== undefined && (!document[key] || typeof document[key] !== 'object' || Array.isArray(document[key]))) {
+      issues.push({ path: key, message: 'deve ser um objeto.' });
+    }
+  }
+  if (document.fieldMeta !== undefined && (!document.fieldMeta || typeof document.fieldMeta !== 'object' || Array.isArray(document.fieldMeta))) {
+    issues.push({ path: 'fieldMeta', message: 'deve ser um objeto.' });
+  }
+  if (document.artifacts !== undefined) {
+    if (!document.artifacts || typeof document.artifacts !== 'object' || Array.isArray(document.artifacts)) {
+      issues.push({ path: 'artifacts', message: 'deve ser um objeto de flags booleanas.' });
+    } else {
+      for (const [artifactType, declared] of Object.entries(document.artifacts as Record<string, unknown>)) {
+        if (typeof declared !== 'boolean') issues.push({ path: `artifacts.${artifactType}`, message: 'deve ser booleano.' });
+      }
+    }
+  }
+  return issues;
+}
+
 export function migrateLegacyBrief(
   input: ProjectBriefData & { artifacts?: Record<string, boolean> },
   options: { id: string; workspaceId: string; projectId: string; now: string },
 ): { document: ProjectBriefRevision; declaredArtifactTypes: string[] } {
-  if (input.schemaVersion !== LEGACY_BRIEF_SCHEMA_VERSION) {
-    throw new Error('Formato de briefing não suportado. Esperado: 0.1.0.');
+  const issues = validateLegacyBrief(input);
+  if (issues.length) {
+    throw new Error(`Briefing inválido: ${issues.map((issue) => `${issue.path} (${issue.message})`).join('; ')}`);
   }
-  if (!input.project?.slug) throw new Error('O briefing precisa conter project.slug.');
 
   const data = structuredClone(input);
   const declaredArtifactTypes = Object.entries(data.artifacts ?? {})

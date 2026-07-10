@@ -1,5 +1,5 @@
 ---
-status: Ready
+status: Done
 story_id: "9.W1.2"
 title: "Importação durável do briefing"
 epic: 9
@@ -48,12 +48,45 @@ touched_paths:
 
 ## Tasks
 
-- [ ] Adicionar ação `importProjectBrief` ao controller e ao contexto.
-- [ ] Portar o handler real do formulário para a ação persistente.
-- [ ] Preservar o caminho demo explicitamente.
-- [ ] Implementar mensagens de conflito e validação.
-- [ ] Cobrir round-trip e regressões de tipos de valor.
+- [x] Adicionar ação `importProjectBrief` ao controller e ao contexto.
+- [x] Portar o handler real do formulário para a ação persistente.
+- [x] Preservar o caminho demo explicitamente.
+- [x] Implementar mensagens de conflito e validação.
+- [x] Cobrir round-trip e regressões de tipos de valor.
 
 ## File List
 
-- A preencher durante a implementação.
+- `apps/academia-lendaria-ads-studio/src/hooks/use-project-workspace.ts`
+- `apps/academia-lendaria-ads-studio/src/hooks/use-project-workspace.test.ts`
+- `apps/academia-lendaria-ads-studio/src/components/project-hydration-boundary.tsx`
+- `apps/academia-lendaria-ads-studio/src/components/project-hydration-boundary.test.tsx`
+- `apps/academia-lendaria-ads-studio/src/components/project-briefing.tsx`
+- `apps/academia-lendaria-ads-studio/src/components/project-briefing.test.tsx`
+- `apps/academia-lendaria-ads-studio/src/lib/project-domain.ts`
+- `apps/academia-lendaria-ads-studio/src/lib/project-domain.test.ts`
+- `docs/stories/epic-9/STORY-9.W1.2-durable-project-brief-import.md`
+
+## Change Log
+
+- Controller real valida/migra o `0.1.0`, verifica slug duplicado, persiste projeto, revisão, ponteiro ativo e artefatos antes de espelhar no cache.
+- O caminho demo segue explícito em `importLegacyBrief`; fora dele, Zustand continua sendo somente cache.
+- Validação retorna todos os caminhos inválidos e mantém o arquivo original selecionado para correção/reenvio.
+- Conflitos de slug/revisão são rejeitados sem sobrescrita; valores `0`, `false`, `unknown` e `not_applicable` permanecem intactos.
+
+## Evidências
+
+- Testes focados: 4 arquivos, 26 testes — PASS.
+- Suíte completa: `npm test` — 33 arquivos, 274 testes — PASS.
+- `npm run lint` — PASS.
+- `VITE_SUPABASE_URL=http://localhost:54321 VITE_SUPABASE_ANON_KEY=test-anon-key npm run typecheck` — PASS.
+- `VITE_SUPABASE_URL=http://localhost:54321 VITE_SUPABASE_ANON_KEY=test-anon-key npm run build` — PASS.
+- `npm run build:server` — PASS.
+- `git diff --check` — PASS.
+
+## QA Gate
+
+**Veredito:** PASS em 2026-07-10. Nenhum finding P0/P1/P2.
+
+- Sucesso, migração, conflito de slug, falha parcial sem atualização de cache, round-trip em novo controller e regressões de tipos foram cobertos.
+- O typecheck detectou e foi corrigido o seam de compatibilidade dos consumidores existentes do contexto; lint e builds finais passaram.
+- Não houve alteração fora dos `touched_paths`, nem uso de `OPENAI_API_KEY`/`CODEX_API_KEY`.
