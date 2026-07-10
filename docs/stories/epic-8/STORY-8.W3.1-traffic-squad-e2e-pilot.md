@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: Ready
 story_id: "8.W3.1"
 title: "E2E real do Squad de Tráfego"
 epic: 8
@@ -54,4 +54,3 @@ touched_paths:
 - `apps/academia-lendaria-ads-studio/e2e/fixtures/traffic-pilot/**`
 - `apps/academia-lendaria-ads-studio/scripts/traffic-pilot-report.mjs`
 - `docs/qa/epic-8-traffic-pilot.md`
-

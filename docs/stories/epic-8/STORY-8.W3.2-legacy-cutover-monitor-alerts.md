@@ -1,5 +1,5 @@
 ---
-status: Draft
+status: Ready
 story_id: "8.W3.2"
 title: "Cutover legado e alertas do monitor"
 epic: 8
@@ -54,4 +54,3 @@ touched_paths:
 - `apps/academia-lendaria-ads-studio/src/routes/dashboard/index.tsx`
 - `apps/academia-lendaria-ads-studio/src/routes/campaigns/$campaignId.$step.tsx`
 - `apps/academia-lendaria-ads-studio/src/lib/monitor-alerts.ts`
-

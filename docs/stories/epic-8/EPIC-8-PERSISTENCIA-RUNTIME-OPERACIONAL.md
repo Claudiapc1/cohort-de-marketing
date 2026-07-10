@@ -55,11 +55,19 @@ As três stories têm ownership de arquivos disjunto e podem executar em paralel
 
 ### W2 - Integração operacional
 
+**Status:** Done em 2026-07-10. Fan-in local `1ebb131`, quality gate final
+**SHIP** (238 testes, lint, typecheck, builds, pgTAP 43/43, matriz SQL 21/21 e
+probes filesystem source/compilado sem escrita externa, vazamento ou path
+incorreto).
+
 - 8.W2.1 - Hidratação e persistência da UI via repository
 - 8.W2.2 - Runs duráveis, assíncronos e observáveis
 - 8.W2.3 - Aprovação em duas fases: DB + filesystem
 
 ### W3 - Piloto e entrega
+
+**Status:** InProgress em 2026-07-10. 8.W3.1 e 8.W3.2 estão Ready para o
+primeiro batch paralelo; 8.W3.3 permanece Draft até o fan-in das duas.
 
 - 8.W3.1 - E2E real do Squad de Tráfego
 - 8.W3.2 - Cutover legado e alertas do monitor
@@ -86,6 +94,7 @@ As três stories têm ownership de arquivos disjunto e podem executar em paralel
 
 ## Execução
 
-Orquestração por `/sinkra-wave-execute epic-8 W1`, com preflight determinístico,
+Orquestração por `/sinkra-wave-execute epic-8`, com preflight determinístico,
 DAG por ownership, worktree por story, `/sinkra-full-cycle` por child e fan-in
-exclusivo de `@devops`.
+exclusivo de `@devops`. W1 e W2 estão concluídas; resume point atual: W3 batch 1
+(`8.W3.1` + `8.W3.2`).
