@@ -240,14 +240,19 @@ export function createProjectWorkspaceController(deps: ProjectWorkspaceDeps): Pr
 
     // `activeBriefRevisionId` funciona como commit marker. Um projeto sem esse
     // pointer é uma importação interrompida e pode ser retomado; um projeto já
-    // ativo continua sendo conflito de slug e nunca é sobrescrito.
-    if (existing?.activeBriefRevisionId || (existing && existing.name !== name)) {
+    // ativo só é idempotente se o briefing for semanticamente igual.
+    if (existing && existing.name !== name) {
       throw new RevisionConflictError('marketing_projects');
     }
     const project = existing ?? await repository.createProject({ workspaceId, slug, name });
     const persistedRevisions = existing ? await repository.listBriefRevisions(workspaceId, project.id) : [];
     if (persistedRevisions.length > 1) throw new RevisionConflictError('project_brief_revisions');
-    const persistedBrief = persistedRevisions[0];
+    const persistedBrief = existing?.activeBriefRevisionId
+      ? persistedRevisions.find((revision) => revision.id === existing.activeBriefRevisionId)
+      : persistedRevisions[0];
+    if (existing?.activeBriefRevisionId && !persistedBrief) {
+      throw new RevisionConflictError('project_brief_revisions');
+    }
     if (persistedBrief && (
       persistedBrief.revision !== 1
       || !sameJsonValue(persistedBrief.data, migrated.document.data)
@@ -281,10 +286,12 @@ export function createProjectWorkspaceController(deps: ProjectWorkspaceDeps): Pr
         });
       }),
     );
-    const updatedProject = await repository.updateProject(workspaceId, project.id, {
-      activeBriefRevisionId: brief.id,
-    });
-    if (!destroyed) store.getState().applyCreatedProject(updatedProject, brief);
+    const updatedProject = project.activeBriefRevisionId
+      ? project
+      : await repository.updateProject(workspaceId, project.id, { activeBriefRevisionId: brief.id });
+    if (!destroyed && !store.getState().projects.some((candidate) => candidate.id === updatedProject.id)) {
+      store.getState().applyCreatedProject(updatedProject, brief);
+    }
     for (const artifact of declarations) {
       if (!destroyed) store.getState().upsertArtifact(artifact);
     }

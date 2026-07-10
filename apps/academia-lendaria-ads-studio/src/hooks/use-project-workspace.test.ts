@@ -336,8 +336,33 @@ describe('use-project-workspace — hidratação e criação', () => {
     expect(persistedArtifacts).toHaveLength(2);
     expect(new Set(persistedArtifacts.map((artifact) => artifact.artifactType))).toEqual(new Set(['offerbook', 'design']));
 
-    await expect(retry.importProjectBrief(input)).rejects.toBeInstanceOf(RevisionConflictError);
+    await expect(retry.importProjectBrief(input)).resolves.toBe(projectId);
+    expect(await repository.listProjects(WORKSPACE_ID)).toHaveLength(1);
+    expect(await repository.listBriefRevisions(WORKSPACE_ID, projectId)).toHaveLength(1);
+    expect(await repository.listArtifacts(WORKSPACE_ID, projectId)).toHaveLength(2);
     retry.destroy();
+  });
+
+  it('reconcilia resposta perdida depois do commit sem duplicar projeto ou revisão', async () => {
+    const base = createFakeRepository();
+    const updateProject = vi.fn(async (...args: Parameters<ProjectRepository['updateProject']>) => {
+      const committed = await base.updateProject(...args);
+      if (updateProject.mock.calls.length === 1) throw new Error('resposta perdida');
+      return committed;
+    });
+    const repository: ProjectRepository = { ...base, updateProject };
+    const store = createProjectStore({ demoEnabled: false });
+    const controller = createProjectWorkspaceController({ workspaceId: WORKSPACE_ID, repository, store, demoEnabled: false });
+    const input = { schemaVersion: '0.1.0' as const, project: { slug: 'commit-incerto', name: 'Commit Incerto' } };
+
+    await expect(controller.importProjectBrief(input)).rejects.toThrow('resposta perdida');
+    expect(store.getState().projects).toHaveLength(0);
+
+    const projectId = await controller.importProjectBrief(input);
+    expect(store.getState().projects.map((project) => project.id)).toEqual([projectId]);
+    expect(await repository.listProjects(WORKSPACE_ID)).toHaveLength(1);
+    expect(await repository.listBriefRevisions(WORKSPACE_ID, projectId)).toHaveLength(1);
+    controller.destroy();
   });
 
   it('recusa slug duplicado sem sobrescrever o projeto existente', async () => {

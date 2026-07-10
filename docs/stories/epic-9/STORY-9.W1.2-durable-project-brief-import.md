@@ -83,7 +83,7 @@ touched_paths:
 
 ## Evidências
 
-- Testes focados finais: 3 arquivos, 22 testes — PASS.
+- Testes focados finais: 2 arquivos, 23 testes — PASS.
 - Suíte completa: `npm test` — 33 arquivos, 276 testes — PASS.
 - `npm run lint` — PASS.
 - `VITE_SUPABASE_URL=http://localhost:54321 VITE_SUPABASE_ANON_KEY=test-anon-key npm run typecheck` — PASS.
@@ -103,4 +103,7 @@ touched_paths:
   validação pelo schema canônico e testes de regressão.
 - A segunda revisão encontrou `schemaVersion` ausente como P2; a validação agora
   aplica também os campos obrigatórios do schema raiz antes da migração.
+- A terceira revisão encontrou commit com resposta perdida como P2; um briefing
+  ativo semanticamente idêntico agora é reconciliado de forma idempotente, sem
+  duplicar projeto, revisão, artefato ou cache.
 - Não houve alteração fora dos `touched_paths`, nem uso de `OPENAI_API_KEY`/`CODEX_API_KEY`.
