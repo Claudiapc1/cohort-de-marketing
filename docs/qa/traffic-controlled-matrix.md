@@ -18,14 +18,22 @@ Script: [`traffic-controlled-matrix.mts`](../../apps/academia-lendaria-ads-studi
 
 ## Limites
 
-Este teste valida o comportamento das skills e dos handoffs no runner local. Não usa credenciais Meta nem substitui o próximo teste controlado em uma conta real, que deve começar em modo de leitura/recomendação e sem publicação.
+Este teste valida o comportamento das skills e dos handoffs no runner local. A matriz determinística não usa credenciais Meta; o handoff real abaixo cobre a leitura controlada em conta configurada, ainda sem publicação.
 
 ## Gate Meta em modo leitura
 
-O check L1 foi executado para `controlled-traffic` e retornou:
+O check L1 foi executado para o spoke local configurado e retornou:
 
-- `adapterAvailable: false`;
-- `capabilityUnavailable: true`;
-- motivo: `services/meta-ads/index.js` não existe neste checkout.
+- adapter disponível em `services/meta-ads/index.js`;
+- autenticação read-only aprovada para o spoke `natalia-tanaka`;
+- saída do CLI higienizada, sem repassar token integral ou fragmentos.
 
-Isso é um bloqueio de capacidade, não uma falha silenciosa. O `MetaCliPublisher` atual implementa apenas `check`; criação e confirmação de campanhas continuam como stubs. Nenhuma chamada de mutação foi realizada.
+O `MetaCliPublisher` atual continua implementando apenas `check`; criação e confirmação de campanhas continuam como stubs. Nenhuma chamada de mutação foi realizada.
+
+## Handoff real read-only
+
+Script: [`traffic-real-readonly-handoff.mts`](../../apps/academia-lendaria-ads-studio/scripts/traffic-real-readonly-handoff.mts)
+
+**PASS — Meta → Leitor → Diagnosticador.** A leitura real usou o período `03/07/2026` a `09/07/2026` e preservou `spend`, `impressions`, `ctr`, `cpc`, `reach`, `clicks`, `frequency` e `cpm`. `conversões`, `CPA` e `ROAS` permaneceram `nao_fornecido`; o diagnóstico produziu `trafficDiagnosis`, uma única alavanca e zero derivação dessas métricas.
+
+O contrato também normaliza os aliases da Meta (`reach`/`alcance` e `frequency`/`frequência`) e o adapter falha fechado após `META_ADS_TIMEOUT_MS` (padrão de 30 segundos). O comando de campanha não foi usado para mutação; quando testado, o timeout foi tratado como erro controlado.

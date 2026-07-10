@@ -491,7 +491,7 @@ describe('local skill runner endpoint', () => {
       capturedPrompt = prompt;
       await writeFile(outputPath, JSON.stringify({
         summary: 'Diagnóstico',
-        resultMarkdown: 'O CTR literal não foi fornecido; o valor aproximado de 0,8% foi derivado.',
+        resultMarkdown: 'CTR aproximado de 0,8% foi derivado apesar de o valor literal não ter sido fornecido.',
         artifacts: [],
         fields: [],
         questions: [],
@@ -540,6 +540,21 @@ describe('local skill runner endpoint', () => {
     await expect(runner.run('diagnosticador', { projectId: 'project-1', brief: {}, context })).resolves.toMatchObject({
       proposal: { summary: 'A frequência não foi fornecida.' },
     });
+  });
+
+  it('matches English Meta aliases to the Portuguese traffic metric contract', () => {
+    const context = {
+      artifacts: [{
+        artifactType: 'trafficMetricReading',
+        content: JSON.stringify({ leitor: { sinais: [
+          { metrica: 'Frequency', valor: 1.53, selo: 'Real' },
+          { metrica: 'Reach', valor: 114596, selo: 'Real' },
+        ] } }),
+      }],
+    };
+
+    expect(unavailableTrafficMetrics(context)).toEqual(expect.arrayContaining(['CTR', 'CPM', 'CPA', 'ROAS']));
+    expect(unavailableTrafficMetrics(context)).not.toEqual(expect.arrayContaining(['frequência', 'alcance']));
   });
 
   it('propagates the AbortSignal to the Codex execution and cleans up (AC4)', async () => {

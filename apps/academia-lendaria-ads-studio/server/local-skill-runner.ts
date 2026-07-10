@@ -122,8 +122,24 @@ interface TrafficMetricSignal {
 
 const CANONICAL_TRAFFIC_METRICS = ['CTR', 'CPM', 'CPA', 'ROAS', 'frequência', 'alcance'] as const;
 
+const TRAFFIC_METRIC_ALIASES: Record<(typeof CANONICAL_TRAFFIC_METRICS)[number], string[]> = {
+  CTR: ['CTR'],
+  CPM: ['CPM'],
+  CPA: ['CPA'],
+  ROAS: ['ROAS'],
+  frequência: ['frequência', 'frequency'],
+  alcance: ['alcance', 'reach'],
+};
+
 function normalizeForComparison(value: string): string {
   return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function canonicalTrafficMetric(value: string): (typeof CANONICAL_TRAFFIC_METRICS)[number] | undefined {
+  const normalized = normalizeForComparison(value);
+  return CANONICAL_TRAFFIC_METRICS.find((metric) =>
+    TRAFFIC_METRIC_ALIASES[metric].some((alias) => normalizeForComparison(alias) === normalized),
+  );
 }
 
 function escapeRegExp(value: string): string {
@@ -165,8 +181,10 @@ export function unavailableTrafficMetrics(context: Record<string, unknown> | und
         if (typeof signal.metrica !== 'string') continue;
         const seal = typeof signal.selo === 'string' ? normalizeForComparison(signal.selo).replace(/[_-]+/g, ' ') : '';
         const name = signal.metrica.trim();
-        if (signal.valor == null || seal.includes('nao fornecido')) metrics.add(name);
-        else suppliedMetrics.add(normalizeForComparison(name));
+        const canonicalName = canonicalTrafficMetric(name);
+        const comparableName = canonicalName ? normalizeForComparison(canonicalName) : normalizeForComparison(name);
+        if (signal.valor == null || seal.includes('nao fornecido')) metrics.add(canonicalName ?? name);
+        else suppliedMetrics.add(comparableName);
       }
       // The Leitor contract says absent named fields are "não fornecido". If a
       // model omits one of the canonical derived metrics instead of emitting a
@@ -216,14 +234,13 @@ function collectProposalStrings(value: unknown, depth = 0): string[] {
  */
 export function derivedUnavailableTrafficMetrics(proposal: SkillProposal, unavailableMetrics: string[]): string[] {
   const texts = collectProposalStrings(proposal).map(normalizeForComparison);
-  const assignment = '(?:valor|aproxim\\w*|calcul\\w*|derivad\\w*|estim\\w*|equival\\w*|result\\w*|seria|foi\\s+de|e\\s+de|[:=])';
   const numeric = '(?:r\\$\\s*)?\\d+(?:[.,]\\d+)*(?:\\s*[%x])?';
   return unavailableMetrics.filter((metric) => {
     const name = escapeRegExp(normalizeForComparison(metric));
-    const metricThenAssignment = new RegExp(`\\b${name}\\b.{0,90}${assignment}.{0,24}${numeric}`, 'i');
-    const assignmentThenMetric = new RegExp(`${numeric}.{0,24}${assignment}.{0,90}\\b${name}\\b`, 'i');
-    const directUnitValue = new RegExp(`(?:\\b${name}\\b.{0,36}${numeric}\\s*[%x]|(?:r\\$\\s*)?\\d+(?:[.,]\\d+)*\\s*[%x].{0,36}\\b${name}\\b)`, 'i');
-    return texts.some((text) => metricThenAssignment.test(text) || assignmentThenMetric.test(text) || directUnitValue.test(text));
+    const connector = '(?:[:=]|(?:e|foi|foram|ficou|fica|esta|estava|seria)\\s+(?:de\\s+)?|(?:de|em|para|abaixo\\s+de|acima\\s+de)\\s*|(?:(?:aproximad|calculad|derivad|estimad|equival|result)\\w*\\s+de)\\s*)';
+    const metricThenValue = new RegExp(`\\b${name}\\b(?:\\s+(?:alvo|meta|do|da|no|na|gerenciador|valor|media|metrica)){0,4}\\s*${connector}\\s*${numeric}`, 'i');
+    const valueThenMetric = new RegExp(`${numeric}\\s*(?:de|para|em|no|na)?\\s*\\b${name}\\b`, 'i');
+    return texts.some((text) => metricThenValue.test(text) || valueThenMetric.test(text));
   });
 }
 
